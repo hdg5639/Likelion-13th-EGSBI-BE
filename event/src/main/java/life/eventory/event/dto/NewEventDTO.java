@@ -1,0 +1,22 @@
+package life.eventory.event.dto;
+
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class NewEventDTO {
+    private Long organizerId;
+    private String name;
+    private String description;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private String address;
+    private Double latitude;
+    private Double longitude;
+    private Integer entryFee;
+}
