@@ -1,4 +1,4 @@
-package com.example.eureka;
+package life.eventory.eureka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
