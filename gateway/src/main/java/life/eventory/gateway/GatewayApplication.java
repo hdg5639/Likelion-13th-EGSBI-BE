@@ -1,4 +1,4 @@
-package com.example.gateway;
+package life.eventory.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
