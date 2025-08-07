@@ -35,8 +35,13 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/**").permitAll()
 
+                        // DELETE 요청 허용
                         .pathMatchers(HttpMethod.DELETE,
                                 "/api/**").permitAll()
+
+                        // OPTIONS 요청 허용
+                        .pathMatchers(HttpMethod.OPTIONS,
+                                "/**").permitAll()
 
                         .anyExchange().authenticated() // 그 외의 요청은 인증 필요
                 )
