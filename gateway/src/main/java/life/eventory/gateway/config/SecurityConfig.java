@@ -23,6 +23,15 @@ public class SecurityConfig {
         log.info("SecurityConfig.securityWebFilterChain(){}", http);
         http
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/docs",
+                                "/api-docs",
+                                "/webjars/**"
+                        ).permitAll()
+
                         // GET 요청 허용
                         .pathMatchers(HttpMethod.GET,
                                 "/**").permitAll()

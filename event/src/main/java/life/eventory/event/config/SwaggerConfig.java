@@ -15,7 +15,7 @@ public class SwaggerConfig {
                 .components(new Components())
                 .info(apiInfo())
                 .addServersItem(new Server()
-                        .url("https://gateway.gamja.cloud/event")
+                        .url("https://gateway.gamja.cloud")
                         .description("Production server"));
     }
 
