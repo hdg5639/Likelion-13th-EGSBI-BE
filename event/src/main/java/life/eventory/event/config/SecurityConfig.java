@@ -36,7 +36,8 @@ public class SecurityConfig {
                             "http://127.0.0.1:3000",
                             "https://eventory.life",
                             "http://eventory.life",
-                            "https://swagger.gamja.cloud"
+                            "https://swagger.gamja.cloud",
+                            "https://gateway.gamja.cloud"
                     ));
                     corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(java.util.List.of("*"));
