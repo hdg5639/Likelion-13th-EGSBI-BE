@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // GET 요청 허용
                         .pathMatchers(HttpMethod.GET,
-                                "/api/**").permitAll()
+                                "/**").permitAll()
 
                         // POST 요청 허용
                         .pathMatchers(HttpMethod.POST,
