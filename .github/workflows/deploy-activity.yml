@@ -31,6 +31,7 @@ jobs:
             docker build -t activity .
             docker run -d -p 12000:12000 --network gamjanet --name activity --env-file activity.env activity
 
+            cd /home/gamja/eventory/aggregator
             docker stop aggregator || true
             docker rm aggregator || true
             docker run -d -p 18000:18000 --network gamjanet --name aggregator --env-file aggregator.env aggregator
