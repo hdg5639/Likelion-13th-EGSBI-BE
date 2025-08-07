@@ -33,7 +33,7 @@ public class DynamicSwaggerConfig implements ApplicationRunner {
 
         // Eureka에 등록된 모든 서비스 이름
         eurekaClient.getApplications().getRegisteredApplications().forEach(app -> {
-            String serviceName = app.getName();
+            String serviceName = app.getName().toLowerCase();
 
             // gateway, aggregator는 제외
             if (serviceName.equalsIgnoreCase("GATEWAY") || serviceName.equalsIgnoreCase("AGGREGATOR")) {
