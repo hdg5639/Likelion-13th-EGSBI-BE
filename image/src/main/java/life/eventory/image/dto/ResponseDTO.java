@@ -12,6 +12,6 @@ import lombok.*;
 public class ResponseDTO {
     @Schema(description = "이미지 고유 ID", example = "123")
     private Long id;
-    @Schema(description = "저장된 파일 이름 (UUID 기반)", example = "f1f2443a-9e41-4a92-ae6c-bb74d5b5a5c9.jpg")
+    @Schema(description = "저장된 파일 이름 (UUID 기반)", example = "f1f2445a-9e41-4a92-ae6c-bb74d5b5a5c9.jpg")
     private String storedFileName;
 }
