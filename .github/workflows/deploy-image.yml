@@ -1,10 +1,10 @@
-name: Deploy activity
+name: Deploy image
 
 on:
   push:
     branches: [ develop ]
     paths:
-      - 'activity/**'
+      - 'image/**'
 
 jobs:
   deploy:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: SSH Deploy activity only
+      - name: SSH Deploy image only
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -24,12 +24,14 @@ jobs:
             cd /home/gamja/eventory
             git pull origin develop
             
-            cd activity
-            docker stop activity || true
-            docker rm activity || true
-            docker rmi activity || true
-            docker build -t activity .
-            docker run -d -p 12000:12000 --network gamjanet --name activity --env-file activity.env activity
+            cd image
+            mkdir -p images
+            
+            docker stop image || true
+            docker rm image || true
+            docker rmi image || true
+            docker build -t image .
+            docker run -d -p 13000:13000 --network gamjanet --name image --env-file image.env -v /home/gamja/eventory/image/images:/home/gamja/eventory/image/images image
 
             cd /home/gamja/eventory/aggregator
             docker stop aggregator || true
