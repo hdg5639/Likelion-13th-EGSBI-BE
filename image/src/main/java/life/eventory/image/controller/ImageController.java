@@ -3,8 +3,10 @@ package life.eventory.image.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import life.eventory.image.dto.ResponseDTO;
 import life.eventory.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +41,9 @@ public class ImageController {
                     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "업로드 성공"),
+                    @ApiResponse(responseCode = "200", description = "업로드 성공",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseDTO.class))),
                     @ApiResponse(responseCode = "400", description = "파일 없음 또는 오류")
             }
     )
