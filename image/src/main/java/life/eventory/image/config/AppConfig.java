@@ -1,4 +1,4 @@
-package life.eventory.event.config;
+package life.eventory.image.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
