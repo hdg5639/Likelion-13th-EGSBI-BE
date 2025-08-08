@@ -1,4 +1,4 @@
-name: Deploy aggregator
+name: Deploy activity
 
 on:
   push:
