@@ -33,7 +33,7 @@ jobs:
             docker build -t image .
             docker run -d -p 13000:13000 --network gamjanet --name image --env-file image.env -v /home/gamja/eventory/image/images:/home/gamja/eventory/image/images image
 
-            until curl --silent --head --fail http://localhost:13000/actuator/health | grep "HTTP/1.1 20"; do
+            until curl --silent --head --fail http://image:13000/actuator/health | grep "HTTP/1.1 20"; do
               echo "Waiting for image service to be ready..."
               sleep 5
             done
