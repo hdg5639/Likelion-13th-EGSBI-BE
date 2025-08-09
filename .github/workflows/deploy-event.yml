@@ -30,13 +30,10 @@ jobs:
             docker rmi event || true
             docker build -t event .
             docker run -d -p 11000:11000 --network gamjanet --name event --env-file event.env event
-            
-            until curl --silent --head --fail http://event:11000/actuator/health | grep "HTTP/1.1 20"; do
-              echo "Waiting for event service to be ready..."
-              sleep 5
-            done
 
             echo "Event service is ready, starting aggregator..."
+            
+            sleep 20
             
             cd /home/gamja/eventory/aggregator
             docker stop aggregator || true
