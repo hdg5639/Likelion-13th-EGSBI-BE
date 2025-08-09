@@ -51,4 +51,10 @@ public class ImageController implements ImageApi {
                 .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
                 .body(resource);
     }
+
+    @Override
+    public ResponseEntity<Boolean> deleteImage(
+            @PathVariable Long id) throws IOException {
+        return ResponseEntity.ok(imageService.deleteById(id));
+    }
 }

@@ -8,4 +8,5 @@ import java.io.IOException;
 public interface ImageService {
     ReturnDTO upload(MultipartFile file) throws IOException;
     String findNameById(Long id);
+    Boolean deleteById(Long id);
 }

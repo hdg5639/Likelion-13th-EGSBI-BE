@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.image.dto.ReturnDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,12 +54,40 @@ public interface ImageApi {
             summary = "이미지 조회",
             description = "ID를 기반으로 저장된 이미지를 다운로드합니다.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "이미지 반환"),
-                    @ApiResponse(responseCode = "404", description = "해당 ID의 이미지 없음")
+                    @ApiResponse(responseCode = "200",
+                            description = "이미지 반환",
+                            content = @Content()
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "해당 ID의 이미지 없음",
+                            content = @Content()
+                    )
             }
     )
     @GetMapping("/{id}")
     ResponseEntity<Resource> getImage(
+            @Parameter(description = "이미지 ID", example = "1") Long id
+    ) throws IOException;
+
+    @Operation(
+            summary = "이미지 삭제",
+            description = "ID를 기반으로 저장된 이미지를 삭제합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "이미지 삭제 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(type = "boolean")
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404",
+                            description = "해당 ID의 이미지 없음",
+                            content = @Content()
+                    )
+            }
+    )
+    @DeleteMapping("/{id}")
+    ResponseEntity<Boolean> deleteImage(
             @Parameter(description = "이미지 ID", example = "1") Long id
     ) throws IOException;
 }
