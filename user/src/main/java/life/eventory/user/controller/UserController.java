@@ -1,8 +1,11 @@
 package life.eventory.user.controller;
 
+import life.eventory.user.dto.UserInfoResponse;
 import life.eventory.user.dto.UserSignUpRequest;
+import life.eventory.user.dto.UserUpdateRequest;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,5 +17,17 @@ public class UserController {
     @PostMapping("/signup")
     public void signup(@RequestBody UserSignUpRequest request) {
         userService.signup(request);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<UserInfoResponse> info(@RequestParam String email){
+        UserInfoResponse userInfoResponse = userService.getUserByEmail(email);
+        return ResponseEntity.ok(userInfoResponse);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<UserUpdateRequest> update(@RequestBody UserUpdateRequest request) {
+        UserUpdateRequest userUpdateRequest = userService.update(request);
+        return ResponseEntity.ok(userUpdateRequest);
     }
 }
