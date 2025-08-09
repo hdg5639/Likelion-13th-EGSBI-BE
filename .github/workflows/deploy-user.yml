@@ -30,8 +30,9 @@ jobs:
             docker rmi user || true
             docker build -t user .
             docker run -d -p 10000:10000 --network gamjanet --name user --env-file user.env user
+            
+            echo "User service is ready, starting aggregator..."
 
-            cd /home/gamja/eventory/aggregator
-            docker stop aggregator || true
-            docker rm aggregator || true
-            docker run -d -p 18000:18000 --network gamjanet --name aggregator --env-file aggregator.env aggregator
+            sleep 40
+            
+            docker restart aggregator

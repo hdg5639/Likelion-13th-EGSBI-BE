@@ -35,9 +35,6 @@ jobs:
 
             echo "Image service is ready, starting aggregator..."
             
-            sleep 20
-
-            cd /home/gamja/eventory/aggregator
-            docker stop aggregator || true
-            docker rm aggregator || true
-            docker run -d -p 18000:18000 --network gamjanet --name aggregator --env-file aggregator.env aggregator
+            sleep 40
+            
+            docker restart aggregator
