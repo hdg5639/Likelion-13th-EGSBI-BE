@@ -1,6 +1,6 @@
 package life.eventory.image.service.impl;
 
-import life.eventory.image.dto.ResponseDTO;
+import life.eventory.image.dto.ReturnDTO;
 import life.eventory.image.entity.Image;
 import life.eventory.image.repository.ImageRepository;
 import life.eventory.image.service.ImageService;
@@ -27,7 +27,10 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public ResponseDTO upload(MultipartFile file) throws IOException {
+    public ReturnDTO upload(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new IOException("빈 파일");
+        }
 
         // 1. 확장자 추출
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -45,7 +48,7 @@ public class ImageServiceImpl implements ImageService {
                 .storedFileName(storedFilename)
                 .build());
 
-        return imageToResponseDTO(image);
+        return new ReturnDTO(image.getId());
     }
 
     @Override
@@ -53,12 +56,5 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않음"))
                 .getStoredFileName();
-    }
-
-    private ResponseDTO imageToResponseDTO(Image image) {
-        return ResponseDTO.builder()
-                .id(image.getId())
-                .storedFileName(image.getStoredFileName())
-                .build();
     }
 }
