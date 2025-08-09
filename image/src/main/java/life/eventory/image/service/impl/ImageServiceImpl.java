@@ -1,10 +1,12 @@
 package life.eventory.image.service.impl;
 
+import jakarta.transaction.Transactional;
 import life.eventory.image.dto.ReturnDTO;
 import life.eventory.image.entity.Image;
 import life.eventory.image.repository.ImageRepository;
 import life.eventory.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
@@ -60,18 +64,25 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Boolean deleteById(Long id) {
-        Image image = imageRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("이미지가 존재하지 않음"));
+        return imageRepository.findById(id)
+                .map(image -> {
+                    Path filePath = Paths.get(uploadDir).resolve(image.getStoredFileName());
 
-        Path filePath = Paths.get(uploadDir).resolve(image.getStoredFileName());
-        try {
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            throw new IllegalStateException("이미지 파일 삭제 실패", e);
-        }
+                    if (!Files.exists(filePath)) {
+                        imageRepository.delete(image);
+                        return true;
+                    }
 
-        imageRepository.delete(image);
+                    try {
+                        Files.deleteIfExists(filePath);
+                        imageRepository.delete(image);
+                    } catch (IOException e) {
+                        log.error("파일 삭제 실패: {}", e.getMessage());
+                        return false;
+                    }
 
-        return true;
+                    return true;
+                })
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 이미지"));
     }
 }

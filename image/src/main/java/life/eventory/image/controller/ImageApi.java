@@ -2,6 +2,7 @@ package life.eventory.image.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.StringToClassMapItem;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Tag(name = "Image API", description = "이미지 업로드 및 조회 API")
 @RequestMapping("/api/image")
@@ -73,19 +75,20 @@ public interface ImageApi {
             responses = {
                     @ApiResponse(responseCode = "200",
                             description = "이미지 삭제 성공",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(type = "boolean")
-                            )
+                            content = @Content()
                     ),
                     @ApiResponse(responseCode = "404",
                             description = "해당 ID의 이미지 없음",
+                            content = @Content()
+                    ),
+                    @ApiResponse(responseCode = "500",
+                            description = "서버 내부 오류",
                             content = @Content()
                     )
             }
     )
     @DeleteMapping("/{id}")
-    ResponseEntity<Boolean> deleteImage(
+    ResponseEntity<Map<String, String>> deleteImage(
             @Parameter(description = "이미지 ID", example = "1")
             @PathVariable Long id
     ) throws IOException;
