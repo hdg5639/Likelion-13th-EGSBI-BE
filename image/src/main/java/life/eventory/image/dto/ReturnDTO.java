@@ -10,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Schema(description = "이미지 ID 반환")
 public class ReturnDTO {
-    @Schema(description = "이미지 ID", example = "1")
+    @Schema(description = "이미지 ID", example = "2")
     private Long imageId;
 }
