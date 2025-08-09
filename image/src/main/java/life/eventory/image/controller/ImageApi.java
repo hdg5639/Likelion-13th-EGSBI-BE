@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.image.dto.ReturnDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -66,7 +63,8 @@ public interface ImageApi {
     )
     @GetMapping("/{id}")
     ResponseEntity<Resource> getImage(
-            @Parameter(description = "이미지 ID", example = "1") Long id
+            @Parameter(description = "이미지 ID", example = "1")
+            @PathVariable Long id
     ) throws IOException;
 
     @Operation(
@@ -88,6 +86,7 @@ public interface ImageApi {
     )
     @DeleteMapping("/{id}")
     ResponseEntity<Boolean> deleteImage(
-            @Parameter(description = "이미지 ID", example = "1") Long id
+            @Parameter(description = "이미지 ID", example = "1")
+            @PathVariable Long id
     ) throws IOException;
 }
