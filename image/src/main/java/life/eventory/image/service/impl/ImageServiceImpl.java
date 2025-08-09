@@ -57,4 +57,21 @@ public class ImageServiceImpl implements ImageService {
                 .orElseThrow(() -> new IllegalStateException("존재하지 않음"))
                 .getStoredFileName();
     }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        Image image = imageRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("이미지가 존재하지 않음"));
+
+        Path filePath = Paths.get(uploadDir).resolve(image.getStoredFileName());
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new IllegalStateException("이미지 파일 삭제 실패", e);
+        }
+
+        imageRepository.delete(image);
+
+        return true;
+    }
 }
