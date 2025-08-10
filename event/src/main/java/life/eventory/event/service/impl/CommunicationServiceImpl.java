@@ -32,6 +32,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public Long uploadPoster(MultipartFile file) throws IOException {
+        // 배포 요청 코드
         ServiceInstance imageInstance = getImageInstance();
 
         // 요청 url 생성
@@ -39,6 +40,12 @@ public class CommunicationServiceImpl implements CommunicationService {
                 .path("/api/image")
                 .build()
                 .toUri();
+
+        // 로컬 테스트 코드 예시
+//        URI uri = UriComponentsBuilder.fromUri(URI.create("https://gateway.gamja.cloud"))
+//                .path("/api/image")
+//                .build()
+//                .toUri();
 
         // RestTemplate 검사
         if (restTemplate == null) {
