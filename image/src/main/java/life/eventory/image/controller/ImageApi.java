@@ -44,10 +44,10 @@ public interface ImageApi {
                     )
             }
     )
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     ResponseEntity<Long> uploadImage(
             @Parameter(description = "업로드할 이미지 파일", required = true)
-            MultipartFile file
+            @RequestPart MultipartFile file
     ) throws IOException;
 
     @Operation(

@@ -32,7 +32,7 @@ public class ImageController implements ImageApi {
     // 이미지 업로드
     @Override
     public ResponseEntity<Long> uploadImage(
-            @RequestParam("file") MultipartFile file
+            @RequestPart("file") MultipartFile file
     ) throws IOException {
         return ResponseEntity.ok(imageService.upload(file));
     }
