@@ -13,5 +13,5 @@ public class UserSignUpRequest {
     private String password;
     private String phone;
     private String nickname;
-    private String profile;
+    private Long profile;
 }

@@ -1,6 +1,7 @@
 package life.eventory.user.controller;
 
 import life.eventory.user.dto.UserInfoResponse;
+import life.eventory.user.dto.UserLocationRequest;
 import life.eventory.user.dto.UserSignUpRequest;
 import life.eventory.user.dto.UserUpdateRequest;
 import life.eventory.user.service.UserService;
@@ -29,5 +30,11 @@ public class UserController {
     public ResponseEntity<UserUpdateRequest> update(@RequestBody UserUpdateRequest request) {
         UserUpdateRequest userUpdateRequest = userService.update(request);
         return ResponseEntity.ok(userUpdateRequest);
+    }
+
+    @PostMapping("/location")
+    public ResponseEntity<UserLocationRequest> location(@RequestBody UserLocationRequest request) {
+        UserLocationRequest userLocationRequest = userService.location(request);
+        return ResponseEntity.ok(userLocationRequest);
     }
 }
