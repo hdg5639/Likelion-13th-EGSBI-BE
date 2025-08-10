@@ -67,6 +67,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
                 "https://eventory.life",
                 "http://127.0.0.1:3000",
+                "http://127.0.0.1:10000",
+                "http://127.0.0.1:11000",
+                "http://127.0.0.1:12000",
                 "https://swagger.gamja.cloud"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
