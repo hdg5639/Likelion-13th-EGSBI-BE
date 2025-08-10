@@ -1,6 +1,7 @@
 package life.eventory.event.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +34,11 @@ public class EventController {
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MULTIPART_FORM_DATA_VALUE,
-                            schema = @Schema(implementation = CreateEventRequest.class)
+                            schema = @Schema(implementation = CreateEventRequest.class),
+                            encoding = {
+                                @Encoding(name = "event", contentType = "application/json"),
+                                @Encoding(name = "image", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                            }
                     )
             )
     )
@@ -46,7 +51,7 @@ public class EventController {
                             schema = @Schema(implementation = NewEventDTO.class)
                     )
             )
-            @RequestPart("event") NewEventDTO newEventDTO,
+            @RequestPart(value = "event") NewEventDTO newEventDTO,
             @Parameter(
                     description = "포스터 이미지 파일 (선택)",
                     content = @Content(
