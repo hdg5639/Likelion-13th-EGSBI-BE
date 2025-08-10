@@ -38,3 +38,5 @@ jobs:
             sleep 40
             
             docker restart aggregator
+            
+            docker builder prune -f
