@@ -1,7 +1,6 @@
 package life.eventory.image.service.impl;
 
 import jakarta.transaction.Transactional;
-import life.eventory.image.dto.ReturnDTO;
 import life.eventory.image.entity.Image;
 import life.eventory.image.repository.ImageRepository;
 import life.eventory.image.service.ImageService;
@@ -31,7 +30,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public ReturnDTO upload(MultipartFile file) throws IOException {
+    public Long upload(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("빈 파일");
         }
@@ -48,11 +47,10 @@ public class ImageServiceImpl implements ImageService {
         Files.copy(file.getInputStream(), filepath);
 
         // 4. DB 저장
-        Image image = imageRepository.save(Image.builder()
+        return imageRepository.save(Image.builder()
                 .storedFileName(storedFilename)
-                .build());
-
-        return new ReturnDTO(image.getId());
+                .build())
+                .getId();
     }
 
     @Override

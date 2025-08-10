@@ -1,6 +1,5 @@
 package life.eventory.image.controller;
 
-import life.eventory.image.dto.ReturnDTO;
 import life.eventory.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class ImageController implements ImageApi {
 
     // 이미지 업로드
     @Override
-    public ResponseEntity<ReturnDTO> uploadImage(
+    public ResponseEntity<Long> uploadImage(
             @RequestParam("file") MultipartFile file
     ) throws IOException {
         return ResponseEntity.ok(imageService.upload(file));

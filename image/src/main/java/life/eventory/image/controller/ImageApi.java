@@ -2,13 +2,11 @@ package life.eventory.image.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.StringToClassMapItem;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import life.eventory.image.dto.ReturnDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +31,10 @@ public interface ImageApi {
                             description = "업로드 성공",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ReturnDTO.class)
+                                    schema = @Schema(
+                                            implementation = Long.class,
+                                            example = "1"
+                                    )
                             )
                     ),
                     @ApiResponse(
@@ -44,7 +45,7 @@ public interface ImageApi {
             }
     )
     @PostMapping
-    ResponseEntity<ReturnDTO> uploadImage(
+    ResponseEntity<Long> uploadImage(
             @Parameter(description = "업로드할 이미지 파일", required = true)
             MultipartFile file
     ) throws IOException;
