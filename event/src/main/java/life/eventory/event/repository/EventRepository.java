@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    @Query("select new life.eventory.event.dto.EventDTO(e.id, e.organizerId, e.name, e.description, e.startTime, e.endTime, e.address, e.latitude, e.longitude, e.entryFee) from Event e where e.organizerId = :organizerId")
+    @Query("select new life.eventory.event.dto.EventDTO(e.id, e.organizerId, e.name,e.posterId , e.description, e.startTime, e.endTime, e.address, e.latitude, e.longitude, e.entryFee) from Event e where e.organizerId = :organizerId")
     List<EventDTO> findAllByOrganizerId(Long organizerId);
 }
