@@ -29,11 +29,16 @@ public class EventServiceImpl implements EventService {
             imageId = communicationService.uploadPoster(image);
         }
 
-        return entityToDTO(
-                eventRepository.save(
-                        newEventDTOToEntity(newEventDTO, imageId)
-                )
-        );
+        try {
+            return entityToDTO(
+                    eventRepository.save(
+                            newEventDTOToEntity(newEventDTO, imageId)
+                    )
+            );
+        }  catch (Exception e) {
+            communicationService.deletePoster(imageId);
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 
     @Override

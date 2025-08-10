@@ -7,10 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -21,6 +19,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -66,12 +66,58 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to upload poster");
         } catch (Exception e) {
-            log.error("Exception occurred while calling IMAGE-SERVER", e);
-            log.error("Exception type: {}", e.getClass().getSimpleName());
-            log.error("Exception message: {}", e.getMessage());
-
+            imageErrorLog(e);
             throw new IllegalStateException("Failed to send request to Image-Server", e);
         }
+    }
+
+    @Override
+    public void deletePoster(Long posterId) {
+        ServiceInstance imageInstance = getImageInstance();
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/image/" + posterId)
+                .build()
+                .toUri();
+
+        // RestTemplate 검사
+        if (restTemplate == null) {
+            log.error("RestTemplate is null");
+            throw new IllegalStateException("RestTemplate is not initialized");
+        }
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(null, headers);
+
+        try {
+            ResponseEntity<Map<String, String>> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.DELETE,
+                            requestEntity,
+                            new ParameterizedTypeReference<>() {
+                            });
+
+            if (response.getStatusCode().is2xxSuccessful() &&
+                    Objects.requireNonNull(response.getBody()).get("status").equals("success")) {
+                return;
+            }
+
+            throw new IllegalStateException("Failed to delete poster");
+        } catch (Exception e) {
+            imageErrorLog(e);
+            throw new IllegalStateException("Failed to send request to Image-Server", e);
+        }
+    }
+
+    private void imageErrorLog(Exception e) {
+        log.error("Exception occurred while calling IMAGE-SERVER", e);
+        log.error("Exception type: {}", e.getClass().getSimpleName());
+        log.error("Exception message: {}", e.getMessage());
     }
 
     // Image 인스턴스 조회
