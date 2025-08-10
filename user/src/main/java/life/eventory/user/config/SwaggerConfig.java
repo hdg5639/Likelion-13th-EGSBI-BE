@@ -22,7 +22,7 @@ public class SwaggerConfig {
     private Info apiInfo() {
         return new Info()
                 .title("이벤토리")
-                .description("이벤토리 {서버명} 서버 API Docs")
+                .description("이벤토리 User 서버 API Docs")
                 .version("1.0.0");
     }
 }
