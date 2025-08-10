@@ -1,5 +1,6 @@
 package life.eventory.event.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +39,21 @@ public class EventController {
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventDTO> createEvent(
+            @Parameter(
+                    description = "이벤트 본문(JSON)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = NewEventDTO.class)
+                    )
+            )
             @RequestPart("event") NewEventDTO newEventDTO,
+            @Parameter(
+                    description = "포스터 이미지 파일 (선택)",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                            schema = @Schema(type = "string", format = "binary")
+                    )
+            )
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(eventService.createEvent(newEventDTO, image));
