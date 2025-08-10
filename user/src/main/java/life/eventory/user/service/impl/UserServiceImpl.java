@@ -2,6 +2,7 @@ package life.eventory.user.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.user.dto.UserInfoResponse;
+import life.eventory.user.dto.UserLocationRequest;
 import life.eventory.user.dto.UserSignUpRequest;
 import life.eventory.user.dto.UserUpdateRequest;
 import life.eventory.user.entity.UserEntity;
@@ -58,21 +59,32 @@ public class UserServiceImpl implements UserService {
             String encodedPassword = passwordEncoder.encode(request.getPassword());
             user.setPassword(encodedPassword);
         }
-
         if (request.getName() != null && !request.getName().isBlank())
             user.setName(request.getName());
-
         if (request.getNickname() != null && !request.getNickname().isBlank())
             user.setNickname(request.getNickname());
-
         if (request.getPhone() != null && !request.getPhone().isBlank())
             user.setPhone(request.getPhone());
-
-        if (request.getProfile() != null && !request.getProfile().isBlank())
+        if (request.getProfile() != null)
             user.setProfile(request.getProfile());
 
         userRepository.save(user);
+        return request;
+    }
 
+    @Override
+    public UserLocationRequest location(UserLocationRequest request) {
+        UserEntity user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if (request.getLatitude() != null)
+            user.setLatitude(request.getLatitude());
+        if (request.getLongitude() != null)
+            user.setLongitude(request.getLongitude());
+        if (request.getAddress() != null && !request.getAddress().isBlank())
+            user.setAddress(request.getAddress());
+
+        userRepository.save(user);
         return request;
     }
 }
