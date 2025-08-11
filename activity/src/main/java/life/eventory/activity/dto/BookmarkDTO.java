@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookmarkDTO {
-    private Long bookmarkId;
+    private Long id;
     private Long userId;
     private Long eventId;
 }

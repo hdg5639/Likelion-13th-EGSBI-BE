@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HistoryDTO {
-    private Long historyId;
+    private Long id;
     private Long userId;
     private Long eventId;
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bookmark")
+@RequestMapping("/api/activity/bookmark")
 @RequiredArgsConstructor
 public class BookmarkController {
     private final BookmarkService bookmarkService;

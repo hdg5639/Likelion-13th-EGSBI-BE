@@ -5,7 +5,7 @@ import life.eventory.activity.dto.BookmarkDTO;
 import lombok.*;
 
 @Entity
-@Table(name="bookmark")
+@Table(name="t_bookmark")
 @Builder
 @Getter
 @Setter
@@ -15,14 +15,14 @@ import lombok.*;
 public class BookmarkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookmarkId;
+    private Long id;
 
     private Long userId;
     private Long eventId;
 
     public BookmarkDTO toDTO() {
         return BookmarkDTO.builder()
-                .bookmarkId(bookmarkId)
+                .id(id)
                 .userId(userId)
                 .eventId(eventId)
                 .build();

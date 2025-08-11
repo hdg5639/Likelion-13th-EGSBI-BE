@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="history")
+@Table(name="t_history")
 @Builder
 @Getter
 @Setter
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class HistoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long historyId;
+    private Long id;
 
     private Long userId;
     private Long eventId;
@@ -27,7 +27,7 @@ public class HistoryEntity {
 
     public HistoryDTO toDTO() {
         return HistoryDTO.builder()
-                .historyId(historyId)
+                .id(id)
                 .userId(userId)
                 .eventId(eventId)
                 .viewedAt(viewedAt)
