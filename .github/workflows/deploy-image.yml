@@ -1,0 +1,42 @@
+name: Deploy image
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'image/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: SSH Deploy image only
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/gamja/eventory
+            git pull origin develop
+            
+            cd image
+            mkdir -p images
+            
+            docker stop image || true
+            docker rm image || true
+            docker rmi image || true
+            docker build -t image .
+            docker run -d -p 13000:13000 --network gamjanet --name image --env-file image.env -v /home/gamja/eventory/image/images:/home/gamja/eventory/image/images image
+
+            echo "Image service is ready, starting aggregator..."
+            
+            sleep 40
+            
+            docker restart aggregator
+            
+            docker builder prune -f

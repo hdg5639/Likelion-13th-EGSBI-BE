@@ -21,6 +21,8 @@ public class Event {
     private Long organizerId;
     @Column(nullable = false)
     private String name;
+    // Poster는 null 허용
+    private Long posterId;
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)

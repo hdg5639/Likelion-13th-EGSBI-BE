@@ -1,0 +1,40 @@
+name: Deploy user
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'user/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: SSH Deploy user only
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/gamja/eventory
+            git pull origin develop
+            
+            cd user
+            docker stop user || true
+            docker rm user || true
+            docker rmi user || true
+            docker build -t user .
+            docker run -d -p 10000:10000 --network gamjanet --name user --env-file user.env user
+            
+            echo "User service is ready, starting aggregator..."
+
+            sleep 40
+            
+            docker restart aggregator
+            
+            docker builder prune -f

@@ -1,6 +1,9 @@
 package life.eventory.gateway.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.DedupeResponseHeaderGatewayFilterFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -67,6 +70,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
                 "https://eventory.life",
                 "http://127.0.0.1:3000",
+                "http://127.0.0.1:10000",
+                "http://127.0.0.1:11000",
+                "http://127.0.0.1:12000",
                 "https://swagger.gamja.cloud"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
@@ -76,5 +82,15 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean
+    public GlobalFilter dedupeHeaders() {
+        GatewayFilter gf = new DedupeResponseHeaderGatewayFilterFactory()
+                .apply(c -> {
+                    c.setName("Access-Control-Allow-Origin");
+                    c.setStrategy(DedupeResponseHeaderGatewayFilterFactory.Strategy.RETAIN_UNIQUE);
+                });
+        return gf::filter;
     }
 }
