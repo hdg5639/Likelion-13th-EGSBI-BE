@@ -47,13 +47,14 @@ public class SecurityConfig {
                                 "http://127.0.0.1:10000",
                                 "http://127.0.0.1:11000",
                                 "http://127.0.0.1:12000",
+                                "http://127.0.0.1:13000",
                                 "https://swagger.gamja.cloud",
                                 "https://gateway.gamja.cloud",
                                 "https://eventory.life"
                         )
-                        .allowedMethods("GET","POST","PUT","PATCH","DELETE","OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .exposedHeaders("Location","Content-Disposition")
+                        .exposedHeaders("Location", "Content-Disposition")
                         .allowCredentials(false)
                         .maxAge(3600);
             }
