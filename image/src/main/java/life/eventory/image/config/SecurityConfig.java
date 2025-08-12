@@ -44,14 +44,9 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "http://localhost:3000",
-                                "http://127.0.0.1:3000",
-                                "http://127.0.0.1:10000",
-                                "http://127.0.0.1:11000",
-                                "http://127.0.0.1:12000",
-                                "http://127.0.0.1:13000",
-                                "https://swagger.gamja.cloud",
-                                "https://gateway.gamja.cloud",
+                                "http://localhost:*",
+                                "http://127.0.0.1:*",
+                                "https://*.gamja.cloud",
                                 "https://eventory.life"
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
