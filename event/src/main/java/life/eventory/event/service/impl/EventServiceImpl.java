@@ -67,9 +67,6 @@ public class EventServiceImpl implements EventService {
             newImageId = communicationService.uploadPoster(image);
         }
 
-        // 이벤트 정보 업데이트
-        event = eventUpdate(eventDTO);
-
         // 이미지 ID 설정
         if (newImageId != null) {
             event.setPosterId(newImageId);
@@ -80,7 +77,7 @@ public class EventServiceImpl implements EventService {
             if (oldImageId != null) {
                 communicationService.deletePoster(oldImageId);
             }
-            return entityToDTO(eventRepository.save(event));
+            return entityToDTO(eventRepository.save(eventUpdate(eventDTO, event)));
         } catch (Exception e) {
             // 오류 발생 시 새로운 이미지 삭제
             if (newImageId != null) {
@@ -89,7 +86,6 @@ public class EventServiceImpl implements EventService {
             throw new IllegalStateException(e.getMessage());
         }
     }
-
 
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
@@ -122,17 +118,15 @@ public class EventServiceImpl implements EventService {
                 .build();
     }
 
-    private Event eventUpdate(EventDTO eventDTO) {
-        return Event.builder()
-                .name(eventDTO.getName())
-                .posterId(eventDTO.getPosterId())
-                .description(eventDTO.getDescription())
-                .startTime(eventDTO.getStartTime())
-                .endTime(eventDTO.getEndTime())
-                .address(eventDTO.getAddress())
-                .latitude(eventDTO.getLatitude())
-                .longitude(eventDTO.getLongitude())
-                .entryFee(eventDTO.getEntryFee())
-                .build();
+    private Event eventUpdate(EventDTO eventDTO, Event event) {
+        event.setName(eventDTO.getName());
+        event.setDescription(eventDTO.getDescription());
+        event.setStartTime(eventDTO.getStartTime());
+        event.setEndTime(eventDTO.getEndTime());
+        event.setAddress(eventDTO.getAddress());
+        event.setLatitude(eventDTO.getLatitude());
+        event.setLongitude(eventDTO.getLongitude());
+        event.setEntryFee(eventDTO.getEntryFee());
+        return event;
     }
 }
