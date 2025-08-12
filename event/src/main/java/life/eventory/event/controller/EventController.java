@@ -26,17 +26,17 @@ public class EventController implements EventApi {
                 .body(eventService.createEvent(newEventDTO, image));
     }
 
-    @GetMapping("/{organizerId}")
+    @Override
     public ResponseEntity<List<EventDTO>> findAllByOrganizerId(@PathVariable Long organizerId) {
         return ResponseEntity.ok(eventService.findAllByOrganizerId(organizerId));
     }
 
-//    @PatchMapping
-//    public ResponseEntity<EventDTO> updateEvent(
-//            @RequestPart(value = "event") EventDTO eventDTO,
-//            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-//
-//    }
+    @Override
+    public ResponseEntity<EventDTO> updateEvent(
+            @RequestPart(value = "event") EventDTO eventDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        return ResponseEntity.ok(eventService.updateEvent(eventDTO, image));
+    }
 //    @GetMapping
 //    public ResponseEntity<List<EventDTO>> getEventsPage(@RequestParam Integer page, @RequestParam Integer size) {
 //        return ResponseEntity.ok(eventService.getEventPage(page, size));
