@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.CreateEventRequest;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.NewEventDTO;
+import life.eventory.event.dto.UpdateEventRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,4 +91,34 @@ public interface EventApi {
     )
     @GetMapping("/{organizerId}")
     ResponseEntity<List<EventDTO>> findAllByOrganizerId(@PathVariable Long organizerId);
+
+    @Operation(summary = "행사 생성",
+            requestBody = @RequestBody(
+                    content = @Content(
+                            mediaType = MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(implementation = UpdateEventRequest.class),
+                            encoding = {
+                                    @Encoding(name = "event", contentType = "application/json"),
+                                    @Encoding(name = "image", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                            }
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "수정 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = EventDTO.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청(필드 검증 실패/누락)", content = @Content),
+                    @ApiResponse(responseCode = "415", description = "지원하지 않는 Content-Type", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<EventDTO> updateEvent(
+            @RequestPart(value = "event") EventDTO eventDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException;
 }

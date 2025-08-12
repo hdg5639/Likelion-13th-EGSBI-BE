@@ -53,6 +53,44 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAllByOrganizerId(organizerId);
     }
 
+    @Override
+    public EventDTO updateEvent(EventDTO eventDTO, MultipartFile image) throws IOException {
+        Event event = eventRepository.findById(eventDTO.getId()).orElseThrow(() -> new IllegalStateException("Event not found"));
+
+        Long oldImageId = event.getPosterId();
+        // 혹시 모를 posterId 변조값 방지
+        eventDTO.setPosterId(oldImageId);
+        Long newImageId = null;
+
+        // 이미지 파일이 있을 경우 업로드
+        if (hasFile(image)) {
+            newImageId = communicationService.uploadPoster(image);
+        }
+
+        // 이벤트 정보 업데이트
+        event = eventUpdate(eventDTO);
+
+        // 이미지 ID 설정
+        if (newImageId != null) {
+            event.setPosterId(newImageId);
+        }
+
+        try {
+            // 이전 이미지가 있으면 삭제
+            if (oldImageId != null) {
+                communicationService.deletePoster(oldImageId);
+            }
+            return entityToDTO(eventRepository.save(event));
+        } catch (Exception e) {
+            // 오류 발생 시 새로운 이미지 삭제
+            if (newImageId != null) {
+                communicationService.deletePoster(newImageId);
+            }
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
+
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
                 .organizerId(newEventDTO.getOrganizerId())
@@ -81,6 +119,20 @@ public class EventServiceImpl implements EventService {
                 .latitude(event.getLatitude())
                 .longitude(event.getLongitude())
                 .entryFee(event.getEntryFee())
+                .build();
+    }
+
+    private Event eventUpdate(EventDTO eventDTO) {
+        return Event.builder()
+                .name(eventDTO.getName())
+                .posterId(eventDTO.getPosterId())
+                .description(eventDTO.getDescription())
+                .startTime(eventDTO.getStartTime())
+                .endTime(eventDTO.getEndTime())
+                .address(eventDTO.getAddress())
+                .latitude(eventDTO.getLatitude())
+                .longitude(eventDTO.getLongitude())
+                .entryFee(eventDTO.getEntryFee())
                 .build();
     }
 }
