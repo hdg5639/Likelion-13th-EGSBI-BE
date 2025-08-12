@@ -92,7 +92,7 @@ public interface EventApi {
     @GetMapping("/{organizerId}")
     ResponseEntity<List<EventDTO>> findAllByOrganizerId(@PathVariable Long organizerId);
 
-    @Operation(summary = "행사 생성",
+    @Operation(summary = "행사 수정",
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MULTIPART_FORM_DATA_VALUE,
