@@ -9,6 +9,7 @@ import life.eventory.event.service.CommunicationService;
 import life.eventory.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,11 +22,17 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final CommunicationService communicationService;
 
+    // 파일 존재 유무 판별 로직
+    private boolean hasFile(MultipartFile f) {
+        return f != null && !f.isEmpty()
+                && f.getSize() > 0
+                && StringUtils.hasText(f.getOriginalFilename());
+    }
 
     @Override
     public EventDTO createEvent(NewEventDTO newEventDTO,  MultipartFile image) throws IOException {
         Long imageId = null;
-        if (image != null) {
+        if (hasFile(image)) {
             imageId = communicationService.uploadPoster(image);
         }
 
