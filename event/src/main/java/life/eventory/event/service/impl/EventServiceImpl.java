@@ -87,7 +87,6 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
                 .organizerId(newEventDTO.getOrganizerId())
