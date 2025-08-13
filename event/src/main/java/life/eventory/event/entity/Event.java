@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_event")
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {
@@ -37,4 +40,17 @@ public class Event {
     private Double longitude;
     @Column(nullable = false)
     private Integer entryFee;
+    @Column(nullable = false)
+    private LocalDateTime createTime;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "t_event_tag",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "tag_id"})
+    )
+    @Builder.Default
+    @ToString.Exclude
+    private Set<Tag> tags = new LinkedHashSet<>();
 }

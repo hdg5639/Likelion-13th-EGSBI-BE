@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Schema(description = "신규 이벤트 생성 요청 DTO")
 @Builder
@@ -39,4 +40,7 @@ public class NewEventDTO {
 
     @Schema(description = "참가비 (원)", example = "10000")
     private Integer entryFee;
+
+    @Schema(description = "해시태그 목록", example = "[\"야시장\",\"음악\",\"대구축제\"]")
+    private List<String> hashtags;
 }
