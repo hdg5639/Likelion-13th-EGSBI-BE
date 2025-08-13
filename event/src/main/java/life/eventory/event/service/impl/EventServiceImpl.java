@@ -4,45 +4,62 @@ import jakarta.transaction.Transactional;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.NewEventDTO;
 import life.eventory.event.entity.Event;
+import life.eventory.event.entity.Tag;
 import life.eventory.event.repository.EventRepository;
 import life.eventory.event.service.CommunicationService;
 import life.eventory.event.service.EventService;
+import life.eventory.event.service.EventTagService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final EventTagService eventTagService;
     private final CommunicationService communicationService;
 
     // 파일 존재 유무 판별 로직
     private boolean hasFile(MultipartFile f) {
-        return f != null && !f.isEmpty()
-                && f.getSize() > 0
-                && StringUtils.hasText(f.getOriginalFilename());
+        if (f == null) return false;
+        log.info("file size {}", f.getSize());
+        if (f.isEmpty()) return false; // size=0 or filename empty 포함
+        if (f.getSize() == 0) return false;
+        log.info("file content type {}", f.getContentType());
+        if (f.getContentType() == null) return false;
+        log.info("file file name {}", f.getOriginalFilename());
+        if (f.getOriginalFilename() == null) return false;
+        return StringUtils.hasText(f.getOriginalFilename());
     }
 
     @Override
     public EventDTO createEvent(NewEventDTO newEventDTO,  MultipartFile image) throws IOException {
         Long imageId = null;
-        if (hasFile(image)) {
+        boolean hasImage = hasFile(image);
+        log.info("status {}", hasImage);
+        if (hasImage) {
             imageId = communicationService.uploadPoster(image);
         }
 
         try {
+            log.info("create event {}", newEventDTO);
             return entityToDTO(
-                    eventRepository.save(
-                            newEventDTOToEntity(newEventDTO, imageId)
-                    )
+                    eventTagService.setEventHashtags(
+                            eventRepository.save(newEventDTOToEntity(newEventDTO, imageId)).getId(),
+                            newEventDTO.getHashtags()
+                )
             );
         }  catch (Exception e) {
+            log.error(e.getMessage());
             communicationService.deletePoster(imageId);
             throw new IllegalStateException(e.getMessage());
         }
@@ -50,7 +67,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDTO> findAllByOrganizerId(Long organizerId) {
-        return eventRepository.findAllByOrganizerId(organizerId);
+        return getByOrganizer(organizerId);
     }
 
     @Override
@@ -77,7 +94,12 @@ public class EventServiceImpl implements EventService {
             if (oldImageId != null) {
                 communicationService.deletePoster(oldImageId);
             }
-            return entityToDTO(eventRepository.save(eventUpdate(eventDTO, event)));
+            return entityToDTO(
+                    eventTagService.setEventHashtags(
+                            eventRepository.save(eventUpdate(eventDTO, event)).getId(),
+                            eventDTO.getHashtags()
+                    )
+            );
         } catch (Exception e) {
             // 오류 발생 시 새로운 이미지 삭제
             if (newImageId != null) {
@@ -99,6 +121,7 @@ public class EventServiceImpl implements EventService {
                 .latitude(newEventDTO.getLatitude())
                 .longitude(newEventDTO.getLongitude())
                 .entryFee(newEventDTO.getEntryFee())
+                .createTime(LocalDateTime.now())
                 .build();
     }
 
@@ -115,6 +138,12 @@ public class EventServiceImpl implements EventService {
                 .latitude(event.getLatitude())
                 .longitude(event.getLongitude())
                 .entryFee(event.getEntryFee())
+                .createTime(event.getCreateTime())
+                .hashtags(
+                        event.getTags() == null ?
+                                List.of() :
+                                event.getTags().stream().map(Tag::getDisplayName).toList()
+                )
                 .build();
     }
 
@@ -128,5 +157,10 @@ public class EventServiceImpl implements EventService {
         event.setLongitude(eventDTO.getLongitude());
         event.setEntryFee(eventDTO.getEntryFee());
         return event;
+    }
+
+    private List<EventDTO> getByOrganizer(Long organizerId) {
+        List<Event> events = eventRepository.findAllByOrganizerIdOrderByCreateTimeAsc(organizerId);
+        return events.stream().map(this::entityToDTO).toList();
     }
 }
