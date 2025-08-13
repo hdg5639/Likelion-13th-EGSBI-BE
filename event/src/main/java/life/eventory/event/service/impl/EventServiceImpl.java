@@ -60,8 +60,9 @@ public class EventServiceImpl implements EventService {
             );
         }  catch (Exception e) {
             log.error(e.getMessage());
-            if(hasImage)
+            if(hasImage) {
                 communicationService.deletePoster(imageId);
+            }
             throw new IllegalStateException(e.getMessage());
         }
     }
