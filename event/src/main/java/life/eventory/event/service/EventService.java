@@ -1,6 +1,7 @@
 package life.eventory.event.service;
 
 import life.eventory.event.dto.EventDTO;
+import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,5 +12,6 @@ public interface EventService {
     EventDTO createEvent(NewEventDTO newEventDTO, MultipartFile image) throws IOException;
     List<EventDTO> findAllByOrganizerId(Long organizerId);
     EventDTO updateEvent(EventDTO eventDTO,  MultipartFile image) throws IOException;
-    List<EventDTO> getEventPage(Integer page, Integer size);
+    List<EventDTO> getEventPage(Integer page, Integer size, Boolean deadline);
+    List<EventDTO> getEventPage(Integer page, Integer size, LocationDTO locationDTO, Boolean deadline);
 }
