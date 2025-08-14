@@ -39,21 +39,21 @@ public class EventController implements EventApi {
         return ResponseEntity.ok(eventService.updateEvent(eventDTO, image));
     }
 
-    // TODO: 최신순 / 거리순 / 마감 제외 / 마감 포함 / 인기순
+    // TODO: 인기순
     // 전체 조회
     @Override
-    public ResponseEntity<List<EventDTO>> getEventsByLocationPage(@RequestParam Integer page,
-                                                                  @RequestParam Integer size,
-                                                                  @RequestParam Boolean deadline) {
+    public ResponseEntity<List<EventDTO>> getEventsPage(@RequestParam Integer page,
+                                                        @RequestParam Integer size,
+                                                        @RequestParam Boolean deadline) {
         return ResponseEntity.ok(eventService.getEventPage(page, size, deadline));
     }
 
     @Override
-    public ResponseEntity<List<EventDTO>> getEventsByLocationPage(@RequestParam Integer page,
-                                                                  @RequestParam Integer size,
-                                                                  @RequestParam Boolean deadline,
-                                                                  @RequestParam Double latitude,
-                                                                  @RequestParam Double longitude) {
+    public ResponseEntity<List<EventDTO>> getEventsPage(@RequestParam Integer page,
+                                                        @RequestParam Integer size,
+                                                        @RequestParam Boolean deadline,
+                                                        @RequestParam Double latitude,
+                                                        @RequestParam Double longitude) {
         return ResponseEntity.ok(eventService.getEventPage(page, size, new LocationDTO(latitude, longitude), deadline));
     }
 }

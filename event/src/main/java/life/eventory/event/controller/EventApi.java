@@ -140,7 +140,7 @@ public interface EventApi {
             }
     )
     @GetMapping
-    ResponseEntity<List<EventDTO>> getEventsByLocationPage(
+    ResponseEntity<List<EventDTO>> getEventsPage(
             @Parameter(description = "페이지 번호", example = "1")
             @RequestParam Integer page,
             @Parameter(description = "페이지 사이즈", example = "10")
@@ -171,7 +171,7 @@ public interface EventApi {
             }
     )
     @GetMapping("/loc")
-    ResponseEntity<List<EventDTO>> getEventsByLocationPage(
+    ResponseEntity<List<EventDTO>> getEventsPage(
             @Parameter(description = "페이지 번호", example = "1")
             @RequestParam Integer page,
             @Parameter(description = "페이지 사이즈", example = "10")
