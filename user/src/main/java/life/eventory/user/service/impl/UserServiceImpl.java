@@ -1,10 +1,7 @@
 package life.eventory.user.service.impl;
 
 import jakarta.transaction.Transactional;
-import life.eventory.user.dto.UserInfoResponse;
-import life.eventory.user.dto.UserLocationRequest;
-import life.eventory.user.dto.UserSignUpRequest;
-import life.eventory.user.dto.UserUpdateRequest;
+import life.eventory.user.dto.*;
 import life.eventory.user.entity.UserEntity;
 import life.eventory.user.repository.UserRepository;
 import life.eventory.user.service.CommunicationService;
@@ -101,5 +98,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean UserExist(Long id){
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public UserLocationResponse getUserLocation(Long id){
+        UserEntity user = userRepository.findById(id).get();
+
+        return UserLocationResponse.builder()
+                .id(user.getId())
+                .latitude(user.getLatitude())
+                .longitude(user.getLongitude())
+                .address(user.getAddress())
+                .build();
     }
 }

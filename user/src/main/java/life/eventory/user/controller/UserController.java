@@ -1,9 +1,6 @@
 package life.eventory.user.controller;
 
-import life.eventory.user.dto.UserInfoResponse;
-import life.eventory.user.dto.UserLocationRequest;
-import life.eventory.user.dto.UserSignUpRequest;
-import life.eventory.user.dto.UserUpdateRequest;
+import life.eventory.user.dto.*;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +43,11 @@ public class UserController {
     @GetMapping("/exists/{id}")
     public boolean checkUserExists(@PathVariable Long id) {
         return userService.UserExist(id);
+    }
+
+    @GetMapping("/location_info/{id}")
+    public ResponseEntity<UserLocationResponse> locationInfo(@PathVariable Long id) {
+        UserLocationResponse location =  userService.getUserLocation(id);
+        return ResponseEntity.ok(location);
     }
 }
