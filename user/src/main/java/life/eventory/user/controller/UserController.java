@@ -8,6 +8,9 @@ import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -16,8 +19,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public void signup(@RequestBody UserSignUpRequest request) {
-        userService.signup(request);
+    public void signup(
+            @RequestPart(value = "user") UserSignUpRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile file) throws IOException {
+        userService.signup(request, file);
     }
 
     @GetMapping("/info")
