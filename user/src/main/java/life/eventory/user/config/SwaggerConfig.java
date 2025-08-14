@@ -16,7 +16,10 @@ public class SwaggerConfig {
                 .info(apiInfo())
                 .addServersItem(new Server()
                         .url("https://gateway.gamja.cloud")
-                        .description("Production server"));
+                        .description("Production server"))
+                .addServersItem(new Server()
+                        .url("http://localhost:10000")
+                        .description("local server"));
     }
 
     private Info apiInfo() {

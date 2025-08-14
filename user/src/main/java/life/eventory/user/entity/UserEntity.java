@@ -30,15 +30,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
     private Long profile;
-
-    @Column
     private Double latitude;
-
-    @Column
     private Double longitude;
-
-    @Column
     private String address;
 }

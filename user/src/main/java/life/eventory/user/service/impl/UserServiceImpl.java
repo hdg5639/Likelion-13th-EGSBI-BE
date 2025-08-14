@@ -7,10 +7,14 @@ import life.eventory.user.dto.UserSignUpRequest;
 import life.eventory.user.dto.UserUpdateRequest;
 import life.eventory.user.entity.UserEntity;
 import life.eventory.user.repository.UserRepository;
+import life.eventory.user.service.CommunicationService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,14 +22,20 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommunicationService communicationService;
 
     @Override
-    public void signup(UserSignUpRequest request) {
+    public void signup(UserSignUpRequest request, MultipartFile file) throws IOException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        Long profileImageId = null;
+        if(file != null && !file.isEmpty()) {
+            profileImageId = communicationService.uploadProfile(file);
+        }
 
         UserEntity user = new UserEntity();
         user.setEmail(request.getEmail());
@@ -33,7 +43,7 @@ public class UserServiceImpl implements UserService {
         user.setName(request.getName());
         user.setNickname(request.getNickname());
         user.setPhone(request.getPhone());
-        user.setProfile(request.getProfile());
+        user.setProfile(profileImageId);
 
         userRepository.save(user);
     }
