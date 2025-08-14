@@ -13,4 +13,5 @@ public interface UserService {
     UserInfoResponse getUserByEmail(String email);
     UserUpdateRequest update(UserUpdateRequest request);
     UserLocationRequest location(UserLocationRequest request);
+    boolean UserExist(Long id);
 }
