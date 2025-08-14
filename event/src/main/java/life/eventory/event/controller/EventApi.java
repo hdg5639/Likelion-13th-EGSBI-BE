@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import life.eventory.event.dto.CreateEventRequest;
-import life.eventory.event.dto.EventDTO;
-import life.eventory.event.dto.NewEventDTO;
-import life.eventory.event.dto.UpdateEventRequest;
+import life.eventory.event.dto.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -124,6 +121,11 @@ public interface EventApi {
 
     @Operation(
             summary = "이벤트 전체 조회 (페이징, 날짜 최신순 자동 정렬)",
+            parameters = {
+                    @Parameter(name = "page", description = "페이지 번호", required = true, example = "1"),
+                    @Parameter(name = "size", description = "페이지 사이즈", required = true, example = "10"),
+                    @Parameter(name = "deadline", description = "마감일 포함 토글 (포함: true, 제외: false)", required = true, example = "true")
+            },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -138,9 +140,46 @@ public interface EventApi {
             }
     )
     @GetMapping
-    ResponseEntity<List<EventDTO>> getEventsPage(
+    ResponseEntity<List<EventDTO>> getEventsByLocationPage(
             @Parameter(description = "페이지 번호", example = "1")
             @RequestParam Integer page,
             @Parameter(description = "페이지 사이즈", example = "10")
-            @RequestParam Integer size);
+            @RequestParam Integer size,
+            @Parameter(description = "마감일 포함 토글 (포함: true, 제외: false)", example = "true")
+            @RequestParam Boolean deadline);
+
+    @Operation(
+            summary = "이벤트 거리순 조회 (페이징, 거리순 자동 정렬)",
+            parameters = {
+                    @Parameter(name = "page", description = "페이지 번호", required = true, example = "1"),
+                    @Parameter(name = "size", description = "페이지 사이즈", required = true, example = "10"),
+                    @Parameter(name = "deadline", description = "마감일 포함 토글 (포함: true, 제외: false)", required = true, example = "true"),
+                    @Parameter(name = "latitude", description = "사용자 위치 (위도)", required = true, example = "35.8704"),
+                    @Parameter(name = "longitude", description = "사용자 위치 (경도)", required = true, example = "128.5912")
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = EventDTO.class))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/loc")
+    ResponseEntity<List<EventDTO>> getEventsByLocationPage(
+            @Parameter(description = "페이지 번호", example = "1")
+            @RequestParam Integer page,
+            @Parameter(description = "페이지 사이즈", example = "10")
+            @RequestParam Integer size,
+            @Parameter(description = "마감일 포함 토글 (포함: true, 제외: false)", example = "true")
+            @RequestParam Boolean deadline,
+            @Parameter(description = "사용자 위치 (위도)")
+            @RequestParam Double latitude,
+            @Parameter(description = "사용자 위치 (경도)")
+            @RequestParam Double longitude);
 }

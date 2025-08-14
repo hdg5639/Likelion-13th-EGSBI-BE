@@ -2,6 +2,7 @@ package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.EventDTO;
+import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -115,13 +115,27 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    // 기본 최신순 전체 조회
     @Override
-    public List<EventDTO> getEventPage(Integer page, Integer size) {
+    public List<EventDTO> getEventPage(Integer page, Integer size, Boolean deadline) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Event> eventPage = eventRepository.findAllByPage(pageable);
+        Page<Event> eventPage =
+                deadline ? eventRepository.findAllByPage(pageable) :
+                        eventRepository.findAllByPageExcludeClosed(pageable);
         return eventPage.getContent().stream()
                 .map(this::entityToDTO)
-                .sorted(Comparator.comparing(EventDTO::getCreateTime).reversed())
+                .toList();
+    }
+
+    // 거리순 전체 조회
+    @Override
+    public List<EventDTO> getEventPage(Integer page, Integer size, LocationDTO locationDTO, Boolean deadline) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Event> eventPage =
+                deadline ? eventRepository.findByDistance(locationDTO, pageable) :
+                        eventRepository.findByDistanceExcludeClosed(locationDTO, pageable);
+        return eventPage.getContent().stream()
+                .map(this::entityToDTO)
                 .toList();
     }
 
