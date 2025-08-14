@@ -42,4 +42,9 @@ public class UserController {
         UserLocationRequest userLocationRequest = userService.location(request);
         return ResponseEntity.ok(userLocationRequest);
     }
+
+    @GetMapping("/exists/{id}")
+    public boolean checkUserExists(@PathVariable Long id) {
+        return userService.UserExist(id);
+    }
 }
