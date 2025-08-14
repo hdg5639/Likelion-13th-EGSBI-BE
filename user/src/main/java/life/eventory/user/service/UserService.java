@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface UserService {
-    void signup(UserSignUpRequest request, MultipartFile file) throws IOException;
+    UserSignUpRequest signup(UserSignUpRequest request, MultipartFile file) throws IOException;
     UserInfoResponse getUserByEmail(String email);
     UserUpdateRequest update(UserUpdateRequest request);
     UserLocationRequest location(UserLocationRequest request);
