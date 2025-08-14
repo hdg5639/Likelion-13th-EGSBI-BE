@@ -11,4 +11,5 @@ public interface EventService {
     EventDTO createEvent(NewEventDTO newEventDTO, MultipartFile image) throws IOException;
     List<EventDTO> findAllByOrganizerId(Long organizerId);
     EventDTO updateEvent(EventDTO eventDTO,  MultipartFile image) throws IOException;
+    List<EventDTO> getEventPage(Integer page, Integer size);
 }

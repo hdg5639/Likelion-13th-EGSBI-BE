@@ -37,8 +37,9 @@ public class EventController implements EventApi {
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         return ResponseEntity.ok(eventService.updateEvent(eventDTO, image));
     }
-//    @GetMapping
-//    public ResponseEntity<List<EventDTO>> getEventsPage(@RequestParam Integer page, @RequestParam Integer size) {
-//        return ResponseEntity.ok(eventService.getEventPage(page, size));
-//    }
+
+    @Override
+    public ResponseEntity<List<EventDTO>> getEventsPage(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.ok(eventService.getEventPage(page, size));
+    }
 }

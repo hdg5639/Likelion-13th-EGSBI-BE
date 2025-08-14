@@ -11,12 +11,16 @@ import life.eventory.event.service.EventService;
 import life.eventory.event.service.EventTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -109,6 +113,16 @@ public class EventServiceImpl implements EventService {
             }
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<EventDTO> getEventPage(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Event> eventPage = eventRepository.findAllByPage(pageable);
+        return eventPage.getContent().stream()
+                .map(this::entityToDTO)
+                .sorted(Comparator.comparing(EventDTO::getCreateTime).reversed())
+                .toList();
     }
 
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {

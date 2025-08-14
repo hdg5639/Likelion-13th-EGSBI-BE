@@ -19,7 +19,7 @@ public class SwaggerConfig {
                         .description("Production server"))
                 .addServersItem(new Server()
                         .url("http://localhost:11000")
-                        .description("Production server"));
+                        .description("local server"));
     }
 
     private Info apiInfo() {

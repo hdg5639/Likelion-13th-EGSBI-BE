@@ -121,4 +121,26 @@ public interface EventApi {
     ResponseEntity<EventDTO> updateEvent(
             @RequestPart(value = "event") EventDTO eventDTO,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException;
+
+    @Operation(
+            summary = "이벤트 전체 조회 (페이징, 날짜 최신순 자동 정렬)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = EventDTO.class))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping
+    ResponseEntity<List<EventDTO>> getEventsPage(
+            @Parameter(description = "페이지 번호", example = "1")
+            @RequestParam Integer page,
+            @Parameter(description = "페이지 사이즈", example = "10")
+            @RequestParam Integer size);
 }
