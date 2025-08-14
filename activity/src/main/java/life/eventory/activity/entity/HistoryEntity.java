@@ -22,6 +22,9 @@ public class HistoryEntity {
     private Long userId;
     private Long eventId;
 
+    private String eventName;
+    private String eventThumbnail;
+
     // 조회 시각
     private LocalDateTime viewedAt;
 
@@ -30,6 +33,8 @@ public class HistoryEntity {
                 .id(id)
                 .userId(userId)
                 .eventId(eventId)
+                .eventName(eventName)
+                .eventThumbnail(eventThumbnail)
                 .viewedAt(viewedAt)
                 .build();
     }
