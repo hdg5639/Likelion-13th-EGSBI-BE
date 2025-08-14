@@ -14,6 +14,9 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByOrganizerIdOrderByCreateTimeAsc(Long organizerId);
 
+    @Query("select e from Event e order by e.createTime desc")
+    Page<Event> findAllByPage(Pageable pageable);
+
     @Query("select distinct e from Event e join e.tags t where t.name in :names")
     Page<Event> findByTagNames(@Param("names") Collection<String> names, Pageable pageable);
 }
