@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface CommunicationService {
     Long uploadPoster(MultipartFile file) throws IOException;
     void deletePoster(Long posterId);
+    void existUser(Long userId);
 }

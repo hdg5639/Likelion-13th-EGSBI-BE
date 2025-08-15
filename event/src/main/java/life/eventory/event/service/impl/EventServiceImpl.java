@@ -47,6 +47,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDTO createEvent(NewEventDTO newEventDTO,  MultipartFile image) throws IOException {
+        // 주최자 유효 검사
+        communicationService.existUser(newEventDTO.getOrganizerId());
+
         Long imageId = null;
         boolean hasImage = hasFile(image);
         log.info("status {}", hasImage);
@@ -78,7 +81,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDTO updateEvent(EventDTO eventDTO, MultipartFile image) throws IOException {
-        Event event = eventRepository.findById(eventDTO.getId()).orElseThrow(() -> new IllegalStateException("Event not found"));
+        Event event = eventRepository.findById(eventDTO.getId())
+                .orElseThrow(() -> new IllegalStateException("Event not found"));
 
         Long oldImageId = event.getPosterId();
         // 혹시 모를 posterId 변조값 방지
@@ -172,7 +176,9 @@ public class EventServiceImpl implements EventService {
                 .hashtags(
                         event.getTags() == null ?
                                 List.of() :
-                                event.getTags().stream().map(Tag::getDisplayName).toList()
+                                event.getTags().stream()
+                                        .map(Tag::getDisplayName)
+                                        .toList()
                 )
                 .build();
     }
