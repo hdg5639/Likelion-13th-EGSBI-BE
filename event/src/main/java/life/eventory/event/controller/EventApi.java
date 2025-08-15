@@ -197,7 +197,7 @@ public interface EventApi {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("/{eventId}/exists")
+    @GetMapping("/exist/{eventId}")
     ResponseEntity<Boolean> existEvent(
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
