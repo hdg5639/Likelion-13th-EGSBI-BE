@@ -32,11 +32,5 @@ jobs:
             docker rmi image || true
             docker build -t image .
             docker run -d -p 13000:13000 --network gamjanet --name image --env-file image.env -v /home/gamja/eventory/image/images:/home/gamja/eventory/image/images image
-
-            echo "Image service is ready, starting aggregator..."
-            
-            sleep 40
-            
-            docker restart aggregator
             
             docker builder prune -f
