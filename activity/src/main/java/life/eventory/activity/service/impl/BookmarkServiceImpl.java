@@ -19,8 +19,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 //    private final EventRepository eventRepository;
 
     @Override
-    @Transactional
-    public boolean toggleBookmark(Long userId, Long eventId) {
+    public String toggleBookmark(Long userId, Long eventId) {
 //        // 사용자 검증
 //        UserEntity user = userRepository.findById(userId)
 //                .orElseThrow(()-> new RuntimeException("사용자 없음"));
@@ -35,18 +34,18 @@ public class BookmarkServiceImpl implements BookmarkService {
         // 북마크가 존재할 때 삭제(북마크 해제)
         if ( bookmark.isPresent()) {
             bookmarkRepository.delete(bookmark.get());
-            return false;
+            return "북마크가 해제되었습니다.";
         }
         else { // 북마크가 없어서 새로 추가(북마크 설정)
             bookmarkRepository.save(BookmarkEntity.builder()
                     .userId(userId)
                     .eventId(eventId)
                     .build());
-            return true;
+            return "북마크가 설정되었습니다.";
         }
     }
 
-        // 특정 사용자의 북마크 목록을 리스트로 조회
+    // 특정 사용자의 북마크 목록을 리스트로 조회
     @Override
     public List<BookmarkDTO> getBookmarkedEvents(Long userId) {
         return bookmarkRepository.findByUserId(userId).stream().map(BookmarkEntity::toDTO).toList();
