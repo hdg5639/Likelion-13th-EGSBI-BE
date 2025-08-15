@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final CommunicationService communicationService;
 
     @Override
-    public void signup(UserSignUpRequest request, MultipartFile file) throws IOException {
+    public UserSignUpRequest signup(UserSignUpRequest request, MultipartFile file) throws IOException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         }
@@ -43,6 +43,14 @@ public class UserServiceImpl implements UserService {
         user.setProfile(profileImageId);
 
         userRepository.save(user);
+
+        return UserSignUpRequest.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .build();
     }
 
     @Override
