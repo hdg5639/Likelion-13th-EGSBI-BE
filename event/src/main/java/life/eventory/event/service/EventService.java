@@ -14,4 +14,5 @@ public interface EventService {
     EventDTO updateEvent(EventDTO eventDTO,  MultipartFile image) throws IOException;
     List<EventDTO> getEventPage(Integer page, Integer size, Boolean deadline);
     List<EventDTO> getEventPage(Integer page, Integer size, LocationDTO locationDTO, Boolean deadline);
+    Boolean existEvent(Long eventId);
 }

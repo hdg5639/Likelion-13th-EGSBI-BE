@@ -143,6 +143,11 @@ public class EventServiceImpl implements EventService {
                 .toList();
     }
 
+    @Override
+    public Boolean existEvent(Long eventId) {
+        return eventRepository.existsById(eventId);
+    }
+
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
                 .organizerId(newEventDTO.getOrganizerId())
