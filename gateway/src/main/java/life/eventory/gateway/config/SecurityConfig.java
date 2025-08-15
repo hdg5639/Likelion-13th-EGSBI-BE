@@ -41,15 +41,15 @@ public class SecurityConfig {
 
                         // POST 요청 허용
                         .pathMatchers(HttpMethod.POST,
-                                "/api/**").permitAll()
+                                "/**").permitAll()
 
                         // PATCH 요청 허용
                         .pathMatchers(HttpMethod.PATCH,
-                                "/api/**").permitAll()
+                                "/**").permitAll()
 
                         // DELETE 요청 허용
                         .pathMatchers(HttpMethod.DELETE,
-                                "/api/**").permitAll()
+                                "/**").permitAll()
 
                         // OPTIONS 요청 허용
                         .pathMatchers(HttpMethod.OPTIONS,
