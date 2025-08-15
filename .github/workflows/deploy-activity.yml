@@ -30,11 +30,5 @@ jobs:
             docker rmi activity || true
             docker build -t activity .
             docker run -d -p 12000:12000 --network gamjanet --name activity --env-file activity.env activity
-            
-            echo "Activity service is ready, starting aggregator..."
-
-            sleep 40
-            
-            docker restart aggregator
-            
+                        
             docker builder prune -f
