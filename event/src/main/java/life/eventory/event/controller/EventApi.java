@@ -209,7 +209,7 @@ public interface EventApi {
                             responseCode = "200",
                             description = "조회 성공",
                             content = @Content(
-                                    schema = @Schema(implementation = Boolean.class)
+                                    schema = @Schema(implementation = EventDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
