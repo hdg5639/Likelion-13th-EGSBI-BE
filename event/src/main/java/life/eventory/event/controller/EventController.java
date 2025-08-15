@@ -61,4 +61,9 @@ public class EventController implements EventApi {
     public ResponseEntity<Boolean> existEvent(@PathVariable Long eventId) {
         return ResponseEntity.ok(eventService.existEvent(eventId));
     }
+
+    @Override
+    public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) {
+        return ResponseEntity.ok(eventService.getEventById(eventId));
+    }
 }

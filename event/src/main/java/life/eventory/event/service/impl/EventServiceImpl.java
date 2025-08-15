@@ -148,6 +148,12 @@ public class EventServiceImpl implements EventService {
         return eventRepository.existsById(eventId);
     }
 
+    @Override
+    public EventDTO getEventById(Long eventId) {
+        return entityToDTO(eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalStateException("Event not found")));
+    }
+
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
                 .organizerId(newEventDTO.getOrganizerId())
