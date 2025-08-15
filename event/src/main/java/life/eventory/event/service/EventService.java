@@ -15,4 +15,5 @@ public interface EventService {
     List<EventDTO> getEventPage(Integer page, Integer size, Boolean deadline);
     List<EventDTO> getEventPage(Integer page, Integer size, LocationDTO locationDTO, Boolean deadline);
     Boolean existEvent(Long eventId);
+    EventDTO getEventById(Long eventId);
 }

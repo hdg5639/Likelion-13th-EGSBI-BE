@@ -201,4 +201,23 @@ public interface EventApi {
     ResponseEntity<Boolean> existEvent(
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
+
+    @Operation(
+            summary = "행사 단건 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    schema = @Schema(implementation = EventDTO.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/info/{eventId}")
+    ResponseEntity<EventDTO> getEventById(
+            @Parameter(description = "행사 ID", example = "1")
+            @PathVariable Long eventId);
 }
