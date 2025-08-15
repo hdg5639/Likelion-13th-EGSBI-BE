@@ -56,4 +56,9 @@ public class EventController implements EventApi {
                                                         @RequestParam Double longitude) {
         return ResponseEntity.ok(eventService.getEventPage(page, size, new LocationDTO(latitude, longitude), deadline));
     }
+
+    @Override
+    public ResponseEntity<Boolean> existEvent(@PathVariable Long eventId) {
+        return ResponseEntity.ok(eventService.existEvent(eventId));
+    }
 }

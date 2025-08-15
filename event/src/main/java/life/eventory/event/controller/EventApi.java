@@ -182,4 +182,24 @@ public interface EventApi {
             @RequestParam Double latitude,
             @Parameter(description = "사용자 위치 (경도)")
             @RequestParam Double longitude);
+
+    @Operation(
+            summary = "행사 존재 유무 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/{eventId}")
+    ResponseEntity<Boolean> existEvent(
+            @Parameter(description = "행사 ID", example = "1")
+            @PathVariable Long eventId);
 }
