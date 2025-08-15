@@ -190,7 +190,6 @@ public interface EventApi {
                             responseCode = "200",
                             description = "조회 성공",
                             content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = Boolean.class)
                             )
                     ),
@@ -198,7 +197,7 @@ public interface EventApi {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("/{eventId}")
+    @GetMapping("/{eventId}/exists")
     ResponseEntity<Boolean> existEvent(
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
