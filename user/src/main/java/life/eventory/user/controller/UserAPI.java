@@ -73,23 +73,51 @@ public interface UserAPI {
     @GetMapping("/info")
     ResponseEntity<UserInfoResponse> info(@RequestParam String email);
 
-    @Operation(summary = "사용자 정보 수정",
+    @Operation(
+            summary = "회원 정보 수정",
             requestBody = @RequestBody(
                     content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = UserUpdateRequest.class)
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            encoding = {
+                                    @Encoding(name = "user", contentType = "application/json"),
+                                    @Encoding(name = "image", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                            }
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "수정 성공",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserUpdateRequest.class))),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 정보 수정 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserUpdateRequest.class)
+                            )
+                    ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @PatchMapping("/update")
-    ResponseEntity<UserUpdateRequest> update(@RequestBody UserUpdateRequest request);
+    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<UserUpdateRequest> update(
+            @Parameter(
+                    description = "회원 정보 수정 데이터 (JSON)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserUpdateRequest.class)
+                    )
+            )
+            @RequestPart(value = "user") UserUpdateRequest request,
+
+            @Parameter(
+                    description = "새 프로필 이미지 파일 (선택)",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                            schema = @Schema(type = "string", format = "binary")
+                    )
+            )
+            @RequestPart(value = "image", required = false) MultipartFile file
+    ) throws IOException;
+
 
     @Operation(summary = "사용자 위치 저장",
             requestBody = @RequestBody(

@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserUpdateRequest update(UserUpdateRequest request){
+    public UserUpdateRequest update(UserUpdateRequest request, MultipartFile file) throws IOException {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -80,8 +80,10 @@ public class UserServiceImpl implements UserService {
             user.setNickname(request.getNickname());
         if (request.getPhone() != null && !request.getPhone().isBlank())
             user.setPhone(request.getPhone());
-        if (request.getProfile() != null)
-            user.setProfile(request.getProfile());
+        if (file != null && !file.isEmpty()) {
+            Long profileImageId = communicationService.uploadProfile(file);
+            user.setProfile(profileImageId);
+        }
 
         userRepository.save(user);
         return request;
