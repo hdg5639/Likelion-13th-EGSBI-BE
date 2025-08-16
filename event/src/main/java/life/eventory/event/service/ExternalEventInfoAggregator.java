@@ -3,6 +3,7 @@ package life.eventory.event.service;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
+import com.google.maps.model.ComponentFilter;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import jakarta.annotation.PostConstruct;
@@ -127,6 +128,7 @@ public class ExternalEventInfoAggregator {
                 .build();
 
         GeocodingResult[] results = GeocodingApi.geocode(context, place + " " + event_area)
+                .components(ComponentFilter.administrativeArea("대구광역시"))
                 .language("ko") // 한글 주소
                 .await();
 
