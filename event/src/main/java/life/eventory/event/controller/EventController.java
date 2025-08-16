@@ -1,5 +1,6 @@
 package life.eventory.event.controller;
 
+import life.eventory.event.controller.api.EventApi;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.LocationDTO;

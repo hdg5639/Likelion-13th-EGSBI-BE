@@ -1,4 +1,4 @@
-package life.eventory.event.controller;
+package life.eventory.event.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

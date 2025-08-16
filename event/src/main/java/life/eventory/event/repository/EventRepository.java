@@ -89,4 +89,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select distinct e from Event e join e.tags t where t.name in :names")
     Page<Event> findByTagNames(@Param("names") Collection<String> names, Pageable pageable);
+
+    @Query("""
+    select case when count(e) > 0 then true else false end
+    from Event e
+    where e.organizerId = 0 and e.name = :name
+    """)
+    boolean existsExternalEvent(String name);
 }
