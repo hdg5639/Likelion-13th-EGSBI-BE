@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.ai.dto.AiEventDTO;
+import life.eventory.ai.dto.CreatedEventDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,7 +72,7 @@ public interface AiApi {
                                     schema = @Schema(implementation = String.class),
                                     examples = {
                                             @ExampleObject(
-                                                    name = "수성구 야시장 안내 예시",
+                                                    name = "행사 본문 생성 예시",
                                                     value = """
                                                             # 수성구 야시장 안내
                                                             
@@ -102,7 +103,7 @@ public interface AiApi {
             }
     )
     @PostMapping("/description")
-    ResponseEntity<String> createEventDescription(
+    ResponseEntity<CreatedEventDTO> createEventDescription(
             @Parameter(description = "AI 행사 생성 정보 DTO")
             @RequestBody AiEventDTO aiEventDTO);
 }

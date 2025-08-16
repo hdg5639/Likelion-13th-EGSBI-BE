@@ -1,4 +1,4 @@
-package life.eventory.ai.dto;
+package life.eventory.event.dto.ai;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;

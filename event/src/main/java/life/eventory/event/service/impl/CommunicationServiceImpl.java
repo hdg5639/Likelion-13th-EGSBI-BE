@@ -1,6 +1,8 @@
 package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
+import life.eventory.event.dto.ai.AiEventDTO;
+import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import life.eventory.event.dto.MultipartFileResource;
 import life.eventory.event.service.CommunicationService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public Long uploadPoster(MultipartFile file) throws IOException {
         // 배포 요청 코드
-        ServiceInstance imageInstance = getImageInstance();
+        ServiceInstance imageInstance = getServerInstance("IMAGE");
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
@@ -74,7 +76,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public void deletePoster(Long posterId) {
-        ServiceInstance imageInstance = getImageInstance();
+        ServiceInstance imageInstance = getServerInstance("IMAGE");
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
@@ -115,25 +117,9 @@ public class CommunicationServiceImpl implements CommunicationService {
         log.error("Exception message: {}", e.getMessage());
     }
 
-    // Image 인스턴스 조회
-    private ServiceInstance getImageInstance() {
-        if (discoveryClient == null) {
-            throw new IllegalStateException("discoveryClient is null");
-        }
-        List<ServiceInstance> instances = discoveryClient.getInstances("IMAGE");
-        log.info("Found {} IMAGE-SERVER instances", instances != null ? instances.size() : 0);
-
-        if (instances == null || instances.isEmpty()) {
-            log.error("No Image-Server instances available");
-            throw new IllegalStateException("No Image-Server instances available");
-        }
-
-        return instances.get(0);
-    }
-
     @Override
     public void existUser(Long userId) {
-        ServiceInstance imageInstance = getUserInstance();
+        ServiceInstance imageInstance = getServerInstance("USER");
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
@@ -167,17 +153,52 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
-    // User 인스턴스 조회
-    private ServiceInstance getUserInstance() {
+    @Override
+    public CreatedEventInfoDTO createAiDescription(AiEventDTO aiEventDTO) {
+        ServiceInstance imageInstance = getServerInstance("AI");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/ai/description")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<AiEventDTO> requestEntity = new HttpEntity<>(aiEventDTO, headers);
+
+        try {
+            ResponseEntity<CreatedEventInfoDTO> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.POST,
+                            requestEntity,
+                            CreatedEventInfoDTO.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+            throw new IllegalStateException("Failed to create Ai-Description");
+        } catch (Exception e) {
+            imageErrorLog(e);
+            throw new IllegalStateException("Failed to send request to Ai-Server", e);
+        }
+    }
+
+    // 서버 인스턴스 조회
+    private ServiceInstance getServerInstance(String serverName) {
         if (discoveryClient == null) {
             throw new IllegalStateException("discoveryClient is null");
         }
-        List<ServiceInstance> instances = discoveryClient.getInstances("USER");
-        log.info("Found {} USER-SERVER instances", instances != null ? instances.size() : 0);
+        List<ServiceInstance> instances = discoveryClient.getInstances(serverName.toUpperCase());
+        log.info("Found {} {}-SERVER instances", instances != null ? instances.size() : 0, serverName);
 
         if (instances == null || instances.isEmpty()) {
-            log.error("No User-Server instances available");
-            throw new IllegalStateException("No User-Server instances available");
+            log.error("No {}-SERVER instances available", serverName);
+            throw new IllegalStateException("No " + serverName + "-SERVER instances available");
         }
 
         return instances.get(0);

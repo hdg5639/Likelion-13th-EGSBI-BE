@@ -1,6 +1,7 @@
 package life.eventory.ai.controller;
 
 import life.eventory.ai.dto.AiEventDTO;
+import life.eventory.ai.dto.CreatedEventDTO;
 import life.eventory.ai.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class AiController implements AiApi {
     }
 
     @Override
-    public ResponseEntity<String> createEventDescription(@RequestBody AiEventDTO aiEventDTO) {
+    public ResponseEntity<CreatedEventDTO> createEventDescription(@RequestBody AiEventDTO aiEventDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(aiService.createDescription(aiEventDTO));
     }

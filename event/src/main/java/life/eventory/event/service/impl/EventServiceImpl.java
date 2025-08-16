@@ -1,9 +1,7 @@
 package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
-import life.eventory.event.dto.EventDTO;
-import life.eventory.event.dto.LocationDTO;
-import life.eventory.event.dto.NewEventDTO;
+import life.eventory.event.dto.*;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
 import life.eventory.event.repository.EventRepository;
