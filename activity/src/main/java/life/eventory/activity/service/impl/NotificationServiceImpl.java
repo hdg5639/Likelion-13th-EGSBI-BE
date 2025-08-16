@@ -1,8 +1,6 @@
 package life.eventory.activity.service.impl;
 
-import life.eventory.activity.dto.BookmarkDTO;
 import life.eventory.activity.dto.NotificationDTO;
-import life.eventory.activity.entity.BookmarkEntity;
 import life.eventory.activity.entity.NotificationEntity;
 import life.eventory.activity.repository.NotificationRepository;
 import life.eventory.activity.service.NotificationService;
