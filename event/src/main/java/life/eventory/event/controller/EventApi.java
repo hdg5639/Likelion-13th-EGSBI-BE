@@ -226,7 +226,7 @@ public interface EventApi {
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CreatedEventInfoDTO.class),
+                            schema = @Schema(implementation = AiEventDTO.class),
                             encoding = {
                                     @Encoding(contentType = "application/json")
                             }
@@ -237,7 +237,7 @@ public interface EventApi {
                             responseCode = "200",
                             description = "조회 성공",
                             content = @Content(
-                                    schema = @Schema(implementation = NewEventDTO.class)
+                                    schema = @Schema(implementation = CreatedEventInfoDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
