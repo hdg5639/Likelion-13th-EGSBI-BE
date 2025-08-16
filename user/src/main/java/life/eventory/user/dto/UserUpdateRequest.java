@@ -24,7 +24,4 @@ public class UserUpdateRequest {
 
     @Schema(description = "사용자 닉네임", example = "Red_RoadEast")
     private String nickname;
-
-    @Schema(description = "프로필 이미지 ID", example = "1234")
-    private Long profile;
 }

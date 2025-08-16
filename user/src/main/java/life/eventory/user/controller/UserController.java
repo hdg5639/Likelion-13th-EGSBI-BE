@@ -32,8 +32,9 @@ public class UserController implements UserAPI{
     }
 
     @Override
-    public ResponseEntity<UserUpdateRequest> update(@RequestBody UserUpdateRequest request) {
-        UserUpdateRequest userUpdateRequest = userService.update(request);
+    public ResponseEntity<UserUpdateRequest> update(@RequestPart(value = "user") UserUpdateRequest request,
+                                                    @RequestPart(value = "image", required = false) MultipartFile file) throws IOException{
+        UserUpdateRequest userUpdateRequest = userService.update(request, file);
         return ResponseEntity.ok(userUpdateRequest);
     }
 
