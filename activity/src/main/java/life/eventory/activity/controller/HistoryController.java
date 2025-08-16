@@ -1,8 +1,10 @@
 package life.eventory.activity.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import life.eventory.activity.dto.HistoryDTO;
 import life.eventory.activity.service.HistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +25,9 @@ public class HistoryController implements HistoryAPI {
         return ResponseEntity.status(HttpStatus.CREATED).body(historyDTO);
     }
     @Override // 사용자의 히스토리 목록 조회
-    public ResponseEntity<Page<HistoryDTO>> getHistoryList(@RequestParam Long userId,@PageableDefault(sort = "viewedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<HistoryDTO>> getHistoryList(@RequestParam Long userId,
+                                                           @ParameterObject
+                                                           @PageableDefault(sort = "viewedAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<HistoryDTO> list = historyService.getHistoryList(userId, pageable);
         return ResponseEntity.ok(list);
     }
