@@ -9,10 +9,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.*;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
@@ -87,7 +91,10 @@ public interface EventApi {
             }
     )
     @GetMapping("/{organizerId}")
-    ResponseEntity<List<EventDTO>> findAllByOrganizerId(@PathVariable Long organizerId);
+    ResponseEntity<List<EventDTO>> findAllByOrganizerId(
+            @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC)
+            @ParameterObject Pageable pageable,
+            @PathVariable Long organizerId);
 
     @Operation(summary = "행사 수정",
             requestBody = @RequestBody(
@@ -122,8 +129,6 @@ public interface EventApi {
     @Operation(
             summary = "이벤트 전체 조회 (페이징, 날짜 최신순 자동 정렬)",
             parameters = {
-                    @Parameter(name = "page", description = "페이지 번호", required = true, example = "1"),
-                    @Parameter(name = "size", description = "페이지 사이즈", required = true, example = "10"),
                     @Parameter(name = "deadline", description = "마감일 포함 토글 (포함: true, 제외: false)", required = true, example = "true")
             },
             responses = {
@@ -141,18 +146,14 @@ public interface EventApi {
     )
     @GetMapping
     ResponseEntity<List<EventDTO>> getEventsPage(
-            @Parameter(description = "페이지 번호", example = "1")
-            @RequestParam Integer page,
-            @Parameter(description = "페이지 사이즈", example = "10")
-            @RequestParam Integer size,
+            @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC)
+            @ParameterObject Pageable pageable,
             @Parameter(description = "마감일 포함 토글 (포함: true, 제외: false)", example = "true")
             @RequestParam Boolean deadline);
 
     @Operation(
             summary = "이벤트 거리순 조회 (페이징, 거리순 자동 정렬)",
             parameters = {
-                    @Parameter(name = "page", description = "페이지 번호", required = true, example = "1"),
-                    @Parameter(name = "size", description = "페이지 사이즈", required = true, example = "10"),
                     @Parameter(name = "deadline", description = "마감일 포함 토글 (포함: true, 제외: false)", required = true, example = "true"),
                     @Parameter(name = "latitude", description = "사용자 위치 (위도)", required = true, example = "35.8704"),
                     @Parameter(name = "longitude", description = "사용자 위치 (경도)", required = true, example = "128.5912")
@@ -172,10 +173,7 @@ public interface EventApi {
     )
     @GetMapping("/loc")
     ResponseEntity<List<EventDTO>> getEventsPage(
-            @Parameter(description = "페이지 번호", example = "1")
-            @RequestParam Integer page,
-            @Parameter(description = "페이지 사이즈", example = "10")
-            @RequestParam Integer size,
+            @ParameterObject Pageable pageable,
             @Parameter(description = "마감일 포함 토글 (포함: true, 제외: false)", example = "true")
             @RequestParam Boolean deadline,
             @Parameter(description = "사용자 위치 (위도)")
