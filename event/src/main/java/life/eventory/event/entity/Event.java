@@ -26,7 +26,8 @@ public class Event {
     private String name;
     // Poster는 null 허용
     private Long posterId;
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String description;
     @Column(nullable = false)
     private LocalDateTime startTime;
