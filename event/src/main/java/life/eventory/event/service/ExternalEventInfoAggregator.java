@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -76,11 +77,15 @@ public class ExternalEventInfoAggregator {
     private void transformAndSaveEvents() throws IOException, InterruptedException, ApiException {
         final LocalDate cutOff = LocalDate.of(2025, 1, 1);
 
-        for (DaeguEventDTO daeguEventDTO : getDaeguEvent()) {
-            // 2025년 이후로 필터, 이미 존재하는 정보인지 확인
-            if (daeguEventDTO.getStart_date().isAfter(cutOff))
-                continue;
+        for (DaeguEventDTO daeguEventDTO :
+                getDaeguEvent().stream()
+                    .filter(e -> e.getStart_date().isAfter(cutOff)) // 2025년 이후로 필터
+                    .sorted(Comparator.comparing(DaeguEventDTO::getStart_date).reversed()) // 최신순 정렬
+                    .toList()
+                .subList(0, 50)) // 50개만 남김
+        {
 
+            // 이미 존재하는 정보인지 확인
             if (eventRepository.existsExternalEvent(daeguEventDTO.getSubject()))
                 continue;
 
