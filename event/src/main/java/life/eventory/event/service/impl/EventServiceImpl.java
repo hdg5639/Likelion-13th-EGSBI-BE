@@ -149,6 +149,11 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new IllegalStateException("Event not found")));
     }
 
+    @Override
+    public Boolean existOrganizer(Long organizerId) {
+        return eventRepository.existsByOrganizerId(organizerId);
+    }
+
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
         return Event.builder()
                 .organizerId(newEventDTO.getOrganizerId())

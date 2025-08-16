@@ -96,4 +96,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     where e.organizerId = 0 and e.name = :name
     """)
     boolean existsExternalEvent(String name);
+
+    Boolean existsByOrganizerId(Long organizerId);
 }
