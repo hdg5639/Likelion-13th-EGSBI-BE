@@ -1,8 +1,11 @@
 package life.eventory.event.controller;
 
+import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
+import life.eventory.event.dto.ai.CreatedEventInfoDTO;
+import life.eventory.event.service.CommunicationService;
 import life.eventory.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventController implements EventApi {
     private final EventService eventService;
+    private final CommunicationService communicationService;
 
     @Override
     public ResponseEntity<EventDTO> createEvent(
@@ -65,5 +69,11 @@ public class EventController implements EventApi {
     @Override
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) {
         return ResponseEntity.ok(eventService.getEventById(eventId));
+    }
+
+    @Override
+    public ResponseEntity<CreatedEventInfoDTO> createAiEvent(@RequestBody AiEventDTO aiEventDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(communicationService.createAiDescription(aiEventDTO));
     }
 }

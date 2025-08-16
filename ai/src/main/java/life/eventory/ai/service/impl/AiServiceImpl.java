@@ -1,12 +1,15 @@
 package life.eventory.ai.service.impl;
 
 import life.eventory.ai.dto.AiEventDTO;
+import life.eventory.ai.dto.CreatedEventDTO;
 import life.eventory.ai.dto.EventDTO;
 import life.eventory.ai.service.AiService;
 import life.eventory.ai.service.CommunicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
+
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -44,29 +47,30 @@ public class AiServiceImpl implements AiService {
     }
 
     @Override
-    public String createDescription(AiEventDTO aiEventDTO) {
+    public CreatedEventDTO createDescription(AiEventDTO aiEventDTO) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (E) a h시 m분");
+        String start = aiEventDTO.getStartTime() != null ? aiEventDTO.getStartTime().format(fmt) : "";
+        String end   = aiEventDTO.getEndTime()   != null ? aiEventDTO.getEndTime().format(fmt)   : "";
+
         return chatClient.build()
                 .prompt()
-                .system("너는 한국어로 답해. 최대한 완성도있게 풍부한 내용으로 작성해. 마크다운만 반환해.")
-                .user(u ->
-                        u.text("""
+                .system("너는 한국어로 답해. 최고의 완성도와 풍부한 내용으로 작성해. 다음 이벤트 정보를 바탕으로 CreatedEventDTO JSON을 생성해. description은 행사 소개글(마크다운), hashtags는 JSON 배열 문자열로 반환.")
+                .user(u -> u.text("""
                         다음 이벤트 정보를 보고 행사 안내 게시물 본문 내용 만들어줘.
                         - 이름: {name}
                         - 간단 행사 내용: {description}
                         - 기간: {start} ~ {end}
                         - 위치: {address}
                         - 입장료: {entryFee}
-                        - 해시태그: {hashtag}
                         """)
                         .param("name", aiEventDTO.getName())
                         .param("description", aiEventDTO.getDescription())
-                        .param("start", aiEventDTO.getStartTime())
-                        .param("end", aiEventDTO.getEndTime())
+                        .param("start", start)
+                        .param("end", end)
                         .param("address", aiEventDTO.getAddress())
-                        .param("entryFee", aiEventDTO.getEntryFee())
-                        .param("hashtag", aiEventDTO.getHashtags())
+                        .param("entryFee", aiEventDTO.getEntryFee() == null ? "" : aiEventDTO.getEntryFee().toString())
                 )
                 .call()
-                .content();
+                .entity(CreatedEventDTO.class);
     }
 }

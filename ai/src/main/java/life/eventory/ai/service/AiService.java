@@ -1,8 +1,9 @@
 package life.eventory.ai.service;
 
 import life.eventory.ai.dto.AiEventDTO;
+import life.eventory.ai.dto.CreatedEventDTO;
 
 public interface AiService {
     String createEventSummary(Long eventId);
-    String createDescription(AiEventDTO aiEventDTO);
+    CreatedEventDTO createDescription(AiEventDTO aiEventDTO);
 }

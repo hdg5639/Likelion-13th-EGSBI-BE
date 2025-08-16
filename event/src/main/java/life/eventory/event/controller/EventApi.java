@@ -2,14 +2,13 @@ package life.eventory.event.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.*;
+import life.eventory.event.dto.ai.AiEventDTO;
+import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Tag(name = "Event API", description = "행사 업로드 및 조회 API")
@@ -220,4 +220,32 @@ public interface EventApi {
     ResponseEntity<EventDTO> getEventById(
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
+
+    @Operation(
+            summary = "AI 행사 본문, 해시태그 생성",
+            requestBody = @RequestBody(
+                    content = @Content(
+                            mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CreatedEventInfoDTO.class),
+                            encoding = {
+                                    @Encoding(contentType = "application/json")
+                            }
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    schema = @Schema(implementation = NewEventDTO.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @PostMapping("/ai/description")
+    ResponseEntity<CreatedEventInfoDTO> createAiEvent(
+            @Parameter(description = "AI 행사 생성 객체")
+            @RequestBody AiEventDTO aiEventDTO);
 }
