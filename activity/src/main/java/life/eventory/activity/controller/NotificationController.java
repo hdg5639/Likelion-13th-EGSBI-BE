@@ -1,5 +1,6 @@
 package life.eventory.activity.controller;
 
+import life.eventory.activity.controller.api.NotificationAPI;
 import life.eventory.activity.dto.NotificationDTO;
 import life.eventory.activity.service.NotificationService;
 import lombok.RequiredArgsConstructor;

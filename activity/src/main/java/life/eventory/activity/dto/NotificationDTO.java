@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "BookmarkDTO", description = "사용자가 특정 이벤트를 북마크했는지 정보를 담는 DTO")
+@Schema(name = "NotificationDTO", description = "사용자가 특정 이벤트를 알림 설정했는지 정보를 담는 DTO")
 
 public class NotificationDTO {
     @Schema(description = "알림 ID (자동 생성)", example = "1")
