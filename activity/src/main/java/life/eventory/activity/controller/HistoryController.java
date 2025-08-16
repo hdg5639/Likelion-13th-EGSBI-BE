@@ -1,6 +1,5 @@
 package life.eventory.activity.controller;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import life.eventory.activity.dto.HistoryDTO;
 import life.eventory.activity.service.HistoryService;
 import lombok.RequiredArgsConstructor;
