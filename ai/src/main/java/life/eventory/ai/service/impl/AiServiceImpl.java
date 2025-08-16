@@ -54,7 +54,7 @@ public class AiServiceImpl implements AiService {
 
         return chatClient.build()
                 .prompt()
-                .system("너는 한국어로 답해. 최고의 완성도와 풍부한 내용으로 작성해. 다음 이벤트 정보를 바탕으로 CreatedEventDTO JSON을 생성해. description은 행사 소개글(마크다운), hashtags는 JSON 배열 문자열로 반환.")
+                .system("너는 한국어로 답해. 최고의 완성도와 풍부한 내용으로 작성해. 다음 이벤트 정보를 바탕으로 CreatedEventDTO JSON을 생성해. description은 행사 소개글(마크다운), hashtags는 '#'을 제외하고 JSON 배열 문자열로 반환.")
                 .user(u -> u.text("""
                         다음 이벤트 정보를 보고 행사 안내 게시물 본문 내용 만들어줘.
                         - 이름: {name}
