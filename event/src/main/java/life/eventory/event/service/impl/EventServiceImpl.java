@@ -11,7 +11,6 @@ import life.eventory.event.service.EventTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -73,8 +72,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> findAllByOrganizerId(Long organizerId) {
-        return getByOrganizer(organizerId);
+    public List<EventDTO> findAllByOrganizerId(Pageable pageable, Long organizerId) {
+        return getByOrganizer(pageable, organizerId);
     }
 
     @Override
@@ -119,8 +118,7 @@ public class EventServiceImpl implements EventService {
 
     // 기본 최신순 전체 조회
     @Override
-    public List<EventDTO> getEventPage(Integer page, Integer size, Boolean deadline) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+    public List<EventDTO> getEventPage(Pageable pageable, Boolean deadline) {
         Page<Event> eventPage =
                 deadline ? eventRepository.findAllByPage(pageable) :
                         eventRepository.findAllByPageExcludeClosed(pageable);
@@ -131,8 +129,7 @@ public class EventServiceImpl implements EventService {
 
     // 거리순 전체 조회
     @Override
-    public List<EventDTO> getEventPage(Integer page, Integer size, LocationDTO locationDTO, Boolean deadline) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+    public List<EventDTO> getEventPage(Pageable pageable, LocationDTO locationDTO, Boolean deadline) {
         Page<Event> eventPage =
                 deadline ? eventRepository.findByDistance(locationDTO, pageable) :
                         eventRepository.findByDistanceExcludeClosed(locationDTO, pageable);
@@ -204,8 +201,8 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    private List<EventDTO> getByOrganizer(Long organizerId) {
-        List<Event> events = eventRepository.findAllByOrganizerIdOrderByCreateTimeAsc(organizerId);
+    private List<EventDTO> getByOrganizer(Pageable pageable, Long organizerId) {
+        Page<Event> events = eventRepository.findAllByOrganizerIdOrderByCreateTimeDesc(organizerId, pageable);
         return events.stream().map(this::entityToDTO).toList();
     }
 }

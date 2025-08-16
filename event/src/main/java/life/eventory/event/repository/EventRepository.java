@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findAllByOrganizerIdOrderByCreateTimeAsc(Long organizerId);
+    Page<Event> findAllByOrganizerIdOrderByCreateTimeDesc(Long organizerId, Pageable pageable);
 
     @Query("select e from Event e order by e.createTime desc")
     Page<Event> findAllByPage(Pageable pageable);
