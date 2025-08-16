@@ -246,4 +246,23 @@ public interface EventApi {
     ResponseEntity<CreatedEventInfoDTO> createAiEvent(
             @Parameter(description = "AI 행사 생성 객체")
             @RequestBody AiEventDTO aiEventDTO);
+
+    @Operation(
+            summary = "행사 주최자 유무 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/exist/organizer/{organizerId}")
+    ResponseEntity<Boolean> existOrganizer(
+            @Parameter(description = "주최자 ID", example = "1")
+            @PathVariable Long organizerId);
 }

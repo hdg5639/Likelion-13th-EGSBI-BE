@@ -83,4 +83,9 @@ public class EventController implements EventApi {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(communicationService.createAiDescription(aiEventDTO));
     }
+
+    @Override
+    public ResponseEntity<Boolean> existOrganizer(@PathVariable Long organizerId) {
+        return ResponseEntity.ok(eventService.existOrganizer(organizerId));
+    }
 }
