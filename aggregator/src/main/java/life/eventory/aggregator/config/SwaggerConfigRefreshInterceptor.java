@@ -18,7 +18,7 @@ public class SwaggerConfigRefreshInterceptor implements HandlerInterceptor {
     private final DynamicSwaggerRegistry registry;
 
     // 과도한 호출 방지 (기본 30초 쿨다운)
-    private final Duration minInterval = Duration.ofSeconds(30);
+    private final Duration minInterval = Duration.ofSeconds(5);
     private final AtomicLong lastRefreshed = new AtomicLong(0L);
 
     @Override
