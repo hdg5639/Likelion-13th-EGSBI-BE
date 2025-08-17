@@ -184,6 +184,7 @@ public class EventServiceImpl implements EventService {
                 .longitude(event.getLongitude())
                 .entryFee(event.getEntryFee())
                 .createTime(event.getCreateTime())
+                .qrImage(event.getQrImage())
                 .hashtags(
                         event.getTags() == null ?
                                 List.of() :

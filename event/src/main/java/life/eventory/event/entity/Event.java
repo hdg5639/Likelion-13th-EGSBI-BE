@@ -43,6 +43,8 @@ public class Event {
     private Integer entryFee;
     @Column(nullable = false)
     private LocalDateTime createTime;
+    @Column
+    private Long qrImage;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
