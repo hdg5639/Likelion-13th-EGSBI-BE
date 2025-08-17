@@ -62,8 +62,7 @@ public class UserController implements UserAPI {
 
     @Override
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
-        Long userId = userService.authenticate(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(tokenService.issueAccessToken(userId));
+        return ResponseEntity.ok(userService.authenticate(request.getEmail(), request.getPassword()));
     }
 
     @Override

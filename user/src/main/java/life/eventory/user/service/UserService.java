@@ -1,6 +1,7 @@
 package life.eventory.user.service;
 
 import life.eventory.user.dto.*;
+import life.eventory.user.dto.login.LoginResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,5 +13,5 @@ public interface UserService {
     UserLocationRequest location(UserLocationRequest request);
     boolean UserExist(Long id);
     UserLocationResponse getUserLocation(Long id);
-    Long authenticate(String email, String password);
+    LoginResponse authenticate(String email, String password);
 }

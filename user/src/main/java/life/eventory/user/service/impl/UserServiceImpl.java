@@ -2,9 +2,11 @@ package life.eventory.user.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.user.dto.*;
+import life.eventory.user.dto.login.LoginResponse;
 import life.eventory.user.entity.UserEntity;
 import life.eventory.user.repository.UserRepository;
 import life.eventory.user.service.CommunicationService;
+import life.eventory.user.service.TokenService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CommunicationService communicationService;
+    private final TokenService tokenService;
 
     @Override
     public UserSignUpRequest signup(UserSignUpRequest request, MultipartFile file) throws IOException {
@@ -126,13 +129,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long authenticate(String email, String password) {
+    public LoginResponse authenticate(String email, String password) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 이메일 정보"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호 정보");
         }
-
-        return user.getId();
+        LoginResponse response = tokenService.issueAccessToken(user.getId());
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        return response;
     }
 }
