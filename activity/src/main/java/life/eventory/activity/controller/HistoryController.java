@@ -1,5 +1,6 @@
 package life.eventory.activity.controller;
 
+import life.eventory.activity.controller.api.HistoryAPI;
 import life.eventory.activity.dto.HistoryDTO;
 import life.eventory.activity.service.HistoryService;
 import lombok.RequiredArgsConstructor;

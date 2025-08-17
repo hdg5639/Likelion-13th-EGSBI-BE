@@ -1,5 +1,6 @@
 package life.eventory.activity.controller;
 
+import life.eventory.activity.controller.api.BookmarkAPI;
 import life.eventory.activity.dto.BookmarkDTO;
 import life.eventory.activity.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
