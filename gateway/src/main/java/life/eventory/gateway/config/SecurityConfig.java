@@ -67,13 +67,10 @@ public class SecurityConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList(
+        config.setAllowedOriginPatterns(Arrays.asList(
                 "https://eventory.life",
-                "http://127.0.0.1:3000",
-                "http://127.0.0.1:10000",
-                "http://127.0.0.1:11000",
-                "http://127.0.0.1:12000",
-                "https://swagger.gamja.cloud"
+                "http://127.0.0.1:*",
+                "https://*.gamja.cloud"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.addAllowedHeader("*");
