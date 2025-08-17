@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
@@ -98,4 +99,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     boolean existsExternalEvent(String name);
 
     Boolean existsByOrganizerId(Long organizerId);
+
+    @Query("select (count(e) > 0) from Event e where e.id = :eventId and e.qrImage is not null")
+    boolean hasQrImage(@Param("eventId") Long eventId);
+
+    @Query("select e.qrImage from Event e where e.id = :eventId")
+    Optional<Long> findQrImageById(@Param("eventId") Long eventId);
 }

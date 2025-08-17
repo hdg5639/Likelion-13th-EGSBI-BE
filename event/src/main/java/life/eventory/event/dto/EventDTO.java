@@ -70,6 +70,9 @@ public class EventDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createTime;
 
+    @Schema(description = "QR 이미지 ID(없을 수 있음)", example = "1001")
+    private Long qrImage;
+
     @Schema(description = "해시태그 목록", example = "[\"야시장\",\"음악\",\"대구축제\"]")
     private List<String> hashtags;
 }
