@@ -12,4 +12,5 @@ public interface UserService {
     UserLocationRequest location(UserLocationRequest request);
     boolean UserExist(Long id);
     UserLocationResponse getUserLocation(Long id);
+    Long authenticate(String email, String password);
 }

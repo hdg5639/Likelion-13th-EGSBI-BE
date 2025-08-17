@@ -2,7 +2,6 @@ package life.eventory.user.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +32,10 @@ public class AuthConfig {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
-        JWKSet jwkSet = new JWKSet(rsaKey.toPublicJWK());
-        return new ImmutableJWKSet<>(jwkSet);
-    }
-
-    @Bean
-    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+    public JwtEncoder jwtEncoder(RSAKey rsaKey) {
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        JWKSource<SecurityContext> jwkSource =
+                (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
         return new NimbusJwtEncoder(jwkSource);
     }
 }
