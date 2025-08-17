@@ -7,9 +7,11 @@ import life.eventory.user.repository.UserRepository;
 import life.eventory.user.service.CommunicationService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -112,7 +114,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLocationResponse getUserLocation(Long id){
-        UserEntity user = userRepository.findById(id).get();
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자가 없음"));
 
         return UserLocationResponse.builder()
                 .id(user.getId())
@@ -120,5 +123,16 @@ public class UserServiceImpl implements UserService {
                 .longitude(user.getLongitude())
                 .address(user.getAddress())
                 .build();
+    }
+
+    @Override
+    public Long authenticate(String email, String password) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 이메일 정보"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호 정보");
+        }
+
+        return user.getId();
     }
 }

@@ -1,5 +1,7 @@
 package life.eventory.user.service;
 
+import life.eventory.user.dto.login.LoginResponse;
+
 public interface TokenService {
-    String issueAccessToken(String userId);
+    LoginResponse issueAccessToken(Long userId);
 }

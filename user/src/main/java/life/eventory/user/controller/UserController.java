@@ -1,6 +1,10 @@
 package life.eventory.user.controller;
 
+import life.eventory.user.controller.api.UserAPI;
 import life.eventory.user.dto.*;
+import life.eventory.user.dto.login.LoginRequest;
+import life.eventory.user.dto.login.LoginResponse;
+import life.eventory.user.service.TokenService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,8 +17,9 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-public class UserController implements UserAPI{
+public class UserController implements UserAPI {
     private final UserService userService;
+    private final TokenService tokenService;
 
     @Override
     public ResponseEntity<UserSignUpRequest> signup(
@@ -53,5 +58,16 @@ public class UserController implements UserAPI{
     public ResponseEntity<UserLocationResponse> locationInfo(@PathVariable Long id) {
         UserLocationResponse location =  userService.getUserLocation(id);
         return ResponseEntity.ok(location);
+    }
+
+    @Override
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+        Long userId = userService.authenticate(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(tokenService.issueAccessToken(userId));
+    }
+
+    @Override
+    public ResponseEntity<LoginResponse> renew(@RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(tokenService.issueAccessToken(Long.parseLong(userId)));
     }
 }

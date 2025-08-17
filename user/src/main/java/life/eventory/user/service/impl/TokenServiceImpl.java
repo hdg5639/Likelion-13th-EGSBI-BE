@@ -2,6 +2,7 @@ package life.eventory.user.service.impl;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import jakarta.transaction.Transactional;
+import life.eventory.user.dto.login.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import life.eventory.user.service.TokenService;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
@@ -21,14 +22,15 @@ public class TokenServiceImpl implements TokenService {
     private final JwtEncoder jwtencoder;
     private final RSAKey rsaKey;
 
-    public String issueAccessToken(String userId) {
+    @Override
+    public LoginResponse issueAccessToken(Long userId) {
         Instant now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("user")
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(3600))
-                .subject(userId)
+                .expiresAt(now.plusSeconds(86400))
+                .subject(userId.toString())
                 .id(UUID.randomUUID().toString())
                 .build();
 
@@ -36,6 +38,8 @@ public class TokenServiceImpl implements TokenService {
                 .keyId(rsaKey.getKeyID())
                 .build();
 
-        return jwtencoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+        String token = jwtencoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+
+        return new LoginResponse(token, 86400, "Bearer");
     }
 }

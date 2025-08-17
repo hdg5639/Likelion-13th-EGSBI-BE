@@ -1,4 +1,4 @@
-package life.eventory.user.controller;
+package life.eventory.user.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.user.dto.*;
+import life.eventory.user.dto.login.LoginRequest;
+import life.eventory.user.dto.login.LoginResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -159,4 +161,38 @@ public interface UserAPI {
     )
     @GetMapping("/location/{id}")
     ResponseEntity<UserLocationResponse> locationInfo(@PathVariable Long id);
+
+    @Operation(summary = "로그인",
+            requestBody = @RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = LoginRequest.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "로그인 성공",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = LoginResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @PostMapping("/login")
+    ResponseEntity<LoginResponse> login(
+            @Parameter(description = "로그인 요청 정보")
+            @RequestBody LoginRequest request);
+
+    @Operation(summary = "토큰 재발급",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "재발급 성공",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = LoginResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @PostMapping("/renew")
+    ResponseEntity<LoginResponse> renew(@RequestHeader("X-User-Id") String userId);
 }
