@@ -16,4 +16,13 @@ public class LoginResponse {
     private Integer expiresIn;
     @Schema(description = "토큰 타입", example = "Bearer", accessMode = Schema.AccessMode.READ_ONLY)
     private String tokenType;
+
+    @Schema(description = "사용자 ID", example = "1")
+    private Long id;
+
+    @Schema(description = "사용자 이름", example = "홍길동")
+    private String name;
+
+    @Schema(description = "이메일 주소", example = "red@example.com")
+    private String email;
 }
