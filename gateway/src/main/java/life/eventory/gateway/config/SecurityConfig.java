@@ -74,14 +74,14 @@ public class SecurityConfig {
                                 "/api/activity/**",
                                 "/api/ai/**",
                                 "/api/event/qr/join",
-//                                "/api/event",
-//                                "/api/event/ai/description",
+                                "/api/event",
+                                "/api/event/ai/description",
                                 "/api/user/renew",
                                 "/api/user/location").authenticated()
 
                         // PATCH 요청 차단
                         .pathMatchers(HttpMethod.PATCH,
-//                                "/api/event",
+                                "/api/event",
                                 "/api/user/update").authenticated()
 
                         .anyExchange().permitAll() // 그 외의 요청은 인증 불필요
