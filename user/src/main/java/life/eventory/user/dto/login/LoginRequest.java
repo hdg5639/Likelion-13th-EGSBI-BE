@@ -11,8 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest {
-    @Schema(description = "이메일", example = "user@example.com")
+    @Schema(description = "이메일", example = "red@example.com")
     private String email;
-    @Schema(description = "비밀번호", example = "password")
+    @Schema(description = "비밀번호", example = "12345678")
     private String password;
 }

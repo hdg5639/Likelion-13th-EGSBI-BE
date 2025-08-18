@@ -63,7 +63,7 @@ public interface UserAPI {
     ) throws IOException;
 
     @Operation(summary = "이메일로 사용자 정보 조회",
-            parameters = @Parameter(name = "email", description = "사용자 이메일", required = true, example = "test@example.com"),
+            parameters = @Parameter(name = "email", description = "사용자 이메일", required = true, example = "red@example.com"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,

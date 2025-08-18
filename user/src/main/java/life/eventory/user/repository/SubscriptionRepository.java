@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
     Optional<SubscriptionEntity> findByUserIdAndOrganizerId(Long userId, Long organizerId);
     List<SubscriptionEntity> findByUserId(Long userId);
+    void deleteByOrganizerId(Long organizerId);
 }

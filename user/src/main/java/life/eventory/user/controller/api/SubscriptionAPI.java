@@ -20,9 +20,7 @@ public interface SubscriptionAPI {
 
     @Operation(
             summary = "구독 생성",
-            description = "사용자 ID를 헤더에서 받아 구독 정보를 생성합니다.",
             requestBody = @RequestBody(
-                    description = "구독 생성 요청 데이터",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
@@ -45,7 +43,6 @@ public interface SubscriptionAPI {
 
     @Operation(
             summary = "사용자 구독 전체 조회",
-            description = "사용자 ID를 헤더에서 받아 해당 사용자의 모든 구독 목록을 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공",
                             content = @Content(mediaType = "application/json",
@@ -61,7 +58,13 @@ public interface SubscriptionAPI {
 
     @Operation(
             summary = "구독 삭제",
-            description = "사용자 ID를 헤더에서 받아 구독 정보를 삭제합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubscriptionCreateRequest.class)
+                    )
+            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "삭제 성공",
                             content = @Content(
@@ -74,6 +77,7 @@ public interface SubscriptionAPI {
     @DeleteMapping("/delete")
     ResponseEntity<String> deleteSubscription(
             @Parameter(description = "사용자 ID", example = "1")
-            @RequestHeader("X-User-Id") Long userId
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody SubscriptionCreateRequest request
     );
 }

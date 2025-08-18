@@ -37,8 +37,10 @@ public class SubscriptionController implements SubscriptionAPI{
     }
 
     @Override
-    public ResponseEntity<String> deleteSubscription(@RequestHeader("X-User-Id") Long userId) {
-        subscriptionService.deleteSubscription(userId);
+    public ResponseEntity<String> deleteSubscription(@RequestHeader("X-User-Id") Long userId,
+                                                     @RequestBody SubscriptionCreateRequest request) {
+        request.setUserId(userId);
+        subscriptionService.deleteSubscription(request);
         return ResponseEntity.ok("삭제 성공");
     }
 }

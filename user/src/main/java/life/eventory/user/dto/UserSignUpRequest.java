@@ -16,7 +16,7 @@ public class UserSignUpRequest {
     @Schema(description = "이메일 주소", example = "red@example.com")
     private String email;
 
-    @Schema(description = "비밀번호", example = "password1234")
+    @Schema(description = "비밀번호", example = "12345678")
     private String password;
 
     @Schema(description = "전화번호", example = "010-1234-5678")

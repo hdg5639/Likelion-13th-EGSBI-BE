@@ -8,5 +8,5 @@ import java.util.List;
 public interface SubscriptionService{
     SubscriptionCreateRequest save(SubscriptionCreateRequest request);
     List<SubscriptionEntity> getSubscriptionsByUserId(Long userId);
-    void deleteSubscription(Long userId);
+    void deleteSubscription(SubscriptionCreateRequest request);
 }

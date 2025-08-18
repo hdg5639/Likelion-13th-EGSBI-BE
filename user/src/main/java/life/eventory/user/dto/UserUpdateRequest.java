@@ -16,10 +16,10 @@ public class UserUpdateRequest {
     @Schema(description = "이메일 주소", example = "red@example.com")
     private String email;
 
-    @Schema(description = "전화번호", example = "010-1234-5678")
+    @Schema(description = "전화번호", example = "010-5678-1234")
     private String phone;
 
-    @Schema(description = "비밀번호", example = "newpassword123")
+    @Schema(description = "비밀번호", example = "87654321")
     private String password;
 
     @Schema(description = "사용자 닉네임", example = "Red_RoadEast")
