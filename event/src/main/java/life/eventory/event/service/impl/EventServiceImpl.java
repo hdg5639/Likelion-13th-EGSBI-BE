@@ -79,13 +79,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO updateEvent(EventDTO eventDTO, MultipartFile image, Boolean poster) throws IOException {
-        Event event = eventRepository.findById(eventDTO.getId())
+    public EventDTO updateEvent(EventUpdate eventUpdate, MultipartFile image) throws IOException {
+        Event event = eventRepository.findById(eventUpdate.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음"));
 
         Long oldImageId = event.getPosterId();
         // 혹시 모를 posterId 변조값 방지
-        eventDTO.setPosterId(oldImageId);
         Long newImageId = null;
 
         // 이미지 파일이 있을 경우 업로드
@@ -101,13 +100,13 @@ public class EventServiceImpl implements EventService {
 
         try {
             // 포스터 존재 플래그 판별
-            if (!poster) {
+            if (!eventUpdate.getPoster()) {
                 event.setPosterId(null);
             }
             return entityToDTO(
                     eventTagService.setEventHashtags(
-                            eventRepository.save(eventUpdate(eventDTO, event)).getId(),
-                            eventDTO.getHashtags()
+                            eventRepository.save(eventUpdate(eventUpdate, event)).getId(),
+                            eventUpdate.getHashtags()
                     )
             );
         } catch (Exception e) {
@@ -198,7 +197,7 @@ public class EventServiceImpl implements EventService {
                 .build();
     }
 
-    private Event eventUpdate(EventDTO eventDTO, Event event) {
+    private Event eventUpdate(EventUpdate eventDTO, Event event) {
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
         event.setStartTime(eventDTO.getStartTime());
