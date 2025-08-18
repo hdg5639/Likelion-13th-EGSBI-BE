@@ -47,8 +47,9 @@ public class EventController implements EventApi {
     @Override
     public ResponseEntity<EventDTO> updateEvent(
             @RequestPart(value = "event") EventDTO eventDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-        return ResponseEntity.ok(eventService.updateEvent(eventDTO, image));
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "poster") Boolean poster) throws IOException {
+        return ResponseEntity.ok(eventService.updateEvent(eventDTO, image, poster));
     }
 
     // TODO: 인기순
