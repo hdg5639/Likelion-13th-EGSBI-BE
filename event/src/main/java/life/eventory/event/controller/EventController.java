@@ -1,6 +1,7 @@
 package life.eventory.event.controller;
 
 import life.eventory.event.controller.api.EventApi;
+import life.eventory.event.dto.EventUpdate;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.LocationDTO;
@@ -46,10 +47,9 @@ public class EventController implements EventApi {
 
     @Override
     public ResponseEntity<EventDTO> updateEvent(
-            @RequestPart(value = "event") EventDTO eventDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image,
-            @RequestPart(value = "poster") Boolean poster) throws IOException {
-        return ResponseEntity.ok(eventService.updateEvent(eventDTO, image, poster));
+            @RequestPart(value = "event") EventUpdate eventUpdate,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        return ResponseEntity.ok(eventService.updateEvent(eventUpdate, image));
     }
 
     // TODO: 인기순

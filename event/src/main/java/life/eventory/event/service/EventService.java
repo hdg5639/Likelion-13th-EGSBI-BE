@@ -1,6 +1,7 @@
 package life.eventory.event.service;
 
 import life.eventory.event.dto.EventDTO;
+import life.eventory.event.dto.EventUpdate;
 import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface EventService {
     EventDTO createEvent(NewEventDTO newEventDTO, MultipartFile image) throws IOException;
     List<EventDTO> findAllByOrganizerId(Pageable pageable, Long organizerId);
-    EventDTO updateEvent(EventDTO eventDTO,  MultipartFile image, Boolean poster) throws IOException;
+    EventDTO updateEvent(EventUpdate eventUpdate, MultipartFile image) throws IOException;
     List<EventDTO> getEventPage(Pageable pageable, Boolean deadline);
     List<EventDTO> getEventPage(Pageable pageable, LocationDTO locationDTO, Boolean deadline);
     Boolean existEvent(Long eventId);

@@ -103,8 +103,7 @@ public interface EventApi {
                             schema = @Schema(implementation = UpdateEventRequest.class),
                             encoding = {
                                     @Encoding(name = "event", contentType = "application/json"),
-                                    @Encoding(name = "image", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE),
-                                    @Encoding(name = "poster", contentType = MediaType.TEXT_PLAIN_VALUE)
+                                    @Encoding(name = "image", contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
                             }
                     )
             ),
@@ -124,9 +123,8 @@ public interface EventApi {
     )
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<EventDTO> updateEvent(
-            @RequestPart(value = "event") EventDTO eventDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image,
-            @RequestPart(value = "poster") Boolean poster) throws IOException;
+            @RequestPart(value = "event") EventUpdate eventUpdate,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException;
 
     @Operation(
             summary = "이벤트 전체 조회 (페이징, 날짜 최신순 자동 정렬)",
