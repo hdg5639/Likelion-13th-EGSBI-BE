@@ -14,4 +14,5 @@ public interface UserService {
     boolean UserExist(Long id);
     UserLocationResponse getUserLocation(Long id);
     LoginResponse authenticate(String email, String password);
+    void deleteLocation(String email);
 }

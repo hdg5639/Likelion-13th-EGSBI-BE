@@ -39,7 +39,7 @@ public interface SubscriptionAPI {
     )
     @PostMapping("/create")
     ResponseEntity<SubscriptionCreateRequest> createSubscription(
-            @Parameter(description = "사용자 ID", required = true)
+            @Parameter(description = "사용자 ID", example = "1")
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody SubscriptionCreateRequest request);
 
@@ -56,7 +56,7 @@ public interface SubscriptionAPI {
     )
     @GetMapping("/getAll")
     ResponseEntity<List<SubscriptionEntity>> getAllSubscriptions(
-            @Parameter(description = "사용자 ID", required = true)
+            @Parameter(description = "사용자 ID", example = "1")
             @RequestHeader("X-User-Id") Long userId);
 
     @Operation(
@@ -73,7 +73,7 @@ public interface SubscriptionAPI {
     )
     @DeleteMapping("/delete")
     ResponseEntity<String> deleteSubscription(
-            @Parameter(description = "사용자 ID", required = true)
+            @Parameter(description = "사용자 ID", example = "1")
             @RequestHeader("X-User-Id") Long userId
     );
 }
