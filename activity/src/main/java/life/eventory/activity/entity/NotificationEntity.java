@@ -1,8 +1,9 @@
 package life.eventory.activity.entity;
 
 import jakarta.persistence.*;
-import life.eventory.activity.dto.NotificationDTO;
+import life.eventory.activity.dto.notification.NotificationResponseDTO;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +22,11 @@ public class NotificationEntity {
     private Long userId;
     private Long eventId;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    public NotificationDTO toDTO() {
-        return NotificationDTO.builder()
-                .id(id)
+    public NotificationResponseDTO toDTO() {
+        return NotificationResponseDTO.builder()
                 .userId(userId)
                 .eventId(eventId)
                 .createdAt(createdAt)

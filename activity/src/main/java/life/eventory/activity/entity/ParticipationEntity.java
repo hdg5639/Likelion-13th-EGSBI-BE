@@ -1,7 +1,6 @@
 package life.eventory.activity.entity;
 
 import jakarta.persistence.*;
-import life.eventory.activity.dto.ParticipationDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,13 +21,4 @@ public class ParticipationEntity {
     private Long eventId;
 
     private LocalDateTime joinedAt;
-
-    public ParticipationDTO toDTO() {
-        return ParticipationDTO.builder()
-                .id(id)
-                .userId(userId)
-                .eventId(eventId)
-                .joinedAt(joinedAt)
-                .build();
-    }
 }

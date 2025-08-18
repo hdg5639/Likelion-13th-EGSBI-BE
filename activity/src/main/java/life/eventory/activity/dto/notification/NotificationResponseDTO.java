@@ -1,4 +1,4 @@
-package life.eventory.activity.dto;
+package life.eventory.activity.dto.notification;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -11,12 +11,9 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "NotificationDTO", description = "사용자가 특정 이벤트를 알림 설정했는지 정보를 담는 DTO")
+@Schema(name = "NotificationResponseDTO", description = "알림 설정 응답 DTO")
 
-public class NotificationDTO {
-    @Schema(description = "알림 ID (자동 생성)", example = "1")
-    private Long id;
-
+public class NotificationResponseDTO {
     @Schema(description = "알림을 설정한 사용자 ID", example = "100")
     private Long userId;
 

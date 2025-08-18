@@ -1,7 +1,6 @@
 package life.eventory.activity.service.impl;
 
-import jakarta.transaction.Transactional;
-import life.eventory.activity.dto.BookmarkDTO;
+import life.eventory.activity.dto.bookmark.BookmarkResponseDTO;
 import life.eventory.activity.entity.BookmarkEntity;
 import life.eventory.activity.repository.BookmarkRepository;
 import life.eventory.activity.service.BookmarkService;
@@ -34,6 +33,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         // 북마크가 존재할 때 삭제(북마크 해제)
         if ( bookmark.isPresent()) {
             bookmarkRepository.delete(bookmark.get());
+
             return "북마크가 해제되었습니다.";
         }
         else { // 북마크가 없어서 새로 추가(북마크 설정)
@@ -45,9 +45,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
     }
 
-    // 특정 사용자의 북마크 목록을 리스트로 조회
+    // 특정 사용자의 북마크 목록을 리스트로 조회(최신순)
     @Override
-    public List<BookmarkDTO> getBookmarkedEvents(Long userId) {
-        return bookmarkRepository.findByUserId(userId).stream().map(BookmarkEntity::toDTO).toList();
+    public List<BookmarkResponseDTO> getBookmarkedEvents(Long userId) {
+        return bookmarkRepository.findByUserIdOrderByCreatedAtDesc(userId).stream().map(BookmarkEntity::toDTO).toList();
     }
+
 }

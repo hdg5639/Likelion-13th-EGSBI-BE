@@ -7,13 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import life.eventory.activity.dto.ParticipationDTO;
+import life.eventory.activity.dto.participation.ParticipationRequestDTO;
+import life.eventory.activity.dto.participation.ParticipationResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public interface ParticipationAPI {
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ParticipationDTO.class)
+                            schema = @Schema(implementation = ParticipationRequestDTO.class)
                     )
             ),
             responses = {
@@ -33,7 +31,7 @@ public interface ParticipationAPI {
                             description = "행사 참여 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ParticipationDTO.class)
+                                    schema = @Schema(implementation = ParticipationResponseDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -41,7 +39,7 @@ public interface ParticipationAPI {
             }
     )
     @PostMapping(value = "/participation/join")
-    ResponseEntity<ParticipationDTO> joinEvent(@RequestBody ParticipationDTO participationDTO);
+    ResponseEntity<ParticipationResponseDTO> joinEvent(@RequestHeader("X-User-Id") Long userId, @RequestBody ParticipationRequestDTO requestDTO);
 
     @Operation(summary = "참여 행사 리스트 조회",
             parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
@@ -51,7 +49,7 @@ public interface ParticipationAPI {
                             description = "참여 행사 리스트 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ParticipationDTO.class)
+                                    schema = @Schema(implementation = ParticipationResponseDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -59,5 +57,5 @@ public interface ParticipationAPI {
             }
     )
     @GetMapping(value = "/participation/list")
-    ResponseEntity<List<ParticipationDTO>> getParticipations(@RequestParam Long userId);
+    ResponseEntity<List<ParticipationResponseDTO>> getParticipations(@RequestHeader("X-User-Id") Long userId);
 }

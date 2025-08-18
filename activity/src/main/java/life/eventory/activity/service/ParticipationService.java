@@ -1,10 +1,11 @@
 package life.eventory.activity.service;
 
-import life.eventory.activity.dto.ParticipationDTO;
+import life.eventory.activity.dto.participation.ParticipationRequestDTO;
+import life.eventory.activity.dto.participation.ParticipationResponseDTO;
 
 import java.util.List;
 
 public interface ParticipationService {
-    ParticipationDTO joinEvent(Long userId, Long eventId);
-    List<ParticipationDTO> getParticipation(Long userId);
+    ParticipationResponseDTO joinEvent(Long userId, ParticipationRequestDTO requestDTO);
+    List<ParticipationResponseDTO> getParticipation(Long userId);
 }

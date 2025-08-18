@@ -1,6 +1,7 @@
 package life.eventory.activity.service.impl;
 
-import life.eventory.activity.dto.ParticipationDTO;
+import life.eventory.activity.dto.participation.ParticipationRequestDTO;
+import life.eventory.activity.dto.participation.ParticipationResponseDTO;
 import life.eventory.activity.entity.ParticipationEntity;
 import life.eventory.activity.repository.ParticipationRepository;
 import life.eventory.activity.service.ParticipationService;
@@ -15,16 +16,34 @@ import java.util.List;
 public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationRepository participationRepository;
 
-    public ParticipationDTO joinEvent(Long userId, Long eventId) {
-        ParticipationEntity participation = ParticipationEntity.builder()
-                .userId(userId)
-                .eventId(eventId)
-                .joinedAt(LocalDateTime.now())
-                .build();
-        return participationRepository.save(participation).toDTO();
+    @Override
+    public ParticipationResponseDTO joinEvent(Long userId, ParticipationRequestDTO requestDTO) {
+        ParticipationEntity participation = participationRepository
+                .findByUserIdAndEventId(userId, requestDTO.getEventId())
+                        .orElseGet(()->{
+                            ParticipationEntity newParticipation = ParticipationEntity.builder()
+                                    .userId(userId)
+                                    .eventId(requestDTO.getEventId())
+                                    .joinedAt(LocalDateTime.now())
+                                    .build();
+                            return participationRepository.save(newParticipation);
+                        });
+
+        return new ParticipationResponseDTO(
+                participation.getUserId(),
+                participation.getEventId(),
+                participation.getJoinedAt()
+        );
     }
 
-    public List<ParticipationDTO> getParticipation(Long userId) {
-        return participationRepository.findByUserId(userId).stream().map(ParticipationEntity::toDTO).toList();
+    @Override
+    public List<ParticipationResponseDTO> getParticipation(Long userId) {
+        return participationRepository.findByUserId(userId).stream()
+                .map(p-> new ParticipationResponseDTO(
+                        p.getUserId(),
+                        p.getEventId(),
+                        p.getJoinedAt()
+                ))
+                .toList();
     }
 }
