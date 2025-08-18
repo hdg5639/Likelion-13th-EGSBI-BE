@@ -69,4 +69,10 @@ public class UserController implements UserAPI {
     public ResponseEntity<LoginResponse> renew(@RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(tokenService.issueAccessToken(Long.parseLong(userId)));
     }
+
+    @Override
+    public ResponseEntity<String> deleteLocation(@RequestParam String email) {
+        userService.deleteLocation(email);
+        return ResponseEntity.ok("삭제 성공");
+    }
 }

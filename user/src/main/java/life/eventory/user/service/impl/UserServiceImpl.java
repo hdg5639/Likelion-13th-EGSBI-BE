@@ -141,4 +141,19 @@ public class UserServiceImpl implements UserService {
         response.setEmail(user.getEmail());
         return response;
     }
+
+    @Override
+    public void deleteLocation(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " not found."));
+
+        if (user != null) {
+            user.setLatitude(null);
+            user.setLongitude(null);
+            user.setAddress(null);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User with email " + email + " not found.");
+        }
+    }
 }

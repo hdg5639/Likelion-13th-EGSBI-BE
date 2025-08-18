@@ -195,4 +195,19 @@ public interface UserAPI {
     )
     @PostMapping("/renew")
     ResponseEntity<LoginResponse> renew(@RequestHeader("X-User-Id") String userId);
+
+    @Operation(summary = "사용자 위치 정보 삭제",
+            parameters = @Parameter(name = "email", description = "사용자 이메일", required = true, example = "red@example.com"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "위치 정보 삭제 성공",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(type = "string", example = "삭제 성공"))),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "사용자 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @DeleteMapping("/delete/location")
+    ResponseEntity<String> deleteLocation(@RequestParam String email);
+
 }
