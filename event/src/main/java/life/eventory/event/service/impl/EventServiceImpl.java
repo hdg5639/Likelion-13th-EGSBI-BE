@@ -95,7 +95,8 @@ public class EventServiceImpl implements EventService {
         // 이미지 ID 설정
         if (newImageId != null) {
             event.setPosterId(newImageId);
-            communicationService.deletePoster(oldImageId);
+            if (oldImageId != null)
+                communicationService.deletePoster(oldImageId);
         }
 
         try {
