@@ -90,4 +90,30 @@ public class CommunicationServiceImpl implements CommunicationService {
         log.error("Exception type: {}", e.getClass().getSimpleName());
         log.error("Exception message: {}", e.getMessage());
     }
+
+    @Override
+    public boolean organizerExists (Long organizerId) {
+        ServiceInstance organizerInstance = getOrganizerInstance();
+
+        URI uri = UriComponentsBuilder.fromUri(organizerInstance.getUri())
+                .path("/api/event/exist/organizer/{organizerId}")
+                .buildAndExpand(organizerId)
+                .toUri();
+
+        ResponseEntity<Boolean> response = restTemplate.getForEntity(uri, Boolean.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new IllegalStateException("Failed to verify event existence");
+        }
+    }
+
+    private ServiceInstance getOrganizerInstance() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("EVENT");
+        if (instances == null || instances.isEmpty()) {
+            throw new IllegalStateException("No EVENT-SERVICE instances available");
+        }
+        return instances.get(0);
+    }
 }
