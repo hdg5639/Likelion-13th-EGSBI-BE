@@ -12,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -77,9 +79,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO updateEvent(EventDTO eventDTO, MultipartFile image) throws IOException {
+    public EventDTO updateEvent(EventDTO eventDTO, MultipartFile image, Boolean poster) throws IOException {
         Event event = eventRepository.findById(eventDTO.getId())
-                .orElseThrow(() -> new IllegalStateException("Event not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음"));
 
         Long oldImageId = event.getPosterId();
         // 혹시 모를 posterId 변조값 방지
@@ -94,12 +96,13 @@ public class EventServiceImpl implements EventService {
         // 이미지 ID 설정
         if (newImageId != null) {
             event.setPosterId(newImageId);
+            communicationService.deletePoster(oldImageId);
         }
 
         try {
-            // 이전 이미지가 있으면 삭제
-            if (oldImageId != null) {
-                communicationService.deletePoster(oldImageId);
+            // 포스터 존재 플래그 판별
+            if (!poster) {
+                event.setPosterId(null);
             }
             return entityToDTO(
                     eventTagService.setEventHashtags(
@@ -146,7 +149,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO getEventById(Long eventId) {
         return entityToDTO(eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalStateException("Event not found")));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음")));
     }
 
     @Override
