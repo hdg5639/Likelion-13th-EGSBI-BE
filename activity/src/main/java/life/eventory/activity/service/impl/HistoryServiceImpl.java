@@ -1,7 +1,8 @@
 package life.eventory.activity.service.impl;
 
 import jakarta.transaction.Transactional;
-import life.eventory.activity.dto.HistoryDTO;
+import life.eventory.activity.dto.history.HistoryRequestDTO;
+import life.eventory.activity.dto.history.HistoryResponseDTO;
 import life.eventory.activity.entity.HistoryEntity;
 import life.eventory.activity.repository.HistoryRepository;
 import life.eventory.activity.service.HistoryService;
@@ -23,9 +24,8 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     @Transactional
-    public HistoryDTO recordView(HistoryDTO historyDTO) {
-        Long userId = historyDTO.getUserId();
-        Long eventId = historyDTO.getEventId();
+    public HistoryResponseDTO recordView(Long userId, HistoryRequestDTO requestDTO) {
+        Long eventId = requestDTO.getEventId();
 
 //        // 사용자 존재 여부 검증
 //        UserEntity user = userRepository.findById(userId)
@@ -52,8 +52,8 @@ public class HistoryServiceImpl implements HistoryService {
             HistoryEntity newHistory = HistoryEntity.builder()
                     .userId(userId)
                     .eventId(eventId)
-                    .eventName(historyDTO.getEventName())
-                    .eventThumbnail(historyDTO.getEventThumbnail())
+                    .eventName(requestDTO.getEventName())
+                    .eventThumbnail(requestDTO.getEventThumbnail())
                     .viewedAt(LocalDateTime.now())
                     .build();
             return historyRepository.save(newHistory).toDTO();
@@ -62,7 +62,7 @@ public class HistoryServiceImpl implements HistoryService {
 
     // 특정 사용자의 조회 히스토리 리스트를 페이징, 최신순으로 정렬
     @Override
-    public Page<HistoryDTO> getHistoryList(Long userId, Pageable pageable) {
+    public Page<HistoryResponseDTO> getHistoryList(Long userId, Pageable pageable) {
         Page<HistoryEntity> history = historyRepository.findByUserId(userId, pageable);
         return history.map(HistoryEntity::toDTO);
     }

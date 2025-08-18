@@ -1,13 +1,12 @@
 package life.eventory.activity.service.impl;
 
-import life.eventory.activity.dto.NotificationDTO;
+import life.eventory.activity.dto.notification.NotificationResponseDTO;
 import life.eventory.activity.entity.NotificationEntity;
 import life.eventory.activity.repository.NotificationRepository;
 import life.eventory.activity.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +39,6 @@ public class NotificationServiceImpl implements NotificationService {
             notificationRepository.save(NotificationEntity.builder()
                     .userId(userId)
                     .eventId(eventId)
-                    .createdAt(LocalDateTime.now())
                     .build());
             return "알림이 설정되었습니다.";
         }
@@ -48,7 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     // 사용자가 알림받기 한 행사 리스트 조회
     @Override
-    public List<NotificationDTO> getNotificationList(Long userId) {
-        return notificationRepository.findByUserId(userId).stream().map(NotificationEntity::toDTO).toList();
+    public List<NotificationResponseDTO> getNotificationList(Long userId) {
+        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId).stream().map(NotificationEntity::toDTO).toList();
     }
 }

@@ -7,13 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import life.eventory.activity.dto.NotificationDTO;
+import life.eventory.activity.dto.notification.NotificationRequestDTO;
+import life.eventory.activity.dto.notification.NotificationResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public interface NotificationAPI {
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = NotificationDTO.class)
+                            schema = @Schema(implementation = NotificationRequestDTO.class)
                     )
             ),
             responses = {
@@ -33,7 +31,7 @@ public interface NotificationAPI {
                             description = "알림 추가/ 해제 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = NotificationDTO.class)
+                                    schema = @Schema(implementation = NotificationResponseDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -41,7 +39,7 @@ public interface NotificationAPI {
             }
     )
     @PostMapping(value = "/notification/toggle")
-    ResponseEntity<String> toggleNotification(@RequestBody NotificationDTO notificationDTO);
+    ResponseEntity<String> toggleNotification(@RequestHeader("X-User-Id") Long userId, @RequestBody NotificationRequestDTO requestDTO);
 
     @Operation(summary = "알림 리스트 조회",
             parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
@@ -51,7 +49,7 @@ public interface NotificationAPI {
                             description = "알림 리스트 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = NotificationDTO.class)
+                                    schema = @Schema(implementation = NotificationResponseDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -59,5 +57,5 @@ public interface NotificationAPI {
             }
     )
     @GetMapping(value = "/notification/list")
-    ResponseEntity<List<NotificationDTO>> notificationList(@RequestParam Long userId);
+    ResponseEntity<List<NotificationResponseDTO>> notificationList(@RequestHeader("X-User-Id") Long userId);
 }

@@ -1,4 +1,4 @@
-package life.eventory.activity.dto;
+package life.eventory.activity.dto.history;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -11,11 +11,8 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HistoryDTO", description = "사용자 활동 히스토리 정보 DTO")
-public class HistoryDTO {
-
-    @Schema(description = "히스토리 고유 ID", example = "1")
-    private Long id;
+@Schema(name = "HistoryDTO", description = "사용자 활동 히스토리 정보 응답 DTO")
+public class HistoryResponseDTO {
 
     @Schema(description = "사용자 ID", example = "100")
     private Long userId;

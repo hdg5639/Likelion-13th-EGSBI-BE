@@ -7,13 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import life.eventory.activity.dto.BookmarkDTO;
+import life.eventory.activity.dto.bookmark.BookmarkRequestDTO;
+import life.eventory.activity.dto.bookmark.BookmarkResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public interface BookmarkAPI {
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BookmarkDTO.class)
+                            schema = @Schema(implementation = BookmarkRequestDTO.class)
                     )
             ),
             responses = {
@@ -33,7 +31,7 @@ public interface BookmarkAPI {
                     description = "북마크 추가/ 해제 성공",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BookmarkDTO.class)
+                            schema = @Schema(implementation = BookmarkResponseDTO.class)
                     )
             ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -41,7 +39,7 @@ public interface BookmarkAPI {
             }
     )
     @PostMapping(value = "/bookmark/toggle")
-    ResponseEntity<String> toggleBookmark(@RequestBody BookmarkDTO bookmarkDTO);
+    ResponseEntity<String> toggleBookmark(@RequestHeader("X-User-Id") Long userId, @RequestBody BookmarkRequestDTO requestDTO);
 
     @Operation(summary = "북마크 리스트 조회",
             parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
@@ -51,7 +49,7 @@ public interface BookmarkAPI {
                             description = "북마크 리스트 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookmarkDTO.class)
+                                    schema = @Schema(implementation = BookmarkResponseDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -59,5 +57,6 @@ public interface BookmarkAPI {
             }
     )
     @GetMapping(value = "/bookmark/list")
-    ResponseEntity<List<BookmarkDTO>> listBookmark(@RequestParam Long userId);
+    ResponseEntity<List<BookmarkResponseDTO>> listBookmark(@RequestHeader("X-User-Id") Long userId);
+
 }

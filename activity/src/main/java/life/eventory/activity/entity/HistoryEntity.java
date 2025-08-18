@@ -1,8 +1,7 @@
 package life.eventory.activity.entity;
 
 import jakarta.persistence.*;
-import life.eventory.activity.dto.BookmarkDTO;
-import life.eventory.activity.dto.HistoryDTO;
+import life.eventory.activity.dto.history.HistoryResponseDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -28,9 +27,8 @@ public class HistoryEntity {
     // 조회 시각
     private LocalDateTime viewedAt;
 
-    public HistoryDTO toDTO() {
-        return HistoryDTO.builder()
-                .id(id)
+    public HistoryResponseDTO toDTO() {
+        return HistoryResponseDTO.builder()
                 .userId(userId)
                 .eventId(eventId)
                 .eventName(eventName)

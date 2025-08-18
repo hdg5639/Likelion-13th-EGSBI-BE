@@ -1,8 +1,11 @@
 package life.eventory.activity.entity;
 
 import jakarta.persistence.*;
-import life.eventory.activity.dto.BookmarkDTO;
+import life.eventory.activity.dto.bookmark.BookmarkResponseDTO;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="t_bookmark")
@@ -20,11 +23,17 @@ public class BookmarkEntity {
     private Long userId;
     private Long eventId;
 
-    public BookmarkDTO toDTO() {
-        return BookmarkDTO.builder()
-                .id(id)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    private Long bookmarkCount;
+
+    public BookmarkResponseDTO toDTO() {
+        return BookmarkResponseDTO.builder()
                 .userId(userId)
                 .eventId(eventId)
+                .createdAt(createdAt)
+                .bookmarkCount(bookmarkCount)
                 .build();
     }
 }
