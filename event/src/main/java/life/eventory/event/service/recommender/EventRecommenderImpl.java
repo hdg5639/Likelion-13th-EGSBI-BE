@@ -153,7 +153,7 @@ public class EventRecommenderImpl implements EventRecommender {
         List<EventDTO> top10 = candidates.stream()
                 .map(e -> Map.entry(e, computeScore(e, tagWeights, now)))
                 .sorted(
-                        Comparator.<Map.Entry<Event, Double>, Double>comparing(Map.Entry::getValue)
+                        Map.Entry.<Event, Double>comparingByValue()
                                 .reversed()
                                 .thenComparing(entry -> entry.getKey().getStartTime())
                 )
