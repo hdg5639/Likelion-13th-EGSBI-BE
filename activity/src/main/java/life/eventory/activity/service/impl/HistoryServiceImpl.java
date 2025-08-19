@@ -52,8 +52,8 @@ public class HistoryServiceImpl implements HistoryService {
             HistoryEntity newHistory = HistoryEntity.builder()
                     .userId(userId)
                     .eventId(eventId)
-                    .eventName(requestDTO.getEventName())
-                    .eventThumbnail(requestDTO.getEventThumbnail())
+                    .eventName(requestDTO.getName())
+                    .posterId(requestDTO.getPosterId())
                     .viewedAt(LocalDateTime.now())
                     .build();
             return historyRepository.save(newHistory).toDTO();

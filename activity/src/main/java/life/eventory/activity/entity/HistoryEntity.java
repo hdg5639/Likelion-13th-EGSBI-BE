@@ -22,7 +22,7 @@ public class HistoryEntity {
     private Long eventId;
 
     private String eventName;
-    private String eventThumbnail;
+    private Long posterId;
 
     // 조회 시각
     private LocalDateTime viewedAt;
@@ -31,8 +31,8 @@ public class HistoryEntity {
         return HistoryResponseDTO.builder()
                 .userId(userId)
                 .eventId(eventId)
-                .eventName(eventName)
-                .eventThumbnail(eventThumbnail)
+                .name(eventName)
+                .posterId(posterId)
                 .viewedAt(viewedAt)
                 .build();
     }
