@@ -1,7 +1,7 @@
 package life.eventory.activity.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,14 +42,13 @@ public interface BookmarkAPI {
     ResponseEntity<String> toggleBookmark(@RequestHeader("X-User-Id") Long userId, @RequestBody BookmarkRequestDTO requestDTO);
 
     @Operation(summary = "북마크 리스트 조회",
-            parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "북마크 리스트 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookmarkResponseDTO.class)
+                                    array = @ArraySchema(schema = @Schema(implementation = BookmarkResponseDTO.class))
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),

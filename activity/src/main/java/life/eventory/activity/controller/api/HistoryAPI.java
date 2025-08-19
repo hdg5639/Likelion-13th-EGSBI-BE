@@ -49,8 +49,6 @@ public interface HistoryAPI {
             @RequestBody HistoryRequestDTO requestDTO);
 
     @Operation(summary = "행사 상세 조회 시 히스토리 목록 조회",
-            parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
-
             responses = {
                     @ApiResponse(
                             responseCode = "200",
