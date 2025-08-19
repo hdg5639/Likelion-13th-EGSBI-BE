@@ -284,7 +284,7 @@ public interface EventApi {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("/hashtags")
+    @GetMapping("/recommend")
     ResponseEntity<AiRecommendResponse> getAiRecommend(
             @RequestHeader(name = "X-User-Id") Long userId);
 }
