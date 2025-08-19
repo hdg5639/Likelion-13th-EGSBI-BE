@@ -75,8 +75,10 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) {
-        return ResponseEntity.ok(eventService.getEventById(eventId));
+    public ResponseEntity<EventDTO> getEventById(
+            @RequestHeader(name = "X-User-Id", required = false) Long userId,
+            @PathVariable Long eventId) {
+        return ResponseEntity.ok(eventService.getEventById(userId, eventId));
     }
 
     @Override

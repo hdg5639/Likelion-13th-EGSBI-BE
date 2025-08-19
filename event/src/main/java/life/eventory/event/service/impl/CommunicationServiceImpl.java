@@ -1,6 +1,8 @@
 package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
+import life.eventory.event.dto.activity.HistoryRequest;
+import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import life.eventory.event.dto.MultipartFileResource;
@@ -185,6 +187,42 @@ public class CommunicationServiceImpl implements CommunicationService {
         } catch (Exception e) {
             imageErrorLog(e);
             throw new IllegalStateException("Failed to send request to Ai-Server", e);
+        }
+    }
+
+    @Override
+    public void addHistory(Long userId, HistoryRequest historyRequest) {
+        ServiceInstance imageInstance = getServerInstance("ACTIVITY");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/activity/history/add")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-User-Id", userId.toString());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<HistoryRequest> requestEntity = new HttpEntity<>(historyRequest, headers);
+
+        try {
+            ResponseEntity<HistoryResponse> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.POST,
+                            requestEntity,
+                            HistoryResponse.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return;
+            }
+
+            throw new IllegalStateException("Failed to create Event History");
+        } catch (Exception e) {
+            imageErrorLog(e);
+            throw new IllegalStateException("Failed to send request to Activity-Server", e);
         }
     }
 

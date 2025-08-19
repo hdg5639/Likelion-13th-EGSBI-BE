@@ -2,6 +2,7 @@ package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.*;
+import life.eventory.event.dto.activity.HistoryRequest;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
 import life.eventory.event.repository.EventRepository;
@@ -147,9 +148,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO getEventById(Long eventId) {
-        return entityToDTO(eventRepository.findById(eventId)
+    public EventDTO getEventById(Long userId, Long eventId) {
+        EventDTO eventDTO = entityToDTO(eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음")));
+
+        if (userId != null) {
+            communicationService.addHistory(
+                    userId,
+                    new HistoryRequest(
+                            eventDTO.getId(),
+                            eventDTO.getName(),
+                            eventDTO.getPosterId()
+                    )
+            );
+        }
+        return eventDTO;
     }
 
     @Override
