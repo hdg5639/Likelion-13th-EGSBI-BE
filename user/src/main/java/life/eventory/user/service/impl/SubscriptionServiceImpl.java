@@ -55,8 +55,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findByUserId(userId);
     }
 
-    public void deleteSubscription(Long userId) {
-        List<SubscriptionEntity> subscriptions = subscriptionRepository.findByUserId(userId);
-        subscriptionRepository.deleteAll(subscriptions);
+    public void deleteSubscription(SubscriptionCreateRequest request) {
+        Long organizerId = request.getOrganizerId();
+        subscriptionRepository.deleteByOrganizerId(organizerId);
     }
 }
