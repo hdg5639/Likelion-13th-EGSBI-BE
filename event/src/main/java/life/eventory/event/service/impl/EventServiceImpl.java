@@ -2,7 +2,9 @@ package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.*;
+import life.eventory.event.dto.activity.BookmarkResponse;
 import life.eventory.event.dto.activity.HistoryRequest;
+import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
 import life.eventory.event.repository.EventRepository;
@@ -21,9 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 @Slf4j
 @Service
@@ -173,16 +174,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Set<String> findHashtagSet(Set<Long> eventIdSet) {
-        Set<String> hashtagSet = new HashSet<>();
-        for (Long eventId : eventIdSet) {
-            Set<Tag> tags = eventRepository.findById(eventId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "잘못된 사용자 ID"))
-                    .getTags();
+    public List<EventDTO> getBookmarkList(Long userId) {
+        List<BookmarkResponse> bookmarks = communicationService.getBookmark(userId);
+        return eventRepository.findAllById(bookmarks.stream().map(BookmarkResponse::getEventId).toList())
+                .stream()
+                .map(this::entityToDTO)
+                .toList();
+    }
 
-            hashtagSet.addAll(tags.stream().map(Tag::getDisplayName).toList());
-        }
-        return hashtagSet;
+    @Override
+    public List<EventDTO> getHistoryList(Long userId, Pageable pageable) {
+        List<HistoryResponse> bookmarks = communicationService.getHistoryPage(userId, pageable);
+        return eventRepository.findAllById(bookmarks.stream().map(HistoryResponse::getEventId).toList())
+                .stream()
+                .map(this::entityToDTO)
+                .toList();
     }
 
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {

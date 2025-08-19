@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public interface EventService {
     EventDTO createEvent(NewEventDTO newEventDTO, MultipartFile image) throws IOException;
@@ -20,5 +19,6 @@ public interface EventService {
     Boolean existEvent(Long eventId);
     EventDTO getEventById(Long userId, Long eventId);
     Boolean existOrganizer(Long organizerId);
-    Set<String> findHashtagSet(Set<Long> eventIdSet);
+    List<EventDTO> getBookmarkList(Long userId);
+    List<EventDTO> getHistoryList(Long userId, Pageable pageable);
 }
