@@ -64,10 +64,6 @@ public class SecurityConfig {
                                 "/api/activity/**",
                                 "/api/event/qr").authenticated()
 
-                        // POST 요청 허용
-                        .pathMatchers(HttpMethod.POST,
-                                "/api/ai/**"
-                                ).permitAll()
 
                         // POST 요청 차단
                         .pathMatchers(HttpMethod.POST,
