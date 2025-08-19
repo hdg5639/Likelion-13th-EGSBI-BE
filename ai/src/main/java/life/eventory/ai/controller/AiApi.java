@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.ai.dto.AiEventDTO;
 import life.eventory.ai.dto.CreatedEventDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "AI API", description = "AI 서버 API")
 @RequestMapping("/api/ai")
@@ -59,6 +56,7 @@ public interface AiApi {
     )
     @PostMapping("/{eventId}")
     ResponseEntity<String> createEventSummary(
+            @RequestHeader(name = "X-User-Id", required = false) Long userId,
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
 

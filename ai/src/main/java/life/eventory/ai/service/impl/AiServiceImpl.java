@@ -3,6 +3,7 @@ package life.eventory.ai.service.impl;
 import life.eventory.ai.dto.AiEventDTO;
 import life.eventory.ai.dto.CreatedEventDTO;
 import life.eventory.ai.dto.EventDTO;
+import life.eventory.ai.dto.activity.HistoryRequest;
 import life.eventory.ai.service.AiService;
 import life.eventory.ai.service.CommunicationService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,19 @@ public class AiServiceImpl implements AiService {
     private final CommunicationService communicationService;
 
     @Override
-    public String createEventSummary(Long eventId) {
+    public String createEventSummary(Long userId, Long eventId) {
         EventDTO eventDTO = communicationService.getEvent(eventId);
+
+        if (userId != null) {
+            communicationService.addHistory(
+                    userId,
+                    new HistoryRequest(
+                            eventDTO.getId(),
+                            eventDTO.getName(),
+                            eventDTO.getPosterId()
+                    )
+            );
+        }
 
         return chatClient.build()
                 .prompt()

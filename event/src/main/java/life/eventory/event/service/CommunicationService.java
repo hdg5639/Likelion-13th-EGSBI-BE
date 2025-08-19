@@ -1,5 +1,6 @@
 package life.eventory.event.service;
 
+import life.eventory.event.dto.activity.HistoryRequest;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,4 +12,5 @@ public interface CommunicationService {
     void deletePoster(Long posterId);
     void existUser(Long userId);
     CreatedEventInfoDTO createAiDescription(AiEventDTO aiEventDTO);
+    void addHistory(Long userId, HistoryRequest historyRequest);
 }

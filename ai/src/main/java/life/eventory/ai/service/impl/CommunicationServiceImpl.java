@@ -1,6 +1,8 @@
 package life.eventory.ai.service.impl;
 
 import life.eventory.ai.dto.EventDTO;
+import life.eventory.ai.dto.activity.HistoryRequest;
+import life.eventory.ai.dto.activity.HistoryResponse;
 import life.eventory.ai.service.CommunicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public EventDTO getEvent(Long eventId) {
-        ServiceInstance eventInstance = getEventInstance();
+        ServiceInstance eventInstance = getServerInstance("EVENT");
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
@@ -63,17 +65,53 @@ public class CommunicationServiceImpl implements CommunicationService {
         log.error("Exception message: {}", e.getMessage());
     }
 
-    // Image 인스턴스 조회
-    private ServiceInstance getEventInstance() {
+    @Override
+    public void addHistory(Long userId, HistoryRequest historyRequest) {
+        ServiceInstance imageInstance = getServerInstance("ACTIVITY");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/activity/history/add")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-User-Id", userId.toString());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<HistoryRequest> requestEntity = new HttpEntity<>(historyRequest, headers);
+
+        try {
+            ResponseEntity<HistoryResponse> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.POST,
+                            requestEntity,
+                            HistoryResponse.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return;
+            }
+
+            throw new IllegalStateException("Failed to create Event History");
+        } catch (Exception e) {
+            imageErrorLog(e);
+            throw new IllegalStateException("Failed to send request to Activity-Server", e);
+        }
+    }
+
+    // 서버 인스턴스 조회
+    private ServiceInstance getServerInstance(String serverName) {
         if (discoveryClient == null) {
             throw new IllegalStateException("discoveryClient is null");
         }
-        List<ServiceInstance> instances = discoveryClient.getInstances("EVENT");
-        log.info("Found {} EVENT-SERVER instances", instances != null ? instances.size() : 0);
+        List<ServiceInstance> instances = discoveryClient.getInstances(serverName.toUpperCase());
+        log.info("Found {} {}-SERVER instances", instances != null ? instances.size() : 0, serverName);
 
         if (instances == null || instances.isEmpty()) {
-            log.error("No Event-Server instances available");
-            throw new IllegalStateException("No Event-Server instances available");
+            log.error("No {}-SERVER instances available", serverName);
+            throw new IllegalStateException("No " + serverName + "-SERVER instances available");
         }
 
         return instances.get(0);
