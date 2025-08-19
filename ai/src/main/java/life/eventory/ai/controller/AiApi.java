@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.ai.dto.AiEventDTO;
 import life.eventory.ai.dto.CreatedEventDTO;
-import life.eventory.ai.dto.Recommender;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,20 +106,21 @@ public interface AiApi {
             @RequestBody AiEventDTO aiEventDTO);
 
     @Operation(
-            summary = "행사 추천 핵심 정보 생성 API",
+            summary = "행사 추천 코멘트 생성 API",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "조회 성공",
+                            responseCode = "201",
+                            description = "생성 성공",
                             content = @Content(
-                                    schema = @Schema(implementation = Recommender.class)
+                                    schema = @Schema(implementation = String.class)
                             )
                     ),
                     @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("/recommend")
-    ResponseEntity<Recommender> getRecommender(
-            @RequestHeader(name = "X-User-Id") Long userId);
+    @PostMapping("/comment")
+    ResponseEntity<String> createComment(
+            @Parameter(description = "추천 코멘트 프롬프트")
+            @RequestParam String prompt);
 }

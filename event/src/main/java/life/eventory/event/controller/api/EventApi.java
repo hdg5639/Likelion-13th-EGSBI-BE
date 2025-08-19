@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.*;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
+import life.eventory.event.dto.recommender.AiRecommendResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -269,13 +271,13 @@ public interface EventApi {
             @PathVariable Long organizerId);
 
     @Operation(
-            summary = "해시태그 세트 조회",
+            summary = "AI 추천 행사 조회",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "조회 성공",
                             content = @Content(
-                                    array = @ArraySchema( schema = @Schema(implementation = String.class) )
+                                    schema = @Schema(implementation = AiRecommendResponse.class)
                             )
                     ),
                     @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
@@ -283,7 +285,6 @@ public interface EventApi {
             }
     )
     @GetMapping("/hashtags")
-    ResponseEntity<Set<String>> findHashtagSet(
-            @Parameter(description = "행사 ID set")
-            @RequestBody Set<Long> eventIdSet);
+    ResponseEntity<AiRecommendResponse> getAiRecommend(
+            @RequestHeader(name = "X-User-Id") Long userId);
 }
