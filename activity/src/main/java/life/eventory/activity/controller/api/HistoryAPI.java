@@ -41,7 +41,10 @@ public interface HistoryAPI {
             }
     )
     @PostMapping(value = "/history/add")
-    ResponseEntity<HistoryResponseDTO> saveHistory(@RequestHeader("X-User-Id") Long userId, @RequestBody HistoryRequestDTO requestDTO);
+    ResponseEntity<HistoryResponseDTO> saveHistory(
+            @RequestHeader("X-User-Id") Long userId,
+            @Parameter(description = "히스토리 생성 객체")
+            @RequestBody HistoryRequestDTO requestDTO);
 
     @Operation(summary = "행사 상세 조회 시 히스토리 목록 조회",
             parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "100"),
