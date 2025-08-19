@@ -285,4 +285,44 @@ public interface EventApi {
     @GetMapping("/recommend")
     ResponseEntity<AiRecommendResponse> getAiRecommend(
             @RequestHeader(name = "X-User-Id") Long userId);
+
+    @Operation(
+            summary = "개인 북마크 행사 리스트 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = EventDTO.class)
+                                    )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/bookmarks")
+    ResponseEntity<List<EventDTO>> getBookmarkList(
+            @RequestHeader(name = "X-User-Id") Long userId);
+
+    @Operation(
+            summary = "개인 행사 조회 기록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = EventDTO.class)
+                                    )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/histories")
+    ResponseEntity<List<EventDTO>> getHistoryList(
+            @RequestHeader(name = "X-User-Id") Long userId);
 }

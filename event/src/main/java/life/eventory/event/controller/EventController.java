@@ -99,4 +99,14 @@ public class EventController implements EventApi {
             @RequestHeader(name = "X-User-Id") Long userId) {
         return ResponseEntity.ok(eventRecommender.recommendWithComment(userId));
     }
+
+    public ResponseEntity<List<EventDTO>> getBookmarkList(
+            @RequestHeader(name = "X-User-Id") Long userId) {
+        return ResponseEntity.ok(eventService.getBookmarkList(userId));
+    }
+
+    public ResponseEntity<List<EventDTO>> getHistoryList(
+            @RequestHeader(name = "X-User-Id") Long userId) {
+        return ResponseEntity.ok(eventService.getHistoryList(userId));
+    }
 }
