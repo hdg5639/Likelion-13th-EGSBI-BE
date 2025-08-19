@@ -269,7 +269,7 @@ public interface EventApi {
             @PathVariable Long organizerId);
 
     @Operation(
-            summary = "AI 추천 행사 조회",
+            summary = "AI 추천 행사 조회 (최대 상위 10개)",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
