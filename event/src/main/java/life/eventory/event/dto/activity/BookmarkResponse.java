@@ -1,4 +1,4 @@
-package life.eventory.ai.dto.activity;
+package life.eventory.event.dto.activity;
 
 import lombok.*;
 

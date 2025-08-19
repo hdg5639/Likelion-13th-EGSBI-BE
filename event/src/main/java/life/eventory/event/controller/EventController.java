@@ -7,8 +7,10 @@ import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
+import life.eventory.event.dto.recommender.AiRecommendResponse;
 import life.eventory.event.service.CommunicationService;
 import life.eventory.event.service.EventService;
+import life.eventory.event.service.recommender.EventRecommender;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Sort;
@@ -21,14 +23,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-
 
 @RestController
 @RequiredArgsConstructor
 public class EventController implements EventApi {
     private final EventService eventService;
     private final CommunicationService communicationService;
+    private final EventRecommender eventRecommender;
 
     @Override
     public ResponseEntity<EventDTO> createEvent(
@@ -94,7 +95,8 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public ResponseEntity<Set<String>> findHashtagSet(@RequestBody Set<Long> eventIdSet) {
-        return ResponseEntity.ok(eventService.findHashtagSet(eventIdSet));
+    public ResponseEntity<AiRecommendResponse> getAiRecommend(
+            @RequestHeader(name = "X-User-Id") Long userId) {
+        return ResponseEntity.ok(eventRecommender.recommendWithComment(userId));
     }
 }

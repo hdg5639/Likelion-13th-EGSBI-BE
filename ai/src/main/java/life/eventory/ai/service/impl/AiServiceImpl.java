@@ -85,4 +85,68 @@ public class AiServiceImpl implements AiService {
                 .call()
                 .entity(CreatedEventDTO.class);
     }
+
+    @Override
+    public String createComment(String prompt) {
+        try {
+            String raw = chatClient.build()
+                    .prompt()
+                    .system("""
+                        너는 한국어로 답해.
+                        규칙:
+                        - 입력 키워드/행사 정보를 바탕으로 '한 줄 코멘트'만 생성
+                        - 최대 28자 내로 자연스럽게
+                        - 마침표/이모지 과다 금지, 과장 표현 지양
+                        - 출력은 텍스트 1문장만 (JSON/설명/따옴표/코드블록 금지)
+                        """)
+                    .user(u -> u.text("""
+                        한 줄 코멘트를 만들어줘.
+                        참고 정보:
+                        {prompt}
+                        """).param("prompt", prompt))
+                    .call()
+                    // 라이브러리에 따라 .content() 또는 .entity(String.class) 중 하나 사용
+                    .content();
+
+            String comment = postProcessOneLine(raw);
+            return comment.isBlank() ? "취향에 맞춘 추천 행사들이에요" : comment;
+        } catch (Exception e) {
+            // 로그 남기고 폴백
+            // log.warn("createComment failed", e);
+            return "취향에 맞춘 추천 행사들이에요";
+        }
+    }
+
+    /** 개행 제거, 양끝 따옴표 제거, 공백 정리, 길이 제한(코드포인트 기준) */
+    private String postProcessOneLine(String s) {
+        if (s == null) return "";
+        // 줄바꿈/탭 → 공백
+        String cleaned = s.replaceAll("[\\r\\n\\t]+", " ").trim();
+        // 양끝 따옴표 제거
+        if ((cleaned.startsWith("\"") && cleaned.endsWith("\"")) ||
+                (cleaned.startsWith("“") && cleaned.endsWith("”")) ||
+                (cleaned.startsWith("‘") && cleaned.endsWith("’")) ||
+                (cleaned.startsWith("'") && cleaned.endsWith("'"))) {
+            cleaned = cleaned.substring(1, cleaned.length() - 1).trim();
+        }
+        // 공백 압축
+        cleaned = cleaned.replaceAll("\\s+", " ");
+
+        // 최대 길이 제한 (코드포인트 단위로 안전하게 자르기)
+        if (cleaned.codePointCount(0, cleaned.length()) > 28) {
+            cleaned = substringByCodePoint(cleaned);
+        }
+
+        // 문장부호 살짝 정리
+        cleaned = cleaned.replaceAll("[.!?…]+$", ""); // 끝의 과한 문장부호 제거
+        return cleaned;
+    }
+
+    /** 코드포인트 기준 안전한 서브스트링 */
+    private String substringByCodePoint(String s) {
+        if (s == null) return "";
+        int endIndex = s.offsetByCodePoints(0, Math.min(28, s.codePointCount(0, s.length())));
+        return s.substring(0, endIndex).trim();
+    }
+
 }
