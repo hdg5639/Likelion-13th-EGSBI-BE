@@ -23,6 +23,4 @@ public class BookmarkResponseDTO {
     @Schema(description = "북마크 한 시간", example = "2025-08-15T14:30:00")
     private LocalDateTime createdAt;
 
-    @Schema(description = "북마크 한 횟수", example = "1234")
-    private Long bookmarkCount;
 }
