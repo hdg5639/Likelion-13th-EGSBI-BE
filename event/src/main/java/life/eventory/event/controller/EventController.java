@@ -100,13 +100,16 @@ public class EventController implements EventApi {
         return ResponseEntity.ok(eventRecommender.recommendWithComment(userId));
     }
 
+    @Override
     public ResponseEntity<List<EventDTO>> getBookmarkList(
             @RequestHeader(name = "X-User-Id") Long userId) {
         return ResponseEntity.ok(eventService.getBookmarkList(userId));
     }
 
+    @Override
     public ResponseEntity<List<EventDTO>> getHistoryList(
-            @RequestHeader(name = "X-User-Id") Long userId) {
-        return ResponseEntity.ok(eventService.getHistoryList(userId));
+            @RequestHeader(name = "X-User-Id") Long userId,
+            Pageable pageable) {
+        return ResponseEntity.ok(eventService.getHistoryList(userId, pageable));
     }
 }

@@ -20,5 +20,5 @@ public interface EventService {
     EventDTO getEventById(Long userId, Long eventId);
     Boolean existOrganizer(Long organizerId);
     List<EventDTO> getBookmarkList(Long userId);
-    List<EventDTO> getHistoryList(Long userId);
+    List<EventDTO> getHistoryList(Long userId, Pageable pageable);
 }

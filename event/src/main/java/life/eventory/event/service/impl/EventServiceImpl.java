@@ -183,8 +183,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> getHistoryList(Long userId) {
-        List<HistoryResponse> bookmarks = communicationService.getHistory(userId);
+    public List<EventDTO> getHistoryList(Long userId, Pageable pageable) {
+        List<HistoryResponse> bookmarks = communicationService.getHistoryPage(userId, pageable);
         return eventRepository.findAllById(bookmarks.stream().map(HistoryResponse::getEventId).toList())
                 .stream()
                 .map(this::entityToDTO)

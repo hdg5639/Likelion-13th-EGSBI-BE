@@ -324,5 +324,6 @@ public interface EventApi {
     )
     @GetMapping("/histories")
     ResponseEntity<List<EventDTO>> getHistoryList(
-            @RequestHeader(name = "X-User-Id") Long userId);
+            @RequestHeader(name = "X-User-Id") Long userId,
+            Pageable pageable);
 }

@@ -275,6 +275,43 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
+    @Override
+    public List<HistoryResponse> getHistoryPage(Long userId, Pageable pageable) {
+        ServiceInstance imageInstance = getServerInstance("ACTIVITY");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/activity/history/list")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-User-Id", userId.toString());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<Pageable> requestEntity = new HttpEntity<>(pageable, headers);
+
+        try {
+            ResponseEntity<List<HistoryResponse>> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.GET,
+                            requestEntity,
+                            new ParameterizedTypeReference<>() {
+                            });
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+            throw new IllegalStateException("Failed to create Event History");
+        } catch (Exception e) {
+            errorLog(e, "ACTIVITY");
+            throw new IllegalStateException("Failed to send request to Activity-Server", e);
+        }
+    }
+
     // 북마크 조회
     @Override
     public List<BookmarkResponse> getBookmark(Long userId) {
