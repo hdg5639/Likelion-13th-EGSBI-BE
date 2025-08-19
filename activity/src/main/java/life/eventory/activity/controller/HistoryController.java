@@ -7,13 +7,14 @@ import life.eventory.activity.service.HistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.webmvc.core.service.RequestService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,10 +30,10 @@ public class HistoryController implements HistoryAPI {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
     @Override // 사용자의 히스토리 목록 조회
-    public ResponseEntity<Page<HistoryResponseDTO>> getHistoryList(@RequestHeader("X-User-Id") Long userId,
-                                                           @ParameterObject
+    public ResponseEntity<List<HistoryResponseDTO>> getHistoryList(@RequestHeader("X-User-Id") Long userId,
+                                                                   @ParameterObject
                                                            @PageableDefault(sort = "viewedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<HistoryResponseDTO> list = historyService.getHistoryList(userId, pageable);
+        List<HistoryResponseDTO> list = historyService.getHistoryList(userId, pageable).stream().toList();
         return ResponseEntity.ok(list);
     }
 
