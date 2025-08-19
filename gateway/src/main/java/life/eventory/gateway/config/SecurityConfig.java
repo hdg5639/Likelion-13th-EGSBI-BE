@@ -66,13 +66,13 @@ public class SecurityConfig {
 
                         // POST 요청 허용
                         .pathMatchers(HttpMethod.POST,
-                                "/api/ai/description"
+                                "/api/ai/**"
                                 ).permitAll()
 
                         // POST 요청 차단
                         .pathMatchers(HttpMethod.POST,
                                 "/api/activity/**",
-                                "/api/ai/**",
+                                "/api/ai/description",
                                 "/api/event/qr/join",
                                 "/api/event",
                                 "/api/event/ai/description",
