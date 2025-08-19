@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HistoryDTO", description = "사용자 활동 히스토리 정보 요청 DTO")
+@Schema(name = "HistoryRequestDTO", description = "사용자 활동 히스토리 정보 요청 DTO")
 public class HistoryRequestDTO {
     @Schema(description = "행사 ID", example = "2001")
     private Long eventId;

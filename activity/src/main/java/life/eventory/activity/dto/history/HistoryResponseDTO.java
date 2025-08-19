@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HistoryDTO", description = "사용자 활동 히스토리 정보 응답 DTO")
+@Schema(name = "HistoryResponseDTO", description = "사용자 활동 히스토리 정보 응답 DTO")
 public class HistoryResponseDTO {
 
     @Schema(description = "사용자 ID", example = "100")
