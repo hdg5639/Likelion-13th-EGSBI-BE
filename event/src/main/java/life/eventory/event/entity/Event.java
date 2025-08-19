@@ -43,7 +43,7 @@ public class Event {
     private Integer entryFee;
     @Column(nullable = false)
     private LocalDateTime createTime;
-    @Column
+    // QrImage는 null 허용
     private Long qrImage;
 
     @ManyToMany(fetch = FetchType.LAZY)

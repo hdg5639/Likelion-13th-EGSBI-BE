@@ -71,7 +71,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to upload poster");
         } catch (Exception e) {
-            imageErrorLog(e);
+            errorLog(e, "IMAGE");
             throw new IllegalStateException("Failed to send request to Image-Server", e);
         }
     }
@@ -108,13 +108,13 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to delete poster");
         } catch (Exception e) {
-            imageErrorLog(e);
+            errorLog(e, "IMAGE");
             throw new IllegalStateException("Failed to send request to Image-Server", e);
         }
     }
 
-    private void imageErrorLog(Exception e) {
-        log.error("Exception occurred while calling IMAGE-SERVER", e);
+    private void errorLog(Exception e, String serverName) {
+        log.error("Exception occurred while calling {}-SERVER", serverName, e);
         log.error("Exception type: {}", e.getClass().getSimpleName());
         log.error("Exception message: {}", e.getMessage());
     }
@@ -150,7 +150,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to check exist of user");
         } catch (Exception e) {
-            imageErrorLog(e);
+            errorLog(e, "USER");
             throw new IllegalStateException("Failed to send request to User-Server", e);
         }
     }
@@ -185,7 +185,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to create Ai-Description");
         } catch (Exception e) {
-            imageErrorLog(e);
+            errorLog(e, "AI");
             throw new IllegalStateException("Failed to send request to Ai-Server", e);
         }
     }
@@ -221,7 +221,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
             throw new IllegalStateException("Failed to create Event History");
         } catch (Exception e) {
-            imageErrorLog(e);
+            errorLog(e, "ACTIVITY");
             throw new IllegalStateException("Failed to send request to Activity-Server", e);
         }
     }

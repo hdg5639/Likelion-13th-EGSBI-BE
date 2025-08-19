@@ -21,7 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -168,6 +170,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public Boolean existOrganizer(Long organizerId) {
         return eventRepository.existsByOrganizerId(organizerId);
+    }
+
+    @Override
+    public Set<String> findHashtagSet(Set<Long> eventIdSet) {
+        Set<String> hashtagSet = new HashSet<>();
+        for (Long eventId : eventIdSet) {
+            Set<Tag> tags = eventRepository.findById(eventId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "잘못된 사용자 ID"))
+                    .getTags();
+
+            hashtagSet.addAll(tags.stream().map(Tag::getDisplayName).toList());
+        }
+        return hashtagSet;
     }
 
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {

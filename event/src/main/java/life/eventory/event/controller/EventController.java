@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -90,5 +91,10 @@ public class EventController implements EventApi {
     @Override
     public ResponseEntity<Boolean> existOrganizer(@PathVariable Long organizerId) {
         return ResponseEntity.ok(eventService.existOrganizer(organizerId));
+    }
+
+    @Override
+    public ResponseEntity<Set<String>> findHashtagSet(@RequestBody Set<Long> eventIdSet) {
+        return ResponseEntity.ok(eventService.findHashtagSet(eventIdSet));
     }
 }

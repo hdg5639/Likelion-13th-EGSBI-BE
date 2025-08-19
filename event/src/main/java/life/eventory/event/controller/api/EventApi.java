@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
@@ -266,4 +267,23 @@ public interface EventApi {
     ResponseEntity<Boolean> existOrganizer(
             @Parameter(description = "주최자 ID", example = "1")
             @PathVariable Long organizerId);
+
+    @Operation(
+            summary = "해시태그 세트 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    array = @ArraySchema( schema = @Schema(implementation = String.class) )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/hashtags")
+    ResponseEntity<Set<String>> findHashtagSet(
+            @Parameter(description = "행사 ID set")
+            @RequestBody Set<Long> eventIdSet);
 }
