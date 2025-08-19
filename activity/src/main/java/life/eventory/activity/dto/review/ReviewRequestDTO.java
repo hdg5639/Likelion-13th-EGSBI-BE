@@ -11,10 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @Schema(name = "ReviewRequest DTO", description = "리뷰 요청 DTO")
 public class ReviewRequestDTO {
-
-    @Schema(description = "참여한 이벤트 ID", example = "1000")
-    private Long eventId;
-
     @Schema(description = "리뷰 내용", example = "굿이에요")
     private String content;
 
