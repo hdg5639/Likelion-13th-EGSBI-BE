@@ -25,4 +25,7 @@ public class LoginResponse {
 
     @Schema(description = "이메일 주소", example = "red@example.com")
     private String email;
+
+    @Schema(description = "프로필 ID", example = "1")
+    private Long profileId;
 }

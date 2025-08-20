@@ -30,16 +30,15 @@ public class UserController implements UserAPI {
     }
 
     @Override
-    public ResponseEntity<UserInfoResponse> info(@RequestParam String email){
-        UserInfoResponse userInfoResponse = userService.getUserByEmail(email);
+    public ResponseEntity<UserInfoResponse> info(@RequestParam Long userId){
+        UserInfoResponse userInfoResponse = userService.getUserById(userId);
         return ResponseEntity.ok(userInfoResponse);
     }
 
     @Override
-    public ResponseEntity<UserUpdateRequest> update(@RequestPart(value = "user") UserUpdateRequest request,
+    public ResponseEntity<UserUpdateResponse> update(@RequestPart(value = "user") UserUpdateRequest request,
                                                     @RequestPart(value = "image", required = false) MultipartFile file) throws IOException{
-        UserUpdateRequest userUpdateRequest = userService.update(request, file);
-        return ResponseEntity.ok(userUpdateRequest);
+        return ResponseEntity.ok(userService.update(request, file));
     }
 
     @Override

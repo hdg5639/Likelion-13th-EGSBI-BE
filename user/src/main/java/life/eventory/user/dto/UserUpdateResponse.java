@@ -8,8 +8,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "사용자 정보 응답 DTO")
-public class UserInfoResponse {
+@Schema(description = "사용자 정보 수정 응답 DTO")
+public class UserUpdateResponse {
     @Schema(description = "사용자 이름", example = "홍길동")
     private String name;
 

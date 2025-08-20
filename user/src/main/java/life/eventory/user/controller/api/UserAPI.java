@@ -63,7 +63,7 @@ public interface UserAPI {
     ) throws IOException;
 
     @Operation(summary = "이메일로 사용자 정보 조회",
-            parameters = @Parameter(name = "email", description = "사용자 이메일", required = true, example = "red@example.com"),
+            parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "1"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -73,7 +73,7 @@ public interface UserAPI {
             }
     )
     @GetMapping("/info")
-    ResponseEntity<UserInfoResponse> info(@RequestParam String email);
+    ResponseEntity<UserInfoResponse> info(@RequestParam Long userId);
 
     @Operation(
             summary = "회원 정보 수정",
@@ -100,7 +100,7 @@ public interface UserAPI {
             }
     )
     @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<UserUpdateRequest> update(
+    ResponseEntity<UserUpdateResponse> update(
             @Parameter(
                     description = "회원 정보 수정 데이터 (JSON)",
                     content = @Content(
