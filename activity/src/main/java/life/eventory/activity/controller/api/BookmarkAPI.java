@@ -31,7 +31,7 @@ public interface BookmarkAPI {
                     description = "북마크 추가/ 해제 성공",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BookmarkResponseDTO.class)
+                            schema = @Schema(implementation = String.class)
                     )
             ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
@@ -65,7 +65,7 @@ public interface BookmarkAPI {
                             description = "북마크 횟수 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = BookmarkResponseDTO.class))
+                                    schema = @Schema(implementation = Long.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),

@@ -31,7 +31,7 @@ public interface NotificationAPI {
                             description = "알림 추가/ 해제 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = NotificationResponseDTO.class)
+                                    schema = @Schema(implementation = String.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),

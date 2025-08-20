@@ -57,4 +57,21 @@ public interface ParticipationAPI {
     )
     @GetMapping(value = "/participation/list")
     ResponseEntity<List<ParticipationResponseDTO>> getParticipations(@RequestHeader("X-User-Id") Long userId);
+
+    @Operation(summary = "이 행사를 북마크한 사용자 리스트 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "리스트 조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array =@ArraySchema(schema = @Schema(implementation = Long.class))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping(value = "/participation/{eventId}")
+    ResponseEntity<List<Long>> getUserIdsByEvent(@PathVariable Long eventId);
 }
