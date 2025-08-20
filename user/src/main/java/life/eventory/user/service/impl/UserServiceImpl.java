@@ -59,19 +59,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponse getUserByEmail(String email) {
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    public UserInfoResponse getUserById(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."));
 
         return UserInfoResponse.builder()
                 .name(user.getName())
                 .nickname(user.getNickname())
+                .email(user.getEmail())
                 .phone(user.getPhone())
+                .profileId(user.getProfileId())
                 .build();
     }
 
     @Override
-    public UserUpdateRequest update(UserUpdateRequest request, MultipartFile file) throws IOException {
+    public UserUpdateResponse update(UserUpdateRequest request, MultipartFile file) throws IOException {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -99,8 +101,17 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        userRepository.save(user);
-        return request;
+        return entityToUpdate(userRepository.save(user));
+    }
+
+    private UserUpdateResponse entityToUpdate(UserEntity userEntity) {
+        return UserUpdateResponse.builder()
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .phone(userEntity.getPhone())
+                .nickname(userEntity.getNickname())
+                .profileId(userEntity.getProfileId())
+                .build();
     }
 
     @Override
@@ -148,6 +159,7 @@ public class UserServiceImpl implements UserService {
         response.setId(user.getId());
         response.setName(user.getName());
         response.setEmail(user.getEmail());
+        response.setProfileId(user.getProfileId());
         return response;
     }
 
