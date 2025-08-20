@@ -3,6 +3,7 @@ package life.eventory.event.service.impl;
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.*;
 import life.eventory.event.dto.activity.BookmarkResponse;
+import life.eventory.event.dto.activity.EventBookmark;
 import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
@@ -23,7 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -178,6 +181,44 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAllById(bookmarks.stream().map(HistoryResponse::getEventId).toList())
                 .stream()
                 .map(this::entityToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<EventBookmark> getBookmarkedEventsInOrder() {
+        LinkedHashMap<Long, Long> bookmarkMap = communicationService.getAllBookmarkedEvents();
+        if (bookmarkMap.isEmpty()) return List.of();
+
+        // LinkedHashMap 이므로 key 순서 = 이미 정렬된 순서
+        List<Long> orderedIds = new ArrayList<>(bookmarkMap.keySet());
+
+        List<Event> fetched = eventRepository.findAllById(orderedIds);
+        Map<Long, Event> byId = fetched.stream()
+                .collect(Collectors.toMap(Event::getId, Function.identity()));
+
+        return orderedIds.stream()
+                .map(id -> {
+                    Event e = byId.get(id);
+                    if (e == null) return null; // 혹시 삭제된 이벤트가 있으면 스킵
+                    return EventBookmark.builder()
+                            .id(e.getId())
+                            .organizerId(e.getOrganizerId())
+                            .name(e.getName())
+                            .posterId(e.getPosterId())
+                            .description(e.getDescription())
+                            .startTime(e.getStartTime())
+                            .endTime(e.getEndTime())
+                            .address(e.getAddress())
+                            .latitude(e.getLatitude())
+                            .longitude(e.getLongitude())
+                            .entryFee(e.getEntryFee())
+                            .createTime(e.getCreateTime())
+                            .qrImage(e.getQrImage())
+                            .hashtags(e.getTags().stream().map(Tag::getName).toList()) // toString() 대신 name 권장
+                            .bookmarkCount(bookmarkMap.getOrDefault(id, 0L))           // ★ 여기
+                            .build();
+                })
+                .filter(Objects::nonNull)
                 .toList();
     }
 
