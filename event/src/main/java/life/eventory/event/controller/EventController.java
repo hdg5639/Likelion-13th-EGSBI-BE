@@ -2,6 +2,7 @@ package life.eventory.event.controller;
 
 import life.eventory.event.controller.api.EventApi;
 import life.eventory.event.dto.EventUpdate;
+import life.eventory.event.dto.activity.EventBookmark;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.LocationDTO;
@@ -110,5 +111,10 @@ public class EventController implements EventApi {
             @RequestHeader(name = "X-User-Id") Long userId,
             Pageable pageable) {
         return ResponseEntity.ok(eventService.getHistoryList(userId, pageable));
+    }
+
+    @Override
+    public ResponseEntity<List<EventBookmark>> getBookmarkedEventsInOrder() {
+        return ResponseEntity.ok(eventService.getBookmarkedEventsInOrder());
     }
 }

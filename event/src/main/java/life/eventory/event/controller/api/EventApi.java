@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.*;
+import life.eventory.event.dto.activity.EventBookmark;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import life.eventory.event.dto.recommender.AiRecommendResponse;
@@ -325,4 +326,23 @@ public interface EventApi {
     ResponseEntity<List<EventDTO>> getHistoryList(
             @RequestHeader(name = "X-User-Id") Long userId,
             Pageable pageable);
+
+    @Operation(
+            summary = "인기순 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "조회 성공",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = EventBookmark.class)
+                                    )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/popular")
+    ResponseEntity<List<EventBookmark>> getBookmarkedEventsInOrder();
 }

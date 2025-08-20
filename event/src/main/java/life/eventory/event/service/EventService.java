@@ -4,6 +4,7 @@ import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.EventUpdate;
 import life.eventory.event.dto.LocationDTO;
 import life.eventory.event.dto.NewEventDTO;
+import life.eventory.event.dto.activity.EventBookmark;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,4 +22,5 @@ public interface EventService {
     Boolean existOrganizer(Long organizerId);
     List<EventDTO> getBookmarkList(Long userId);
     List<EventDTO> getHistoryList(Long userId, Pageable pageable);
+    List<EventBookmark> getBookmarkedEventsInOrder();
 }
