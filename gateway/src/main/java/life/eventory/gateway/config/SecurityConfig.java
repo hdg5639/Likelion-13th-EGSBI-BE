@@ -61,7 +61,11 @@ public class SecurityConfig {
 
                         // GET 요청 차단
                         .pathMatchers(HttpMethod.GET,
-                                "/api/activity/**",
+                                "/api/activity/history/**",
+                                "/api/activity/bookmark/toggle",
+                                "/api/activity/participation/**",
+                                "/api/activity/review/**",
+                                "/api/activity/notification/**",
                                 "/api/event/qr").authenticated()
 
 
