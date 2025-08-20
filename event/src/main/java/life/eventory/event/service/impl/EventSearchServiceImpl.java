@@ -22,18 +22,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class EventSearchServiceImpl implements EventSearchService {               // ✅ 클래스명 PascalCase
+public class EventSearchServiceImpl implements EventSearchService {
 
     private final FullTextSearch fullTextSearch;
-    private final JPAQueryFactory queryFactory;     // QueryDSL
-    private final EventMapper mapper;               // entity -> DTO
+    private final JPAQueryFactory queryFactory;
+    private final EventMapper mapper;
 
     public Page<EventDTO> searchFulltext(String rawQuery, Pageable pageable,
                                          @Nullable EventSearchCond extra) {
         String booleanQ = toBooleanQuery(rawQuery);
         if (booleanQ.isBlank()) return Page.empty(pageable);
 
-        // ✅ 정렬 제거 (nativeQuery가 자체 ORDER BY를 가짐)
         Pageable pageOnly = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted());
 
         Page<Long> idPage = fullTextSearch.searchFulltextIds(booleanQ, pageOnly);
@@ -41,7 +40,6 @@ public class EventSearchServiceImpl implements EventSearchService {             
 
         List<Long> idsInOrder = idPage.getContent();
 
-        // 2) 실제 데이터 로드 (+ 추가 조건 필요시 extra 사용)
         QEvent e = QEvent.event;
         QTag t = QTag.tag;
 
@@ -50,14 +48,10 @@ public class EventSearchServiceImpl implements EventSearchService {             
                 .leftJoin(e.tags, t).fetchJoin()
                 .where(
                         e.id.in(idsInOrder)
-                        // 필요 시 추가 where:
-                        // , extra != null && extra.getStartFrom() != null ? e.startTime.goe(extra.getStartFrom()) : null
-                        // , extra != null && extra.getStartTo()   != null ? e.startTime.loe(extra.getStartTo())   : null
                 )
                 .distinct()
                 .fetch();
 
-        // 3) 원래 ID 순서대로 재정렬 후 DTO 매핑
         Map<Long, Event> byId = fetched.stream()
                 .collect(Collectors.toMap(Event::getId, Function.identity()));
 
@@ -70,13 +64,27 @@ public class EventSearchServiceImpl implements EventSearchService {             
         return new PageImpl<>(ordered, pageable, idPage.getTotalElements());
     }
 
-    // 공백으로 토큰 나눠 +토큰* 로 변환 (특수기호 제거)
     private String toBooleanQuery(String raw) {
-        if (raw == null || raw.isBlank()) return "";
-        return Arrays.stream(raw.trim().split("\\s+"))
-                .map(token -> token.replaceAll("[+\\-~()><\"*]", "")) // 불필요 기호 제거
-                .filter(s -> !s.isBlank())
-                .map(s -> "+" + s + "*")                              // 접두사 매칭
-                .collect(Collectors.joining(" "));
+        if (raw == null) return "";
+        String trimmed = raw.trim();
+        if (trimmed.isBlank()) return "";
+
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("\"([^\"]+)\"|(\\S+)").matcher(trimmed);
+
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        while (m.find()) {
+            String phrase = m.group(1);
+            String word   = m.group(2);
+
+            if (phrase != null) {
+                String p = phrase.replaceAll("[+\\-~()><*]", " ").trim();
+                if (!p.isBlank()) parts.add("\"" + p + "\"");
+            } else if (word != null) {
+                String w = word.replaceAll("[+\\-~()><\"*]", "");
+                if (!w.isBlank()) parts.add(w + "*");
+            }
+        }
+        return String.join(" ", parts);
     }
 }
