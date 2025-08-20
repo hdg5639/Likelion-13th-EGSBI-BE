@@ -350,6 +350,42 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
+    @Override
+    public List<BookmarkResponse> getAllBookmarkedEvents() {
+        ServiceInstance imageInstance = getServerInstance("ACTIVITY");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/activity/bookmark/all")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(null, headers);
+
+        try {
+            ResponseEntity<List<BookmarkResponse>> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.GET,
+                            requestEntity,
+                            new ParameterizedTypeReference<>() {
+                            });
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+            throw new IllegalStateException("Failed to create Event History");
+        } catch (Exception e) {
+            errorLog(e, "ACTIVITY");
+            throw new IllegalStateException("Failed to send request to Activity-Server", e);
+        }
+    }
+
     // 참여 조회
     @Override
     public List<ParticipationResponse> getParticipation(Long userId) {

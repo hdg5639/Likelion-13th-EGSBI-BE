@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Tag(name = "Bookmark API", description = "북마크 정보 관련 API")
@@ -90,5 +91,5 @@ public interface BookmarkAPI {
             }
     )
     @GetMapping(value = "/bookmark/all")
-    ResponseEntity<List<BookmarkResponseDTO>> getBookmarkedEvents();
+    ResponseEntity<LinkedHashMap<Long, Long>> getBookmarkedEvents();
 }
