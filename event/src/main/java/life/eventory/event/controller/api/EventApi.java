@@ -217,7 +217,6 @@ public interface EventApi {
     )
     @GetMapping("/info/{eventId}")
     ResponseEntity<EventDTO> getEventById(
-            @RequestHeader(name = "X-User-Id", required = false) Long userId,
             @Parameter(description = "행사 ID", example = "1")
             @PathVariable Long eventId);
 

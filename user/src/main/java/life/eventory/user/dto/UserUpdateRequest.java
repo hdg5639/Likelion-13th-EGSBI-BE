@@ -24,4 +24,7 @@ public class UserUpdateRequest {
 
     @Schema(description = "사용자 닉네임", example = "Red_RoadEast")
     private String nickname;
+
+    @Schema(description = "프로필 사진 유무 (삭제 시 false, 유지 혹은 변경 시 true", example = "true")
+    private Boolean profileEnabled;
 }
