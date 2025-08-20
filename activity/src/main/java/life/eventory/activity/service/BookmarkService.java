@@ -8,5 +8,7 @@ public interface BookmarkService {
     String toggleBookmark(Long userId, Long eventId);
     List<BookmarkResponseDTO> getBookmarkedEvents(Long userId);
     Long getBookmarkCountByEvent(Long eventId);
+
+    List<Long> getUserIdsByEvent(Long eventId);
     List<BookmarkResponseDTO> getBookmarkedEvents();
 }
