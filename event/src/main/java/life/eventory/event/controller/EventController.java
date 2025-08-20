@@ -10,6 +10,7 @@ import life.eventory.event.dto.NewEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import life.eventory.event.dto.recommender.AiRecommendResponse;
 import life.eventory.event.service.CommunicationService;
+import life.eventory.event.service.EventSearchService;
 import life.eventory.event.service.EventService;
 import life.eventory.event.service.recommender.EventRecommender;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventController implements EventApi {
     private final EventService eventService;
+    private final EventSearchService eventSearchService;
     private final CommunicationService communicationService;
     private final EventRecommender eventRecommender;
 
@@ -55,7 +57,6 @@ public class EventController implements EventApi {
         return ResponseEntity.ok(eventService.updateEvent(eventUpdate, image));
     }
 
-    // TODO: 인기순
     // 전체 조회
     @Override
     public ResponseEntity<List<EventDTO>> getEventsPage(@PageableDefault(sort = "createTime", direction = Sort.Direction.DESC)
@@ -112,9 +113,17 @@ public class EventController implements EventApi {
             Pageable pageable) {
         return ResponseEntity.ok(eventService.getHistoryList(userId, pageable));
     }
-
+    
     @Override
     public ResponseEntity<List<EventBookmark>> getBookmarkedEventsInOrder() {
         return ResponseEntity.ok(eventService.getBookmarkedEventsInOrder());
+    }
+
+    @Override
+    public List<EventDTO> searchFulltext(
+            @RequestParam String q,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return eventSearchService.searchFulltext(q, pageable, null).toList();
     }
 }

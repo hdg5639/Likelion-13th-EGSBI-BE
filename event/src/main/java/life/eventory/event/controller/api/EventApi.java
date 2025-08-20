@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.event.dto.*;
 import life.eventory.event.dto.activity.EventBookmark;
@@ -345,4 +346,39 @@ public interface EventApi {
     )
     @GetMapping("/popular")
     ResponseEntity<List<EventBookmark>> getBookmarkedEventsInOrder();
+
+    @Operation(
+            summary = "행사 검색 (풀텍스트, 관련도순)",
+            description = """
+                name/description/address 대상으로 풀텍스트 검색합니다.
+                검색어는 공백으로 구분되며 내부적으로 +토큰* 형태(Boolean mode)로 변환됩니다.
+                예) "AI 세미나" → "+AI* +세미나*"
+                """,
+            parameters = {
+                    @Parameter(name = "q", description = "검색어(공백 구분)", required = true, example = "AI 세미나"),
+                    @Parameter(name = "page", description = "페이지 번호(0부터)", example = "0"),
+                    @Parameter(name = "size", description = "페이지 크기", example = "20"),
+                    @Parameter(name = "sort", description = "정렬(미사용, 내부적으로 관련도순)", example = "startTime,desc")
+            }
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = EventDTO.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @GetMapping("/search")
+    List<EventDTO> searchFulltext(
+            @Parameter(description = "검색어", required = true)
+            @RequestParam String q,
+
+            @Parameter(hidden = true) // springdoc가 page/size/sort를 자동 노출
+            @PageableDefault(size = 20) Pageable pageable
+    );
 }
