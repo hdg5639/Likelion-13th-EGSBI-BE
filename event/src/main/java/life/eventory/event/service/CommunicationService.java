@@ -23,4 +23,5 @@ public interface CommunicationService {
     List<BookmarkResponse> getBookmark(Long userId);
     List<ParticipationResponse> getParticipation(Long userId);
     String getComment(String prompt);
+    List<BookmarkResponse> getAllBookmarkedEvents();
 }

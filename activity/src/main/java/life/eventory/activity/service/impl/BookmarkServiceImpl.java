@@ -7,6 +7,7 @@ import life.eventory.activity.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,10 +62,15 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarkRepository.findUserIdsByEventId(eventId);
     }
 
-
     @Override
-    public List<BookmarkResponseDTO> getBookmarkedEvents() {
-        return bookmarkRepository.findAllByOrderByBookmarkCountDesc()
-                .stream().map(BookmarkEntity::toDTO).toList();
+    public LinkedHashMap<Long, Long> getBookmarkedEvents() {
+        List<BookmarkEntity> list = bookmarkRepository.findAllByOrderByBookmarkCountDesc();
+        LinkedHashMap<Long, Long> eventList = new LinkedHashMap<>();
+        for (BookmarkEntity bookmarkEntity : list) {
+            if (!eventList.containsKey(bookmarkEntity.getEventId())) {
+                eventList.put(bookmarkEntity.getEventId(), bookmarkEntity.getBookmarkCount());
+            }
+        }
+        return eventList;
     }
 }

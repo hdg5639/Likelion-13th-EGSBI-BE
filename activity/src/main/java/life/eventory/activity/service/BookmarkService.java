@@ -2,6 +2,7 @@ package life.eventory.activity.service;
 
 import life.eventory.activity.dto.bookmark.BookmarkResponseDTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface BookmarkService {
@@ -10,5 +11,5 @@ public interface BookmarkService {
     Long getBookmarkCountByEvent(Long eventId);
 
     List<Long> getUserIdsByEvent(Long eventId);
-    List<BookmarkResponseDTO> getBookmarkedEvents();
+    LinkedHashMap<Long, Long> getBookmarkedEvents();
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class BookmarkController implements BookmarkAPI {
     }
 
     @Override
-    public ResponseEntity<List<BookmarkResponseDTO>> getBookmarkedEvents() {
+    public ResponseEntity<LinkedHashMap<Long, Long>> getBookmarkedEvents() {
         return ResponseEntity.ok(bookmarkService.getBookmarkedEvents());
     }
 
