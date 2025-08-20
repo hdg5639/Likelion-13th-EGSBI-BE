@@ -10,6 +10,7 @@ import life.eventory.user.service.TokenService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,6 +137,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<Long> checkByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> ResponseEntity.ok(user.getId()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @Override
     public UserLocationResponse getUserLocation(Long id){
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자가 없음"));
@@ -176,5 +184,11 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new IllegalArgumentException("User with email " + email + " not found.");
         }
+    }
+
+    @Override
+    public UserEntity getUserById_Id(Long userId) {
+        return userRepository.findById(userId)
+                .orElse(null);
     }
 }

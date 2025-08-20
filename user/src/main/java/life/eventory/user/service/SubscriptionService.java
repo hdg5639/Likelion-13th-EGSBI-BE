@@ -9,4 +9,5 @@ public interface SubscriptionService{
     SubscriptionCreateRequest save(SubscriptionCreateRequest request);
     List<SubscriptionListResponse> getSubscriptionsByUserId(Long userId);
     void deleteSubscription(SubscriptionCreateRequest request);
+    List<Long> getUser(Long organizerId);
 }

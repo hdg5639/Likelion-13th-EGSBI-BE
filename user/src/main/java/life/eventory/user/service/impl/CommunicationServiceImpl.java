@@ -8,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -150,6 +154,59 @@ public class CommunicationServiceImpl implements CommunicationService {
         List<ServiceInstance> instances = discoveryClient.getInstances("EVENT");
         if (instances == null || instances.isEmpty()) {
             throw new IllegalStateException("No EVENT-SERVICE instances available");
+        }
+        return instances.get(0);
+    }
+
+    @Override
+    public List<Long> getUserIds(Long eventId) {
+        ServiceInstance bookmarkInstance = getBookmarkInstance();
+
+        URI uri = UriComponentsBuilder.fromUri(bookmarkInstance.getUri())
+                .path("/api/activity/participation/{eventId}")
+                .buildAndExpand(eventId)
+                .toUri();
+
+        ResponseEntity<List<Long>> response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Long>>() {});
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new IllegalStateException("Failed to fetch bookmarked userIds");
+        }
+    }
+
+    private ServiceInstance getBookmarkInstance() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("ACTIVITY");
+        if (instances == null || instances.isEmpty()) {
+            log.error("No ACTIVITY-SERVICE instances available");
+            throw new IllegalStateException("No ACTIVITY-SERVICE instances available");
+        }
+        return instances.get(0);
+    }
+
+    @Override
+    public List<Long> UpcomingEventIds() {
+        ServiceInstance eventInstance = getEventInstance();
+
+        URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
+                .path("/api/event/upcoming")
+                .build()
+                .toUri();
+
+        ResponseEntity<List<Long>> response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Long>>() {});
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new IllegalStateException("Failed to fetch upcoming events");
+        }
+    }
+
+    private ServiceInstance getEventInstance() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("EVENT");
+        if (instances == null || instances.isEmpty()) {
+            throw new IllegalStateException("No EVENT service instances available");
         }
         return instances.get(0);
     }
