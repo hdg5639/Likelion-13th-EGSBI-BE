@@ -40,6 +40,6 @@ public class TokenServiceImpl implements TokenService {
 
         String token = jwtencoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
 
-        return new LoginResponse(token, 86400, "Bearer", null, null, null);
+        return new LoginResponse(token, 86400, "Bearer", null, null, null, null);
     }
 }
