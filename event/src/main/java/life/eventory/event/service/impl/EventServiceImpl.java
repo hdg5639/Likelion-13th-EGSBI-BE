@@ -3,11 +3,11 @@ package life.eventory.event.service.impl;
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.*;
 import life.eventory.event.dto.activity.BookmarkResponse;
-import life.eventory.event.dto.activity.HistoryRequest;
 import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.entity.Event;
 import life.eventory.event.entity.Tag;
 import life.eventory.event.repository.EventRepository;
+import life.eventory.event.repository.EventSearchRepository;
 import life.eventory.event.service.CommunicationService;
 import life.eventory.event.service.EventService;
 import life.eventory.event.service.EventTagService;
@@ -32,6 +32,7 @@ import java.util.List;
 @Transactional
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final EventSearchRepository eventSearchRepository;
     private final EventTagService eventTagService;
     private final CommunicationService communicationService;
 
@@ -127,8 +128,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO> getEventPage(Pageable pageable, Boolean deadline) {
         Page<Event> eventPage =
-                deadline ? eventRepository.findAllByPage(pageable) :
-                        eventRepository.findAllByPageExcludeClosed(pageable);
+                deadline ? eventSearchRepository.findAllByPage(pageable) :
+                        eventSearchRepository.findAllByPageExcludeClosed(pageable);
         return eventPage.getContent().stream()
                 .map(this::entityToDTO)
                 .toList();
@@ -138,8 +139,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO> getEventPage(Pageable pageable, LocationDTO locationDTO, Boolean deadline) {
         Page<Event> eventPage =
-                deadline ? eventRepository.findByDistance(locationDTO, pageable) :
-                        eventRepository.findByDistanceExcludeClosed(locationDTO, pageable);
+                deadline ? eventSearchRepository.findByDistance(locationDTO, pageable) :
+                        eventSearchRepository.findByDistanceExcludeClosed(locationDTO, pageable);
         return eventPage.getContent().stream()
                 .map(this::entityToDTO)
                 .toList();
