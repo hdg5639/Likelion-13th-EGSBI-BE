@@ -54,6 +54,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .build();
     }
 
+    @Override
     public List<SubscriptionListResponse> getSubscriptionsByUserId(Long userId) {
         List<SubscriptionEntity> organizers = subscriptionRepository.findByUserId(userId);
         return organizers.stream()
@@ -66,16 +67,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     String profileImageUri = (profileImageId != null) ? communicationService.getImageUri(profileImageId) : null;
 
                     return SubscriptionListResponse.builder()
-                            .organizerId(subscription.getId())
+                            .organizerId(organizerId)
                             .organizerName(organizer.getName())
                             .organizerNickname(organizer.getNickname())
-                            .profileImageId(organizer.getProfileId())
+                            .profileImageId(profileImageId)
                             .profileImageUri(profileImageUri)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Long> getUser(Long organizerId) {
+        List<SubscriptionEntity> subscriptions = subscriptionRepository.findByOrganizerId(organizerId);
+        return subscriptions.stream()
+                .map(SubscriptionEntity::getUserId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteSubscription(SubscriptionCreateRequest request) {
         Long organizerId = request.getOrganizerId();
         subscriptionRepository.deleteByOrganizerId(organizerId);

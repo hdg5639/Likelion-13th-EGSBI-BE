@@ -12,4 +12,5 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
     Optional<SubscriptionEntity> findByUserIdAndOrganizerId(Long userId, Long organizerId);
     List<SubscriptionEntity> findByUserId(Long userId);
     void deleteByOrganizerId(Long organizerId);
+    List<SubscriptionEntity> findByOrganizerId(Long organizerId);
 }
