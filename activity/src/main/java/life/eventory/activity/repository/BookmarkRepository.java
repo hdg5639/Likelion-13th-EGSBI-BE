@@ -17,4 +17,5 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, Long> 
 
     @Query("SELECT b.userId FROM BookmarkEntity b WHERE b.eventId =:eventId")
     List<Long> findUserIdsByEventId(@Param("eventId") Long eventId);
+    List<BookmarkEntity> findAllByOrderByBookmarkCountDesc();
 }

@@ -10,4 +10,5 @@ public interface BookmarkService {
     Long getBookmarkCountByEvent(Long eventId);
 
     List<Long> getUserIdsByEvent(Long eventId);
+    List<BookmarkResponseDTO> getBookmarkedEvents();
 }

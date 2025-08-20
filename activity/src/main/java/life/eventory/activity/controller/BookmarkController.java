@@ -35,4 +35,9 @@ public class BookmarkController implements BookmarkAPI {
         return ResponseEntity.ok(count);
     }
 
+    @Override
+    public ResponseEntity<List<BookmarkResponseDTO>> getBookmarkedEvents() {
+        return ResponseEntity.ok(bookmarkService.getBookmarkedEvents());
+    }
+
 }
