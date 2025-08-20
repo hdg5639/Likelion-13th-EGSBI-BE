@@ -56,5 +56,9 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarkRepository.countByEventId(eventId);
     }
 
-
+    @Override
+    public List<BookmarkResponseDTO> getBookmarkedEvents() {
+        return bookmarkRepository.findAllByOrderByBookmarkCountDesc()
+                .stream().map(BookmarkEntity::toDTO).toList();
+    }
 }
