@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface CommunicationService {
@@ -23,5 +24,5 @@ public interface CommunicationService {
     List<BookmarkResponse> getBookmark(Long userId);
     List<ParticipationResponse> getParticipation(Long userId);
     String getComment(String prompt);
-    List<BookmarkResponse> getAllBookmarkedEvents();
+    LinkedHashMap<Long, Long> getAllBookmarkedEvents();
 }

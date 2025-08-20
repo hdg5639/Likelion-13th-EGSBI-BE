@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -351,7 +352,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     }
 
     @Override
-    public List<BookmarkResponse> getAllBookmarkedEvents() {
+    public LinkedHashMap<Long, Long> getAllBookmarkedEvents() {
         ServiceInstance imageInstance = getServerInstance("ACTIVITY");
 
         // 요청 url 생성
@@ -368,7 +369,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(null, headers);
 
         try {
-            ResponseEntity<List<BookmarkResponse>> response =
+            ResponseEntity<LinkedHashMap<Long, Long>> response =
                     restTemplate.exchange(uri,
                             HttpMethod.GET,
                             requestEntity,
