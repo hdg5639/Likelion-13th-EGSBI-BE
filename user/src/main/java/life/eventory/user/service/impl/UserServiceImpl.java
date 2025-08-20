@@ -92,7 +92,9 @@ public class UserServiceImpl implements UserService {
             if (file != null && !file.isEmpty()) {
                 Long profileImageId = communicationService.uploadProfile(file);
                 // 기존 이미지 삭제
-                communicationService.deleteProfile(user.getProfileId());
+                if (profileImageId != null)
+                    communicationService.deleteProfile(user.getProfileId());
+
                 user.setProfileId(profileImageId);
             }
         }
