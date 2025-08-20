@@ -68,7 +68,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         LinkedHashMap<Long, Long> eventList = new LinkedHashMap<>();
         for (BookmarkEntity bookmarkEntity : list) {
             if (!eventList.containsKey(bookmarkEntity.getEventId())) {
-                eventList.put(bookmarkEntity.getEventId(), bookmarkEntity.getBookmarkCount());
+                eventList.put(bookmarkEntity.getEventId(), bookmarkRepository.countByEventId(bookmarkEntity.getEventId()));
             }
         }
         return eventList;
