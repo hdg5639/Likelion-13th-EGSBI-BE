@@ -85,9 +85,16 @@ public class UserServiceImpl implements UserService {
             user.setNickname(request.getNickname());
         if (request.getPhone() != null && !request.getPhone().isBlank())
             user.setPhone(request.getPhone());
-        if (file != null && !file.isEmpty()) {
-            Long profileImageId = communicationService.uploadProfile(file);
-            user.setProfileId(profileImageId);
+        if (! request.getProfileEnabled()) {
+            communicationService.deleteProfile(user.getProfileId());
+            user.setProfileId(null);
+        } else {
+            if (file != null && !file.isEmpty()) {
+                Long profileImageId = communicationService.uploadProfile(file);
+                // 기존 이미지 삭제
+                communicationService.deleteProfile(user.getProfileId());
+                user.setProfileId(profileImageId);
+            }
         }
 
         userRepository.save(user);
