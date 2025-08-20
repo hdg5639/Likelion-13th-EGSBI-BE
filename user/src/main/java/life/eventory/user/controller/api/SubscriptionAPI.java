@@ -2,13 +2,14 @@ package life.eventory.user.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import life.eventory.user.dto.SubscriptionCreateRequest;
-import life.eventory.user.entity.SubscriptionEntity;
+import life.eventory.user.dto.SubscriptionListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,13 +47,13 @@ public interface SubscriptionAPI {
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = SubscriptionEntity.class))),
+                                    array = @ArraySchema(schema = @Schema(implementation = SubscriptionListResponse.class)))),
                     @ApiResponse(responseCode = "204", description = "구독 없음", content = @Content),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
     @GetMapping("/getAll")
-    ResponseEntity<List<SubscriptionEntity>> getAllSubscriptions(
+    ResponseEntity<List<SubscriptionListResponse>> getAllSubscriptions(
             @Parameter(description = "사용자 ID", example = "1")
             @RequestHeader("X-User-Id") Long userId);
 

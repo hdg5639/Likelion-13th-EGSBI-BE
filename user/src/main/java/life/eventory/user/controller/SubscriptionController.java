@@ -2,7 +2,7 @@ package life.eventory.user.controller;
 
 import life.eventory.user.controller.api.SubscriptionAPI;
 import life.eventory.user.dto.SubscriptionCreateRequest;
-import life.eventory.user.entity.SubscriptionEntity;
+import life.eventory.user.dto.SubscriptionListResponse;
 import life.eventory.user.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +28,8 @@ public class SubscriptionController implements SubscriptionAPI{
     }
 
     @Override
-    public ResponseEntity<List<SubscriptionEntity>> getAllSubscriptions(@RequestHeader("X-User-Id") Long userId) {
-        List<SubscriptionEntity> subscriptions = subscriptionService.getSubscriptionsByUserId(userId);
+    public ResponseEntity<List<SubscriptionListResponse>> getAllSubscriptions(@RequestHeader("X-User-Id") Long userId) {
+        List<SubscriptionListResponse> subscriptions = subscriptionService.getSubscriptionsByUserId(userId);
         if (subscriptions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

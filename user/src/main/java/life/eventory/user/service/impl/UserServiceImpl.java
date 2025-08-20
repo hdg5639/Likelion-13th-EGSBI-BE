@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         user.setName(request.getName());
         user.setNickname(request.getNickname());
         user.setPhone(request.getPhone());
-        user.setProfile(profileImageId);
+        user.setProfileId(profileImageId);
 
         userRepository.save(user);
 
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
             user.setPhone(request.getPhone());
         if (file != null && !file.isEmpty()) {
             Long profileImageId = communicationService.uploadProfile(file);
-            user.setProfile(profileImageId);
+            user.setProfileId(profileImageId);
         }
 
         userRepository.save(user);
