@@ -68,7 +68,7 @@ public interface ReviewAPI {
                             description = "사용자 평균 평점 조회 성공",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array =@ArraySchema(schema = @Schema(implementation = ReviewResponseDTO.class))
+                                    schema = @Schema(implementation = Double.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),

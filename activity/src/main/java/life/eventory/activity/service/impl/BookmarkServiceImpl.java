@@ -56,5 +56,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarkRepository.countByEventId(eventId);
     }
 
+    @Override
+    public List<Long> getUserIdsByEvent(Long eventId) {
+        return bookmarkRepository.findUserIdsByEventId(eventId);
+    }
+
 
 }
