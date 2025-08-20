@@ -29,4 +29,10 @@ public class BookmarkController implements BookmarkAPI {
         return ResponseEntity.ok(bookmarks);
     }
 
+    @Override
+    public ResponseEntity<Long> getBookmarkCount(@RequestParam Long eventId) {
+        Long count = bookmarkService.getBookmarkCountByEvent(eventId);
+        return ResponseEntity.ok(count);
+    }
+
 }

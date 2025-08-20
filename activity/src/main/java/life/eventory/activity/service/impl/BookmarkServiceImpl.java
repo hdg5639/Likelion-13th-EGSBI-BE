@@ -51,4 +51,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarkRepository.findByUserIdOrderByCreatedAtDesc(userId).stream().map(BookmarkEntity::toDTO).toList();
     }
 
+    @Override
+    public Long getBookmarkCountByEvent(Long eventId) {
+        return bookmarkRepository.countByEventId(eventId);
+    }
+
+
 }

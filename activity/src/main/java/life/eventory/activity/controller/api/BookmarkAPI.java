@@ -58,4 +58,20 @@ public interface BookmarkAPI {
     @GetMapping(value = "/bookmark/list")
     ResponseEntity<List<BookmarkResponseDTO>> listBookmark(@RequestHeader("X-User-Id") Long userId);
 
+    @Operation(summary = "특정 행사 북마크 횟수 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "북마크 횟수 조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = BookmarkResponseDTO.class))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping(value = "/bookmark/count")
+    ResponseEntity<Long> getBookmarkCount(@RequestParam Long eventId);
 }

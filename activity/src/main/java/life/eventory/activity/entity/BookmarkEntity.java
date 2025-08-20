@@ -33,7 +33,6 @@ public class BookmarkEntity {
                 .userId(userId)
                 .eventId(eventId)
                 .createdAt(createdAt)
-                .bookmarkCount(bookmarkCount)
                 .build();
     }
 }

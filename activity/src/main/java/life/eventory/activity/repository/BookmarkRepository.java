@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface BookmarkRepository extends JpaRepository<BookmarkEntity, Long> {
     List<BookmarkEntity> findByUserIdOrderByCreatedAtDesc(Long userId);
     Optional<BookmarkEntity> findByUserIdAndEventId(Long userId, Long eventId);
-
+    long countByEventId(Long eventId);
 }
