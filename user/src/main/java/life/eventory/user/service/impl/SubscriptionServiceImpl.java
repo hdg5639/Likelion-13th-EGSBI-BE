@@ -2,7 +2,9 @@ package life.eventory.user.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.user.dto.SubscriptionCreateRequest;
+import life.eventory.user.dto.SubscriptionListResponse;
 import life.eventory.user.entity.SubscriptionEntity;
+import life.eventory.user.entity.UserEntity;
 import life.eventory.user.repository.SubscriptionRepository;
 import life.eventory.user.repository.UserRepository;
 import life.eventory.user.service.CommunicationService;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,8 +54,26 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .build();
     }
 
-    public List<SubscriptionEntity> getSubscriptionsByUserId(Long userId) {
-        return subscriptionRepository.findByUserId(userId);
+    public List<SubscriptionListResponse> getSubscriptionsByUserId(Long userId) {
+        List<SubscriptionEntity> organizers = subscriptionRepository.findByUserId(userId);
+        return organizers.stream()
+                .map(subscription -> {
+                    Long organizerId = subscription.getOrganizerId();
+                    UserEntity organizer = userRepository.findById(organizerId)
+                            .orElseThrow(() -> new IllegalStateException("Organizer not found"));
+
+                    Long profileImageId = organizer.getProfileId();
+                    String profileImageUri = (profileImageId != null) ? communicationService.getImageUri(profileImageId) : null;
+
+                    return SubscriptionListResponse.builder()
+                            .organizerId(subscription.getId())
+                            .organizerName(organizer.getName())
+                            .organizerNickname(organizer.getNickname())
+                            .profileImageId(organizer.getProfileId())
+                            .profileImageUri(profileImageUri)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     public void deleteSubscription(SubscriptionCreateRequest request) {

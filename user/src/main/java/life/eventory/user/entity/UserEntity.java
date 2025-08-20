@@ -30,7 +30,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String nickname;
 
-    private Long profile;
+    private Long profileId;
     private Double latitude;
     private Double longitude;
     private String address;

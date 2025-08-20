@@ -116,4 +116,13 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
         return instances.get(0);
     }
+
+    public String getImageUri(Long imageId) {
+        ServiceInstance imageInstance = getImageInstance();
+
+        return UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/image/{id}")
+                .buildAndExpand(imageId)
+                .toUriString();
+    }
 }
