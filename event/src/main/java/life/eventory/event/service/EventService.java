@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface EventService {
-    EventDTO createEvent(NewEventDTO newEventDTO, MultipartFile image) throws IOException;
+    EventDTO createEvent(Long userId, NewEventDTO newEventDTO, MultipartFile image) throws IOException;
     List<EventDTO> findAllByOrganizerId(Pageable pageable, Long organizerId);
-    EventDTO updateEvent(EventUpdate eventUpdate, MultipartFile image) throws IOException;
+    EventDTO updateEvent(Long userId, EventUpdate eventUpdate, MultipartFile image) throws IOException;
     List<EventDTO> getEventPage(Pageable pageable, Boolean deadline);
     List<EventDTO> getEventPage(Pageable pageable, LocationDTO locationDTO, Boolean deadline);
     Boolean existEvent(Long eventId);

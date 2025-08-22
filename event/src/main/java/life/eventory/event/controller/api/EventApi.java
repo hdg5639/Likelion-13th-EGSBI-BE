@@ -57,6 +57,7 @@ public interface EventApi {
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<EventDTO> createEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @Parameter(
                     description = "이벤트 본문(JSON)",
                     content = @Content(
@@ -126,6 +127,7 @@ public interface EventApi {
     )
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<EventDTO> updateEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @RequestPart(value = "event") EventUpdate eventUpdate,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException;
 
