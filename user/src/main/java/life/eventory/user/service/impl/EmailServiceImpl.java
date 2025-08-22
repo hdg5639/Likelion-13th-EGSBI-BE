@@ -133,7 +133,7 @@ public class EmailServiceImpl implements EmailService {
             String content = String.format(
                     "<html>" +
                             "<body style='font-family: Arial, sans-serif; color: #333; font-size: 14px; line-height: 1.6;'>" +
-                            "<p>안녕하세요 <span style='font-size: 16px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
+                            "<p>안녕하세요 <span style='font-size: 18px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
 
                             "<p style='margin-top: 2em;'>구독하신 행사 담당자가 " +
                             "<span style='font-size: 18px; color: #d9534f; font-weight: bold;'>새로운 행사</span>를 등록했습니다.</p>" +
@@ -171,7 +171,7 @@ public class EmailServiceImpl implements EmailService {
             String content = String.format(
                     "<html>" +
                             "<body style='font-family: Arial, sans-serif; color: #333; font-size: 14px; line-height: 1.6;'>" +
-                            "<p>안녕하세요 <span style='font-size: 16px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
+                            "<p>안녕하세요 <span style='font-size: 18px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
 
                             "<p style='margin-top: 2em;'>북마크 하신 행사 정보가 " +
                             "<span style='font-size: 18px; color: #d9534f; font-weight: bold;'>수정</span>되었습니다.</p>" +
@@ -213,7 +213,7 @@ public class EmailServiceImpl implements EmailService {
                     String content = String.format(
                             "<html>" +
                                     "<body style='font-family: Arial, sans-serif; color: #333; font-size: 14px; line-height: 1.6;'>" +
-                                    "<p>안녕하세요 <span style='font-size: 16px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
+                                    "<p>안녕하세요 <span style='font-size: 18px; font-weight: bold;'>%s</span>님, <span style='color: #28a745; font-weight: bold;'>Eventory</span> 입니다.</p>" +
 
                                     "<p style='margin-top: 2em;'>북마크 하신 행사가 " +
                                     "<span style='font-size: 18px; color: #d9534f; font-weight: bold;'>곧 시작됩니다</span>.</p>" +
