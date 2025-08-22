@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import life.eventory.event.dto.activity.BookmarkResponse;
 import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.dto.activity.ParticipationResponse;
+import life.eventory.event.dto.ai.AiComment;
 import life.eventory.event.dto.ai.AiEventDTO;
 import life.eventory.event.dto.ai.CreatedEventInfoDTO;
 import life.eventory.event.dto.MultipartFileResource;
@@ -369,14 +370,21 @@ public class CommunicationServiceImpl implements CommunicationService {
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
                 .path("/api/ai/comment")
-                .queryParam("prompt", prompt)
                 .build()
                 .toUri();
 
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<AiComment> requestEntity = new HttpEntity<>(new AiComment(prompt), headers);
+
         try {
             ResponseEntity<String> response =
-                    restTemplate.postForEntity(uri,
-                            HttpEntity.EMPTY,
+                    restTemplate.exchange(uri,
+                            HttpMethod.POST,
+                            requestEntity,
                             String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
