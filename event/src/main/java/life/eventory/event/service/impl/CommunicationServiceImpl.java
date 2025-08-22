@@ -373,18 +373,10 @@ public class CommunicationServiceImpl implements CommunicationService {
                 .build()
                 .toUri();
 
-        // 요청 헤더 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // 요청 HTTP 엔티티 생성
-        HttpEntity<Void> requestEntity = new HttpEntity<>(null, headers);
-
         try {
             ResponseEntity<String> response =
-                    restTemplate.exchange(uri,
-                            HttpMethod.POST,
-                            requestEntity,
+                    restTemplate.postForEntity(uri,
+                            HttpEntity.EMPTY,
                             String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
