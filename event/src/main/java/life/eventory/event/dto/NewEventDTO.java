@@ -14,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class NewEventDTO {
 
-    @Schema(description = "주최자 ID", example = "1")
-    private Long organizerId;
-
     @Schema(description = "이벤트 이름", example = "여름 음악 페스티벌")
     private String name;
 

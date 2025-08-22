@@ -100,7 +100,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventUpdate.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음"));
 
-        if (!event.getId().equals(userId)) {
+        if (!event.getOrganizerId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "본인 행사가 아님");
         }
 
