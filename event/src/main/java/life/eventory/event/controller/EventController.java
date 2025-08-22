@@ -122,10 +122,15 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public List<EventDTO> searchFulltext(
+    public ResponseEntity<List<EventDTO>> searchFulltext(
             @RequestParam String q,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return eventSearchService.searchFulltext(q, pageable, null).toList();
+        return ResponseEntity.ok(eventSearchService.searchFulltext(q, pageable, null).toList());
+    }
+
+    @Override
+    public ResponseEntity<List<Long>> getEventIdsStartingWithin24h() {
+        return ResponseEntity.ok(eventService.getEventIdsStartingWithin24h());
     }
 }

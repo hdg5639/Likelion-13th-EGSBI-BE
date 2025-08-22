@@ -234,6 +234,12 @@ public class EventServiceImpl implements EventService {
                 .toList();
     }
 
+    @Override
+    public List<Long> getEventIdsStartingWithin24h() {
+        LocalDateTime now = LocalDateTime.now();
+        return eventRepository.findIdsStartingWithin24HoursFromNow(now, now.plusHours(24));
+    }
+
     private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId, Long userId) {
         return Event.builder()
                 .organizerId(userId)

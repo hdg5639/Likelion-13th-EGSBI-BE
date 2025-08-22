@@ -61,4 +61,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         where e.id in :ids
         """)
     List<Event> findAllWithTagsByIdInOrderAgnostic(@Param("ids") List<Long> ids);
+
+    @Query("""
+    select e.id
+    from Event e
+    where e.startTime >= :now
+        and e.startTime < :util
+    order by e.startTime asc
+    """)
+    List<Long> findIdsStartingWithin24HoursFromNow(LocalDateTime now, LocalDateTime util);
+
 }

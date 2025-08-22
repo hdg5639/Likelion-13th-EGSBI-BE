@@ -23,4 +23,5 @@ public interface EventService {
     List<EventDTO> getBookmarkList(Long userId);
     List<EventDTO> getHistoryList(Long userId, Pageable pageable);
     List<EventBookmark> getBookmarkedEventsInOrder();
+    List<Long> getEventIdsStartingWithin24h();
 }
