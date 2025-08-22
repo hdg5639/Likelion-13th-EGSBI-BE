@@ -382,7 +382,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         try {
             ResponseEntity<String> response =
                     restTemplate.exchange(uri,
-                            HttpMethod.GET,
+                            HttpMethod.POST,
                             requestEntity,
                             String.class);
 

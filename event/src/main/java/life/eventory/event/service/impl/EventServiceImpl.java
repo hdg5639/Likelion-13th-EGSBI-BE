@@ -97,8 +97,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDTO updateEvent(Long userId, EventUpdate eventUpdate, MultipartFile image) throws IOException {
-        Event event = eventRepository.findById(userId)
+        Event event = eventRepository.findById(eventUpdate.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음"));
+
+        if (!event.getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "본인 행사가 아님");
+        }
 
         Long oldImageId = event.getPosterId();
         // 혹시 모를 posterId 변조값 방지
