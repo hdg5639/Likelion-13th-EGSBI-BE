@@ -369,6 +369,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
                 .path("/api/ai/comment")
+                .queryParam("prompt", prompt)
                 .build()
                 .toUri();
 
@@ -377,7 +378,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 HTTP 엔티티 생성
-        HttpEntity<String> requestEntity = new HttpEntity<>(prompt, headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(null, headers);
 
         try {
             ResponseEntity<String> response =
