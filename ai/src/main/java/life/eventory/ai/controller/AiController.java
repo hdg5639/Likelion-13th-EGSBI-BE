@@ -1,5 +1,6 @@
 package life.eventory.ai.controller;
 
+import life.eventory.ai.dto.AiComment;
 import life.eventory.ai.dto.AiEventDTO;
 import life.eventory.ai.dto.CreatedEventDTO;
 import life.eventory.ai.service.AiService;
@@ -28,9 +29,9 @@ public class AiController implements AiApi {
     }
 
     @Override
-    public ResponseEntity<String> createComment(@RequestParam String prompt) {
+    public ResponseEntity<String> createComment(@RequestBody AiComment prompt) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(aiService.createComment(prompt));
+                .body(aiService.createComment(prompt.getPrompt()));
     }
 
     @Override
