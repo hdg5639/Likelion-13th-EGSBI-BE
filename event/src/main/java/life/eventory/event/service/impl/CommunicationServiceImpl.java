@@ -416,7 +416,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/user/email/notify/update/{eventId}" + eventId)
+                .path("/api/user/email/notify/update/" + eventId)
                 .build()
                 .toUri();
 
