@@ -32,4 +32,10 @@ public class AiController implements AiApi {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(aiService.createComment(prompt));
     }
+
+    @Override
+    public ResponseEntity<String> createReviewSummary(
+            @RequestHeader(name = "X-User-Id") Long userId) {
+        return ResponseEntity.ok(aiService.createUserReviewSummary(userId));
+    }
 }
