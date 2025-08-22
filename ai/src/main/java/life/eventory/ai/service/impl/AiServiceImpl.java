@@ -32,7 +32,7 @@ public class AiServiceImpl implements AiService {
         return chatClient.build()
                 .prompt()
                 .system("""
-            너는 간결하게 한국어로 답한다. 마크다운만 반환한다.
+            너는 간결하게 한국어로 답한다. 마크다운과 적절한 이모티콘을 반환한다.
             [규칙]
             - 상단 카드(날짜/시간/장소/가격/해시태그)의 값을 그대로 나열/반복하지 말 것.
             - 이벤트의 '느낌/특징/차별점/추천 대상/관람 팁'만 추려라.
