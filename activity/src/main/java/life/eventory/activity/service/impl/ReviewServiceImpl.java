@@ -1,10 +1,12 @@
 package life.eventory.activity.service.impl;
 
+import life.eventory.activity.dto.event.EventResponse;
 import life.eventory.activity.dto.review.ReviewRequestDTO;
 import life.eventory.activity.dto.review.ReviewResponseDTO;
 import life.eventory.activity.entity.ReviewEntity;
 import life.eventory.activity.repository.ParticipationRepository;
 import life.eventory.activity.repository.ReviewRepository;
+import life.eventory.activity.service.CommunicationService;
 import life.eventory.activity.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
+    private final CommunicationService communicationService;
     private final ReviewRepository reviewRepository;
     private final ParticipationRepository participationRepository;
 
@@ -49,5 +52,15 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Double getAvgRatingByUser(Long userId) {
         return reviewRepository.findAvgRatingByUserId(userId);
+    }
+
+    @Override
+    public List<String> getUserReviews(Long userId) {
+        List<EventResponse> events = communicationService.getUserEvents(userId);
+        List<Long> eventIds = events.stream()
+                .filter(e -> e.getOrganizerId().equals(userId))
+                .map(EventResponse::getId)
+                .toList();
+        return reviewRepository.findReviewsByEventIds(eventIds);
     }
 }

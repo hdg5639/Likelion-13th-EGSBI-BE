@@ -42,4 +42,10 @@ public class ReviewController implements ReviewAPI {
         return ResponseEntity.ok(avg);
     }
 
+    @Override
+    public ResponseEntity<List<String>> getUserReviews (
+            @RequestHeader(name = "X-User-Id") Long userId) {
+        return ResponseEntity.ok(reviewService.getUserReviews(userId));
+    }
+
 }

@@ -9,4 +9,5 @@ public interface ReviewService {
     ReviewResponseDTO createReview(Long userId, Long eventId, ReviewRequestDTO requestDTO);
     List<ReviewResponseDTO> getReviewsByEvent(Long eventId);
     Double getAvgRatingByUser(Long userId);
+    List<String> getUserReviews(Long userId);
 }
