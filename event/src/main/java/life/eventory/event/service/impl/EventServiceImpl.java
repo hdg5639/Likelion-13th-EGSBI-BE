@@ -15,7 +15,9 @@ import life.eventory.event.service.EventTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -205,37 +207,55 @@ public class EventServiceImpl implements EventService {
         LinkedHashMap<Long, Long> bookmarkMap = communicationService.getAllBookmarkedEvents();
         if (bookmarkMap.isEmpty()) return List.of();
 
-        // LinkedHashMap 이므로 key 순서 = 이미 정렬된 순서
         List<Long> orderedIds = new ArrayList<>(bookmarkMap.keySet());
 
         List<Event> fetched = eventRepository.findAllById(orderedIds);
         Map<Long, Event> byId = fetched.stream()
                 .collect(Collectors.toMap(Event::getId, Function.identity()));
 
-        return orderedIds.stream()
-                .map(id -> {
-                    Event e = byId.get(id);
-                    if (e == null) return null; // 혹시 삭제된 이벤트가 있으면 스킵
-                    return EventBookmark.builder()
-                            .id(e.getId())
-                            .organizerId(e.getOrganizerId())
-                            .name(e.getName())
-                            .posterId(e.getPosterId())
-                            .description(e.getDescription())
-                            .startTime(e.getStartTime())
-                            .endTime(e.getEndTime())
-                            .address(e.getAddress())
-                            .latitude(e.getLatitude())
-                            .longitude(e.getLongitude())
-                            .entryFee(e.getEntryFee())
-                            .createTime(e.getCreateTime())
-                            .qrImage(e.getQrImage())
-                            .hashtags(e.getTags().stream().map(Tag::getName).toList()) // toString() 대신 name 권장
-                            .bookmarkCount(bookmarkMap.getOrDefault(id, 0L))           // ★ 여기
-                            .build();
-                })
+        List<EventBookmark> result = orderedIds.stream()
+                .map(byId::get)
                 .filter(Objects::nonNull)
-                .toList();
+                .map(e -> eventToEventBookmark(e, bookmarkMap.getOrDefault(e.getId(), 0L)))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        final int TARGET = 20;
+        int missing = TARGET - result.size();
+        if (missing > 0) {
+            LocalDateTime now = LocalDateTime.now();
+
+            PageRequest pr = PageRequest.of(0, missing, Sort.by(Sort.Direction.ASC, "startTime"));
+
+            List<Event> extras = orderedIds.isEmpty()
+                    ? eventRepository.findByStartTimeGreaterThanEqual(now, pr).getContent()
+                    : eventRepository.findByStartTimeGreaterThanEqualAndIdNotIn(now, orderedIds, pr).getContent();
+
+            for (Event e : extras) {
+                result.add(eventToEventBookmark(e, bookmarkMap.getOrDefault(e.getId(), 0L)));
+            }
+        }
+
+        return result;
+    }
+
+    private EventBookmark eventToEventBookmark(Event e, Long bookmarkCount) {
+        return EventBookmark.builder()
+                .id(e.getId())
+                .organizerId(e.getOrganizerId())
+                .name(e.getName())
+                .posterId(e.getPosterId())
+                .description(e.getDescription())
+                .startTime(e.getStartTime())
+                .endTime(e.getEndTime())
+                .address(e.getAddress())
+                .latitude(e.getLatitude())
+                .longitude(e.getLongitude())
+                .entryFee(e.getEntryFee())
+                .createTime(e.getCreateTime())
+                .qrImage(e.getQrImage())
+                .hashtags(e.getTags().stream().map(Tag::getName).toList())
+                .bookmarkCount(bookmarkCount)
+                .build();
     }
 
     @Override
