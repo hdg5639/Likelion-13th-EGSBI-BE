@@ -20,40 +20,47 @@ public class AiServiceImpl implements AiService {
 
     @Override
     public String createEventSummary(Long userId, Long eventId) {
-        EventDTO eventDTO = communicationService.getEvent(eventId);
+        EventDTO e = communicationService.getEvent(eventId);
 
         if (userId != null) {
-            communicationService.addHistory(
-                    userId,
-                    new HistoryRequest(
-                            eventDTO.getId(),
-                            eventDTO.getName(),
-                            eventDTO.getPosterId()
-                    )
-            );
+            communicationService.addHistory(userId, new HistoryRequest(e.getId(), e.getName(), e.getPosterId()));
         }
 
         return chatClient.build()
                 .prompt()
-                .system("너는 간결하게 한국어로 답해. 마크다운만 반환해.")
-                .user(u ->
-                        u.text("""
-                        다음 이벤트 정보를 보고 간단 요약을 만들어줘.
-                        - 이름: {name}
-                        - 내용: {description}
-                        - 기간: {start} ~ {end}
-                        - 위치: {address}
-                        - 입장료: {entryFee}
-                        - 해시태그: {hashtag}
-                        """)
-                        .param("name", eventDTO.getName())
-                        .param("description", eventDTO.getDescription())
-                        .param("start", eventDTO.getStartTime())
-                        .param("end", eventDTO.getEndTime())
-                        .param("address", eventDTO.getAddress())
-                        .param("entryFee", eventDTO.getEntryFee())
-                        .param("hashtag", eventDTO.getHashtags())
-                    )
+                .system("""
+            너는 간결하게 한국어로 답한다. 마크다운만 반환한다.
+            [규칙]
+            - 상단 카드(날짜/시간/장소/가격/해시태그)의 값을 그대로 나열/반복하지 말 것.
+            - 이벤트의 '느낌/특징/차별점/추천 대상/관람 팁'만 추려라.
+            - 과한 수식어, 느낌표, 이모지 금지. 불필요한 숫자/주소 언급 금지.
+            - 총 4줄만 출력한다: 1) 한 줄 요약 2) 하이라이트 3) 이런 분께 추천 4) 관람 팁.
+            """)
+                .user(u -> u.text("""
+            아래 이벤트를 요약하되, 형식은 정확히 다음처럼 지켜라.
+
+            출력 형식(정확히 4줄):
+            한 줄 요약: <핵심을 1문장 35자 내>
+            - 하이라이트: <공연/행사의 차별점 1가지만>
+            - 이런 분께: <대상/취향 1~2개>
+            - 관람 팁: <준비물/좌석/동선 등 1가지>
+
+            참고 정보(반복 금지):
+            - 이름: {name}
+            - 내용: {description}
+            - 기간: {start} ~ {end}
+            - 위치: {address}
+            - 입장료: {entryFee}
+            - 해시태그: {hashtag}
+            """)
+                        .param("name", e.getName())
+                        .param("description", e.getDescription())
+                        .param("start", e.getStartTime())
+                        .param("end", e.getEndTime())
+                        .param("address", e.getAddress())
+                        .param("entryFee", e.getEntryFee())
+                        .param("hashtag", e.getHashtags())
+                )
                 .call()
                 .content();
     }
@@ -117,7 +124,6 @@ public class AiServiceImpl implements AiService {
         }
     }
 
-    /** 개행 제거, 양끝 따옴표 제거, 공백 정리, 길이 제한(코드포인트 기준) */
     private String postProcessOneLine(String s) {
         if (s == null) return "";
         // 줄바꿈/탭 → 공백
@@ -142,7 +148,6 @@ public class AiServiceImpl implements AiService {
         return cleaned;
     }
 
-    /** 코드포인트 기준 안전한 서브스트링 */
     private String substringByCodePoint(String s) {
         if (s == null) return "";
         int endIndex = s.offsetByCodePoints(0, Math.min(28, s.codePointCount(0, s.length())));
