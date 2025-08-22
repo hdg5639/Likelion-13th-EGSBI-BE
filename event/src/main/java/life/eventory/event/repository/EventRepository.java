@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,4 +72,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     """)
     List<Long> findIdsStartingWithin24HoursFromNow(LocalDateTime now, LocalDateTime util);
 
+    Page<Event> findByStartTimeGreaterThanEqual(LocalDateTime now, Pageable pageable);
+
+    Page<Event> findByStartTimeGreaterThanEqualAndIdNotIn(
+            LocalDateTime now,
+            Collection<Long> excludeIds,
+            Pageable pageable
+    );
 }
