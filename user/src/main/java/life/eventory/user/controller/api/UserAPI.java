@@ -62,7 +62,7 @@ public interface UserAPI {
             @RequestPart(value = "image", required = false) MultipartFile file
     ) throws IOException;
 
-    @Operation(summary = "이메일로 사용자 정보 조회",
+    @Operation(summary = "사용자 정보 조회",
             parameters = @Parameter(name = "userId", description = "사용자 ID", required = true, example = "1"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공",
