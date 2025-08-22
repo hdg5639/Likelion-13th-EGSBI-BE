@@ -11,6 +11,9 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +36,8 @@ public class AiServiceImpl implements AiService {
             [규칙]
             - 상단 카드(날짜/시간/장소/가격/해시태그)의 값을 그대로 나열/반복하지 말 것.
             - 이벤트의 '느낌/특징/차별점/추천 대상/관람 팁'만 추려라.
-            - 과한 수식어, 느낌표, 이모지 금지. 불필요한 숫자/주소 언급 금지.
+            - 과한 수식어, 느낌표 금지. 불필요한 숫자/주소 언급 금지.
+            - 조금의 적절한 이모티콘 활용 허용
             - 총 4줄만 출력한다: 1) 요약 2) 하이라이트 3) 이런 분께 추천 4) 관람 팁.
             """)
                 .user(u -> u.text("""
@@ -94,6 +98,45 @@ public class AiServiceImpl implements AiService {
     }
 
     @Override
+    public String createUserReviewSummary(Long userId) {
+        List<String> reviews = communicationService.getReviews(userId);
+
+        if (reviews == null || reviews.isEmpty()) return "아직 리뷰가 부족해요";
+
+        String formatted = reviews.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .map(s -> "- " + s.replaceAll("\\s+", " "))
+                .collect(Collectors.joining("\n"));
+
+        try {
+            return chatClient.build()
+                    .prompt()
+                    .system("""
+                    너는 한국어로 답한다.
+                    규칙:
+                    - 아래 리뷰를 바탕으로 '한 줄 평가 종합'만 생성
+                    - 28자 이내, 자연스럽게. 의미 유지가 우선이면 26~30자 범위 허용
+                    - 날짜/가격/장소 등 메타정보 언급 금지
+                    - 마침표/이모지/따옴표/코드블록/머리말 금지
+                    - 출력은 '순수 텍스트 한 문장'만
+                    """)
+                    .user(u -> u.text("""
+                    <리뷰 모음>
+                    {reviews}
+                    </리뷰 모음>
+
+                    위 내용을 바탕으로 한 문장으로만 요약해줘.
+                    """).param("reviews", formatted))
+                    .call()
+                    .content();
+        } catch (Exception e) {
+            return "아직 리뷰가 부족해요";
+        }
+    }
+
+    @Override
     public String createComment(String prompt) {
         try {
             String raw = chatClient.build()
@@ -112,14 +155,11 @@ public class AiServiceImpl implements AiService {
                         {prompt}
                         """).param("prompt", prompt))
                     .call()
-                    // 라이브러리에 따라 .content() 또는 .entity(String.class) 중 하나 사용
                     .content();
 
             String comment = postProcessOneLine(raw);
             return comment.isBlank() ? "취향에 맞춘 추천 행사들이에요" : comment;
         } catch (Exception e) {
-            // 로그 남기고 폴백
-            // log.warn("createComment failed", e);
             return "취향에 맞춘 추천 행사들이에요";
         }
     }

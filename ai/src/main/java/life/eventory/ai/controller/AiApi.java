@@ -123,4 +123,22 @@ public interface AiApi {
     ResponseEntity<String> createComment(
             @Parameter(description = "추천 코멘트 프롬프트")
             @RequestParam String prompt);
+
+    @Operation(
+            summary = "개인 리뷰 종합 평가 API",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "생성 성공",
+                            content = @Content(
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "데이터 없음", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/review/summary")
+    ResponseEntity<String> createReviewSummary(
+            @RequestHeader(name = "X-User-Id") Long userId);
 }

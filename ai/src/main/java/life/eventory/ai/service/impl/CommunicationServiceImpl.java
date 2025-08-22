@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -57,6 +58,44 @@ public class CommunicationServiceImpl implements CommunicationService {
         } catch (Exception e) {
             errorLog(e, "EVENT");
             throw new IllegalStateException("Failed to send request to Event-Server", e);
+        }
+    }
+
+    // 리뷰 내용 조회
+    @Override
+    public List<String> getReviews(Long userId) {
+        ServiceInstance eventInstance = getServerInstance("ACTIVITY");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
+                .path("/api/activity/review/all")
+                .build()
+                .toUri();
+
+        // 요청 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-User-Id", userId.toString());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(null, headers);
+
+        try {
+            ResponseEntity<List<String>> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.GET,
+                            requestEntity,
+                            new ParameterizedTypeReference<>() {
+                            });
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+            throw new IllegalStateException("Failed to get reviews");
+        } catch (Exception e) {
+            errorLog(e, "ACTIVITY");
+            throw new IllegalStateException("Failed to send request to Activity-Server", e);
         }
     }
 
