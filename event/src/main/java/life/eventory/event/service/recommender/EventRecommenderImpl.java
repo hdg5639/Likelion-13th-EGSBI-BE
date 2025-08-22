@@ -117,7 +117,7 @@ public class EventRecommenderImpl implements EventRecommender {
         Set<Long> excludeIds = rec.getExcludeEventIds();
 
         if (topTagIds.isEmpty() || tagWeights.isEmpty()) {
-            return new AiRecommendResponse("아직 추천 태그가 없어서, 대신 방금 올라온 최신 행사들을 가져왔어요!",
+            return new AiRecommendResponse("오늘 가입하셨나요? 지금 뜨는 행사 모아봤어요!",
                     eventService.getEventPage(PageRequest.of(0, 20), Boolean.FALSE));
         }
 
@@ -130,26 +130,26 @@ public class EventRecommenderImpl implements EventRecommender {
                 PageRequest.of(0, 200)
         );
         if (candidateIds.isEmpty()) {
-            return new AiRecommendResponse("아직 추천 행사를 생성할 수 없습니다. 최신 행사 목록을 확인해보세요!",
+            return new AiRecommendResponse("가입 초기 맞춤 최근 등록 행사 큐레이션!",
                     eventService.getEventPage(PageRequest.of(0, 20), Boolean.FALSE));
         }
 
         List<Event> candidates = eventRepository.findAllWithTagsByIdInOrderAgnostic(candidateIds);
 
-        List<EventDTO> top10 = candidates.stream()
+        List<EventDTO> top20 = candidates.stream()
                 .map(e -> Map.entry(e, computeScore(e, tagWeights, now)))
                 .sorted(
                         Map.Entry.<Event, Double>comparingByValue()
                                 .reversed()
                                 .thenComparing(entry -> entry.getKey().getStartTime())
                 )
-                .limit(10)
+                .limit(20)
                 .map(entry -> toEventDTO(entry.getKey()))
                 .toList();
 
         List<String> keywords = collectTopTagDisplayNamesInOrder(candidates, tagWeights, topTagIds);
 
-        String prompt = buildCommentPrompt(keywords, top10);
+        String prompt = buildCommentPrompt(keywords, top20);
         String comment;
         try {
             comment = communicationService.getComment(prompt);
@@ -158,7 +158,7 @@ public class EventRecommenderImpl implements EventRecommender {
             comment = defaultComment(keywords);
         }
 
-        return new AiRecommendResponse(comment, top10);
+        return new AiRecommendResponse(comment, top20);
     }
 
     private List<String> collectTopTagDisplayNamesInOrder(List<Event> candidates,
