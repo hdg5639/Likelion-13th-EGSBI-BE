@@ -78,4 +78,21 @@ public interface ReviewAPI {
     @GetMapping(value = "/review/rating")
     ResponseEntity<Double> getAvgRatingByUser(@RequestHeader("X-User-Id") Long userId);
 
+    @Operation(summary = "사용자별 리뷰 내용 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "사용자별 리뷰 내용 조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = String.class))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
+    @GetMapping("/review/all")
+    ResponseEntity<List<String>> getUserReviews (@RequestHeader(name = "X-User-Id") Long userId);
+
 }
