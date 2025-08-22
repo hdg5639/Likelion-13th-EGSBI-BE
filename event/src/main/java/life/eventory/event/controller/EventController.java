@@ -36,10 +36,11 @@ public class EventController implements EventApi {
 
     @Override
     public ResponseEntity<EventDTO> createEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @RequestPart(value = "event") NewEventDTO newEventDTO,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(eventService.createEvent(newEventDTO, image));
+                .body(eventService.createEvent(userId, newEventDTO, image));
     }
 
     @Override
@@ -52,9 +53,10 @@ public class EventController implements EventApi {
 
     @Override
     public ResponseEntity<EventDTO> updateEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @RequestPart(value = "event") EventUpdate eventUpdate,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
-        return ResponseEntity.ok(eventService.updateEvent(eventUpdate, image));
+        return ResponseEntity.ok(eventService.updateEvent(userId, eventUpdate, image));
     }
 
     // 전체 조회
@@ -120,10 +122,15 @@ public class EventController implements EventApi {
     }
 
     @Override
-    public List<EventDTO> searchFulltext(
+    public ResponseEntity<List<EventDTO>> searchFulltext(
             @RequestParam String q,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return eventSearchService.searchFulltext(q, pageable, null).toList();
+        return ResponseEntity.ok(eventSearchService.searchFulltext(q, pageable, null).toList());
+    }
+
+    @Override
+    public ResponseEntity<List<Long>> getEventIdsStartingWithin24h() {
+        return ResponseEntity.ok(eventService.getEventIdsStartingWithin24h());
     }
 }

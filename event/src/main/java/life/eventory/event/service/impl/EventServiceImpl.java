@@ -53,9 +53,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO createEvent(NewEventDTO newEventDTO,  MultipartFile image) throws IOException {
+    public EventDTO createEvent(Long userId, NewEventDTO newEventDTO,  MultipartFile image) throws IOException {
         // 주최자 유효 검사
-        communicationService.existUser(newEventDTO.getOrganizerId());
+        communicationService.existUser(userId);
 
         Long imageId = null;
         boolean hasImage = hasFile(image);
@@ -66,9 +66,18 @@ public class EventServiceImpl implements EventService {
 
         try {
             log.info("create event {}", newEventDTO);
+            // 알림 메일 발송
+            communicationService.notiNewEvent(userId);
+
             return entityToDTO(
                     eventTagService.setEventHashtags(
-                            eventRepository.save(newEventDTOToEntity(newEventDTO, imageId)).getId(),
+                            eventRepository.save(
+                                    newEventDTOToEntity(
+                                            newEventDTO,
+                                            imageId,
+                                            userId
+                                    )
+                            ).getId(),
                             newEventDTO.getHashtags()
                 )
             );
@@ -87,8 +96,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTO updateEvent(EventUpdate eventUpdate, MultipartFile image) throws IOException {
-        Event event = eventRepository.findById(eventUpdate.getId())
+    public EventDTO updateEvent(Long userId, EventUpdate eventUpdate, MultipartFile image) throws IOException {
+        Event event = eventRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "행사를 찾을 수 없음"));
 
         Long oldImageId = event.getPosterId();
@@ -112,6 +121,9 @@ public class EventServiceImpl implements EventService {
             if (!eventUpdate.getPoster()) {
                 event.setPosterId(null);
             }
+            // 행사 수정 알림
+            communicationService.notiUpdateEvent(eventUpdate.getId());
+
             return entityToDTO(
                     eventTagService.setEventHashtags(
                             eventRepository.save(eventUpdate(eventUpdate, event)).getId(),
@@ -222,9 +234,15 @@ public class EventServiceImpl implements EventService {
                 .toList();
     }
 
-    private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId) {
+    @Override
+    public List<Long> getEventIdsStartingWithin24h() {
+        LocalDateTime now = LocalDateTime.now();
+        return eventRepository.findIdsStartingWithin24HoursFromNow(now, now.plusHours(24));
+    }
+
+    private Event newEventDTOToEntity(NewEventDTO newEventDTO, Long posterId, Long userId) {
         return Event.builder()
-                .organizerId(newEventDTO.getOrganizerId())
+                .organizerId(userId)
                 .name(newEventDTO.getName())
                 .posterId(posterId)
                 .description(newEventDTO.getDescription())

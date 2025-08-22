@@ -17,9 +17,6 @@ public class EventUpdate {
     @Schema(description = "행사 식별자", example = "123")
     private Long id;
 
-    @Schema(description = "주최자(organizer) 사용자 ID", example = "42")
-    private Long organizerId;
-
     @Schema(description = "행사명", example = "수성구 야시장")
     private String name;
 

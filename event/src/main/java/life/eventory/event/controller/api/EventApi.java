@@ -57,6 +57,7 @@ public interface EventApi {
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<EventDTO> createEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @Parameter(
                     description = "이벤트 본문(JSON)",
                     content = @Content(
@@ -126,6 +127,7 @@ public interface EventApi {
     )
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<EventDTO> updateEvent(
+            @RequestHeader(name = "X-User-Id") Long userId,
             @RequestPart(value = "event") EventUpdate eventUpdate,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException;
 
@@ -374,11 +376,30 @@ public interface EventApi {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @GetMapping("/search")
-    List<EventDTO> searchFulltext(
+    ResponseEntity<List<EventDTO>> searchFulltext(
             @Parameter(description = "검색어", required = true)
             @RequestParam String q,
 
             @Parameter(hidden = true) // springdoc가 page/size/sort를 자동 노출
             @PageableDefault(size = 20) Pageable pageable
     );
+
+    @Operation(
+            summary = "24시간 이내 시작 행사 리스트 조회",
+            description = "24시간 이내 시작하는 행사 ID 조회"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = Long.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @GetMapping("/upcoming")
+    ResponseEntity<List<Long>> getEventIdsStartingWithin24h();
 }

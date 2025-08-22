@@ -2,7 +2,6 @@ package life.eventory.event.service.impl;
 
 import jakarta.transaction.Transactional;
 import life.eventory.event.dto.activity.BookmarkResponse;
-import life.eventory.event.dto.activity.HistoryRequest;
 import life.eventory.event.dto.activity.HistoryResponse;
 import life.eventory.event.dto.activity.ParticipationResponse;
 import life.eventory.event.dto.ai.AiEventDTO;
@@ -50,12 +49,6 @@ public class CommunicationServiceImpl implements CommunicationService {
                 .path("/api/image")
                 .build()
                 .toUri();
-
-        // 로컬 테스트 코드 예시
-//        URI uri = UriComponentsBuilder.fromUri(URI.create("https://gateway.gamja.cloud"))
-//                .path("/api/image")
-//                .build()
-//                .toUri();
 
         // 요청 헤더 생성
         HttpHeaders headers = new HttpHeaders();
@@ -117,12 +110,6 @@ public class CommunicationServiceImpl implements CommunicationService {
             errorLog(e, "IMAGE");
             throw new IllegalStateException("Failed to send request to Image-Server", e);
         }
-    }
-
-    private void errorLog(Exception e, String serverName) {
-        log.error("Exception occurred while calling {}-SERVER", serverName, e);
-        log.error("Exception type: {}", e.getClass().getSimpleName());
-        log.error("Exception message: {}", e.getMessage());
     }
 
     @Override
@@ -196,42 +183,6 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
-    @Override
-    public void addHistory(Long userId, HistoryRequest historyRequest) {
-        ServiceInstance imageInstance = getServerInstance("ACTIVITY");
-
-        // 요청 url 생성
-        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/history/add")
-                .build()
-                .toUri();
-
-        // 요청 헤더 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-User-Id", userId.toString());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // 요청 HTTP 엔티티 생성
-        HttpEntity<HistoryRequest> requestEntity = new HttpEntity<>(historyRequest, headers);
-
-        try {
-            ResponseEntity<HistoryResponse> response =
-                    restTemplate.exchange(uri,
-                            HttpMethod.POST,
-                            requestEntity,
-                            HistoryResponse.class);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return;
-            }
-
-            throw new IllegalStateException("Failed to create Event History");
-        } catch (Exception e) {
-            errorLog(e, "ACTIVITY");
-            throw new IllegalStateException("Failed to send request to Activity-Server", e);
-        }
-    }
-
     // 기록 조회
     @Override
     public List<HistoryResponse> getHistory(Long userId) {
@@ -255,25 +206,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         );
 
         // 요청 HTTP 엔티티 생성
-        HttpEntity<Pageable> requestEntity = new HttpEntity<>(pageable, headers);
-
-        try {
-            ResponseEntity<List<HistoryResponse>> response =
-                    restTemplate.exchange(uri,
-                            HttpMethod.GET,
-                            requestEntity,
-                            new ParameterizedTypeReference<>() {
-                            });
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-
-            throw new IllegalStateException("Failed to create Event History");
-        } catch (Exception e) {
-            errorLog(e, "ACTIVITY");
-            throw new IllegalStateException("Failed to send request to Activity-Server", e);
-        }
+        return historyFunc(uri, pageable, headers);
     }
 
     @Override
@@ -292,6 +225,10 @@ public class CommunicationServiceImpl implements CommunicationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 HTTP 엔티티 생성
+        return historyFunc(uri, pageable, headers);
+    }
+
+    private List<HistoryResponse> historyFunc(URI uri, Pageable pageable, HttpHeaders headers) {
         HttpEntity<Pageable> requestEntity = new HttpEntity<>(pageable, headers);
 
         try {
@@ -460,6 +397,57 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
+    @Override
+    public void notiNewEvent(Long organizerId) {
+        ServiceInstance imageInstance = getServerInstance("USER");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/user/email/notify/new/" + organizerId)
+                .build()
+                .toUri();
+
+        sendNotification(uri);
+    }
+
+    @Override
+    public void notiUpdateEvent(Long eventId) {
+        ServiceInstance imageInstance = getServerInstance("USER");
+
+        // 요청 url 생성
+        URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
+                .path("/api/user/email/notify/update/{eventId}" + eventId)
+                .build()
+                .toUri();
+
+        sendNotification(uri);
+    }
+
+    private void sendNotification(URI uri) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 HTTP 엔티티 생성
+        HttpEntity<Void> requestEntity = new HttpEntity<>(null, headers);
+
+        try {
+            ResponseEntity<Void> response =
+                    restTemplate.exchange(uri,
+                            HttpMethod.POST,
+                            requestEntity,
+                            Void.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return;
+            }
+
+            throw new IllegalStateException("Failed to notification Event");
+        } catch (Exception e) {
+            errorLog(e, "USER");
+            throw new IllegalStateException("Failed to send request to User-Server", e);
+        }
+    }
+
     // 서버 인스턴스 조회
     private ServiceInstance getServerInstance(String serverName) {
         if (discoveryClient == null) {
@@ -474,5 +462,12 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
 
         return instances.get(0);
+    }
+
+    // 에러 로그
+    private void errorLog(Exception e, String serverName) {
+        log.error("Exception occurred while calling {}-SERVER", serverName, e);
+        log.error("Exception type: {}", e.getClass().getSimpleName());
+        log.error("Exception message: {}", e.getMessage());
     }
 }
