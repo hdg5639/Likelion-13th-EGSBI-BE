@@ -1,5 +1,6 @@
 package life.eventory.event.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import life.eventory.event.dto.EventDTO;
 import life.eventory.event.dto.search.EventSearchCond;
@@ -11,7 +12,7 @@ import life.eventory.event.service.EventMapper;
 import life.eventory.event.service.EventSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.lang.Nullable;                // ✅ 스프링 Nullable
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,39 @@ public class EventSearchServiceImpl implements EventSearchService {
         Pageable pageOnly = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted());
 
         Page<Long> idPage = fullTextSearch.searchFulltextIds(booleanQ, pageOnly);
-        if (idPage.isEmpty()) return Page.empty(pageable);
+        if (idPage.isEmpty()) {
+            QEvent e = QEvent.event;
+            QTag t = QTag.tag;
+
+            // 공백 기준 토큰화
+            var tokens = Arrays.stream(rawQuery.trim().split("\\s+"))
+                    .filter(s -> !s.isBlank()).toList();
+
+            var where = new BooleanBuilder();
+            for (String tok : tokens) {
+                where.or(e.name.containsIgnoreCase(tok))
+                        .or(e.description.containsIgnoreCase(tok))
+                        .or(e.address.containsIgnoreCase(tok));
+            }
+
+            var content = queryFactory.selectFrom(e)
+                    .leftJoin(e.tags, t).fetchJoin()
+                    .where(where)
+                    .distinct()
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+
+            long total = java.util.Optional.ofNullable(
+                    queryFactory.select(e.id.countDistinct())
+                            .from(e)
+                            .leftJoin(e.tags, t)
+                            .where(where)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(content.stream().map(mapper::toDTO).toList(), pageable, total);
+        }
 
         List<Long> idsInOrder = idPage.getContent();
 
