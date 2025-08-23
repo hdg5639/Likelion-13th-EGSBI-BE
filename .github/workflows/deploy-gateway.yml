@@ -1,0 +1,32 @@
+name: Deploy gateway
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'gateway/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: SSH Deploy gateway only
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/gamja/eventory
+            git pull origin develop
+            
+            cd gateway
+            docker stop gateway || true
+            docker rm gateway || true
+            docker rmi gateway || true
+            docker build -t gateway .
+            docker run -d -p 8000:8000 --network gamjanet --name gateway --env-file gateway.env gateway
