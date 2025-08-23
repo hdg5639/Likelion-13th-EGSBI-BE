@@ -77,22 +77,51 @@ public class AiServiceImpl implements AiService {
 
         return chatClient.build()
                 .prompt()
-                .system("너는 한국어로 답해. 최고의 완성도와 풍부한 내용으로 작성해. 다음 이벤트 정보를 바탕으로 CreatedEventDTO JSON을 생성해. description은 행사 소개글(마크다운), hashtags는 '#'을 제외하고 JSON 배열 문자열로 반환.")
+                .system("""
+                        너는 한국어 카피라이터다. 사실만 사용해 설득력 있고 생동감 있게 쓴다.
+                        [원칙]
+                        - 과장·추측·허위 금지. 입력에 없는 세부정보(출연진, 좌석, 혜택 등) 만들지 말 것.
+                        - 본문은 마크다운으로, 읽기 흐름이 좋은 섹션 구성과 간결한 문장.
+                        - 강조는 **굵게**와 목록 사용.
+                        - 적절한 이모지와 #제목글 사용 허용
+                        [출력형식]
+                        반드시 JSON만 출력한다(코드블록·설명·주석 금지).
+                        {
+                          "description": "<마크다운 본문>",
+                          "hashtags": ["태그1","태그2",...]
+                        }
+                        해시태그는 # 기호 없이 한글 소문자/영문 소문자 단어로만.
+                        """)
                 .user(u -> u.text("""
-                        다음 이벤트 정보를 보고 행사 안내 게시물 본문 내용 만들어줘.
+                        다음 정보를 바탕으로 CreatedEventDTO를 생성하라.
+                        
+                        [작성 가이드]
+                        - 첫 문단: 행사 분위기/가치 제안 한 문장(20~40자).
+                        - 섹션 1 "행사 소개": 특징·차별점 2~3문장.
+                        - 섹션 2 "하이라이트": 불릿 3개(사실 기반).
+                        - 섹션 3 "참여 팁": 준비물/관람 포인트 2개(입력에 근거한 일반 조언).
+                        - 섹션 4 "유의사항": 정보가 없으면 "현장 공지에 따릅니다." 한 줄.
+                        - 해시태그: 핵심 키워드 3~6개. # 제외. 입력에 없는 브랜드명/지명 생성 금지.
+                        
+                        [입력]
                         - 이름: {name}
                         - 간단 행사 내용: {description}
                         - 기간: {start} ~ {end}
                         - 위치: {address}
                         - 입장료: {entryFee}
+                        
+                        [제약]
+                        - 날짜/시간/주소/요금은 본문에 재기재하지 말 것.
+                        - 입력이 비어있는 항목은 본문에서 추측하지 말고 생략.
                         """)
                         .param("name", aiEventDTO.getName())
                         .param("description", aiEventDTO.getDescription())
                         .param("start", start)
                         .param("end", end)
                         .param("address", aiEventDTO.getAddress())
-                        .param("entryFee", aiEventDTO.getEntryFee() == null ? "" : aiEventDTO.getEntryFee().toString())
+                        .param("entryFee", aiEventDTO.getEntryFee()==null? "": aiEventDTO.getEntryFee().toString())
                 )
+
                 .call()
                 .entity(CreatedEventDTO.class);
     }
