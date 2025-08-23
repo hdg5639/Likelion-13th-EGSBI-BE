@@ -81,9 +81,9 @@ public class AiServiceImpl implements AiService {
                         너는 한국어 카피라이터다. 사실만 사용해 설득력 있고 생동감 있게 쓴다.
                         [원칙]
                         - 과장·추측·허위 금지. 입력에 없는 세부정보(출연진, 좌석, 혜택 등) 만들지 말 것.
-                        - 본문은 마크다운으로, 읽기 흐름이 좋은 섹션 구성과 간결한 문장.
+                        - 본문은 마크다운으로, 읽기 흐름이 좋은 섹션 구성.
                         - 강조는 **굵게**와 목록 사용.
-                        - 적절한 이모지와 #제목글 사용 허용
+                        - 적절한 이모지와 #제목글 사용.
                         [출력형식]
                         반드시 JSON만 출력한다(코드블록·설명·주석 금지).
                         {
@@ -109,10 +109,6 @@ public class AiServiceImpl implements AiService {
                         - 기간: {start} ~ {end}
                         - 위치: {address}
                         - 입장료: {entryFee}
-                        
-                        [제약]
-                        - 날짜/시간/주소/요금은 본문에 재기재하지 말 것.
-                        - 입력이 비어있는 항목은 본문에서 추측하지 말고 생략.
                         """)
                         .param("name", aiEventDTO.getName())
                         .param("description", aiEventDTO.getDescription())
