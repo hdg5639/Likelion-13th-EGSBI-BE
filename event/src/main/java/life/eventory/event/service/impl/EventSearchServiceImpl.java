@@ -47,9 +47,9 @@ public class EventSearchServiceImpl implements EventSearchService {
 
             var where = new BooleanBuilder();
             for (String tok : tokens) {
-                where.or(e.name.containsIgnoreCase(tok))
-                        .or(e.description.containsIgnoreCase(tok))
-                        .or(e.address.containsIgnoreCase(tok));
+                where.or(e.name.contains(tok))
+                        .or(e.address.contains(tok))
+                        .or(e.description.contains(tok));
             }
 
             var content = queryFactory.selectFrom(e)
