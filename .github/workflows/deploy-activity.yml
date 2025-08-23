@@ -2,7 +2,7 @@ name: Deploy activity
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - 'activity/**'
 

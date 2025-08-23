@@ -2,7 +2,7 @@ name: Deploy eureka
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - 'eureka/**'
 
