@@ -10,24 +10,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FullTextSearch extends JpaRepository<Event, Long> {
-    @Query(
-            value = """
-              SELECT e.id
-              FROM t_event e
-              WHERE MATCH(e.name, e.description, e.address)
-                    AGAINST (:booleanQuery IN BOOLEAN MODE)
-              ORDER BY MATCH(e.name, e.description, e.address)
-                       AGAINST (:booleanQuery IN BOOLEAN MODE) DESC,
-                       e.start_time DESC
-              """,
+    @Query(value = """
+        SELECT e.id
+        FROM t_event e
+        WHERE MATCH(e.name, e.description, e.address)
+              AGAINST (:q IN BOOLEAN MODE)
+        ORDER BY MATCH(e.name, e.description, e.address)
+                 AGAINST (:q IN BOOLEAN MODE) DESC,
+                 e.start_time DESC
+        """,
             countQuery = """
-              SELECT COUNT(*)
-              FROM t_event e
-              WHERE MATCH(e.name, e.description, e.address)
-                    AGAINST (:booleanQuery IN BOOLEAN MODE)
-              """,
-            nativeQuery = true
-    )
-    Page<Long> searchFulltextIds(@Param("booleanQuery") String booleanQuery, Pageable pageable);
+        SELECT COUNT(*)
+        FROM t_event e
+        WHERE MATCH(e.name, e.description, e.address)
+              AGAINST (:q IN BOOLEAN MODE)
+        """,
+            nativeQuery = true)
+    Page<Long> searchFulltextIds(@Param("q") String q, Pageable pageable);
 
 }
