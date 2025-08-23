@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/gamja/eventory
-            git pull origin develop
+            git pull origin main
             
             cd user
             docker stop user || true
