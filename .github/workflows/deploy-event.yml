@@ -2,7 +2,7 @@ name: Deploy event
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - 'event/**'
 

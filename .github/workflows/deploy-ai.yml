@@ -2,7 +2,7 @@ name: Deploy ai
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - 'ai/**'
 
