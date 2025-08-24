@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @Tag(name = "Review API", description = "리뷰 관련 API")
-@RequestMapping("api/activity")
+@RequestMapping("/api/activity")
 public interface ReviewAPI {
     @Operation(summary = "사용자별 참여 행사 리뷰 작성 생성",
             requestBody = @RequestBody(
