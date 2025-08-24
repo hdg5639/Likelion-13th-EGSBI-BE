@@ -56,18 +56,14 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/docs",
                                 "/api-docs",
-                                "/webjars/**"
-                        ).permitAll()
+                                "/webjars/**")
+                        .permitAll()
 
                         // GET 요청 차단
                         .pathMatchers(HttpMethod.GET,
                                 "/api/activity/history/**",
-                                "/api/activity/bookmark/toggle",
-                                "/api/activity/participation/**",
-                                "/api/activity/review/**",
-                                "/api/activity/notification/**",
-                                "/api/event/qr").authenticated()
-
+                                "/api/event/qr")
+                        .authenticated()
 
                         // POST 요청 차단
                         .pathMatchers(HttpMethod.POST,
@@ -77,12 +73,19 @@ public class SecurityConfig {
                                 "/api/event",
                                 "/api/event/ai/description",
                                 "/api/user/renew",
-                                "/api/user/location").authenticated()
+                                "/api/user/location",
+                                "/api/user/subscription/create")
+                        .authenticated()
 
                         // PATCH 요청 차단
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/event",
                                 "/api/user/update").authenticated()
+
+                        // DELETE 요청 차단
+                        .pathMatchers(HttpMethod.DELETE,
+                                "/api/user/subscription/create")
+                        .authenticated()
 
                         .anyExchange().permitAll() // 그 외의 요청은 인증 불필요
                 )
