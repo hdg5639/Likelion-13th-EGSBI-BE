@@ -1,5 +1,6 @@
 package life.eventory.activity.service;
 
+import life.eventory.activity.dto.review.DetailReview;
 import life.eventory.activity.dto.review.ReviewRequestDTO;
 import life.eventory.activity.dto.review.ReviewResponseDTO;
 
@@ -10,4 +11,5 @@ public interface ReviewService {
     List<ReviewResponseDTO> getReviewsByEvent(Long eventId);
     Double getAvgRatingByUser(Long userId);
     List<String> getUserReviews(Long userId);
+    List<DetailReview> getUserDetailReviews(Long userId);
 }
