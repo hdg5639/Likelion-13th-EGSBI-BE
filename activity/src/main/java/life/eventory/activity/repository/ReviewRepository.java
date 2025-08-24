@@ -15,19 +15,19 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewEntity> findAllByEventIdOrderByCreatedAtDesc(Long eventId);
 
     @Query("SELECT AVG(r.rating) FROM ReviewEntity r WHERE r.eventId in :eventIds")
-    Double findAvgRatingByEventIds(@Param("userId") List<Long> eventIds);
+    Double findAvgRatingByEventIds(@Param("eventIds") List<Long> eventIds);
 
     @Query("""
     select r.content
     from ReviewEntity r
     where r.eventId in :eventIds
     """)
-    List<String> findReviewsByEventIds(List<Long> eventIds);
+    List<String> findReviewsByEventIds(@Param("eventIds") List<Long> eventIds);
 
     @Query("""
     select new life.eventory.activity.dto.review.DetailReview(r.userId, r.content, r.rating)
     from ReviewEntity r
     where r.eventId in :eventIds
     """)
-    List<DetailReview> findDetailReviews(List<Long> eventIds);
+    List<DetailReview> findDetailReviews(@Param("eventIds") List<Long> eventIds);
 }
