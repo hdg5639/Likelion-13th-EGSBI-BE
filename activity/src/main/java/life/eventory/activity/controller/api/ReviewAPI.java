@@ -64,9 +64,6 @@ public interface ReviewAPI {
     ResponseEntity<List<ReviewResponseDTO>> getReviewsByEvent(@RequestParam Long eventId);
 
     @Operation(summary = "사용자별 평균 평점 조회",
-            parameters = {
-                @Parameter(description = "타겟 ID (없어도 되는데, 넣으면 여기 들어간 ID로 조회됨)", example = "1")
-            },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -82,6 +79,7 @@ public interface ReviewAPI {
     )
     @GetMapping(value = "/review/rating")
     ResponseEntity<Double> getAvgRatingByUser(@RequestHeader(value = "X-User-Id", required = false) Long userId,
+                                              @Parameter(description = "타겟 ID (없어도 되는데, 넣으면 여기 들어간 ID로 조회됨)", example = "1")
                                               @RequestParam(required = false) Long targetId);
 
     @Operation(summary = "사용자별 리뷰 내용 조회",
