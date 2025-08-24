@@ -1,6 +1,7 @@
 package life.eventory.activity.service.impl;
 
 import life.eventory.activity.dto.event.EventResponse;
+import life.eventory.activity.dto.review.DetailReview;
 import life.eventory.activity.dto.review.ReviewRequestDTO;
 import life.eventory.activity.dto.review.ReviewResponseDTO;
 import life.eventory.activity.entity.ReviewEntity;
@@ -51,7 +52,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Double getAvgRatingByUser(Long userId) {
-        return reviewRepository.findAvgRatingByUserId(userId);
+        List<EventResponse> events = communicationService.getUserEvents(userId);
+        List<Long> eventIds = events.stream()
+                .filter(e -> e.getOrganizerId().equals(userId))
+                .map(EventResponse::getId)
+                .toList();
+        return reviewRepository.findAvgRatingByEventIds(eventIds);
     }
 
     @Override
@@ -62,5 +68,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(EventResponse::getId)
                 .toList();
         return reviewRepository.findReviewsByEventIds(eventIds);
+    }
+
+    @Override
+    public List<DetailReview> getUserDetailReviews(Long userId) {
+        List<EventResponse> events = communicationService.getUserEvents(userId);
+        List<Long> eventIds = events.stream()
+                .filter(e -> e.getOrganizerId().equals(userId))
+                .map(EventResponse::getId)
+                .toList();
+        return reviewRepository.findDetailReviews(eventIds);
     }
 }
