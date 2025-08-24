@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DetailReview {
     @Schema(example = "1")
-    private Long userID;
+    private Long userId;
     @Schema(example = "내용")
     private String content;
     @Schema(example = "점수")
