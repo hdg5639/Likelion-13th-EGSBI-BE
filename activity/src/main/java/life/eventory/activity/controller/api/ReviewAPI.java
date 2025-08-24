@@ -100,6 +100,7 @@ public interface ReviewAPI {
     )
     @GetMapping("/review/all")
     ResponseEntity<List<String>> getUserReviews (@RequestHeader(name = "X-User-Id", required = false) Long userId,
+                                                 @Parameter(description = "타겟 ID (없어도 되는데, 넣으면 여기 들어간 ID로 조회됨)", example = "1")
                                                  @RequestParam(required = false) Long targetId);
 
     @Operation(summary = "사용자별 리뷰 내용 조회 (상세)",
@@ -118,5 +119,6 @@ public interface ReviewAPI {
     )
     @GetMapping("/review/all/detail")
     ResponseEntity<List<DetailReview>> getUserDetailReviews (@RequestHeader(name = "X-User-Id", required = false) Long userId,
+                                                             @Parameter(description = "타겟 ID (없어도 되는데, 넣으면 여기 들어간 ID로 조회됨)", example = "1")
                                                              @RequestParam(required = false) Long targetId);
 }
