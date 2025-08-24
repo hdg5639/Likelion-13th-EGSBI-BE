@@ -54,37 +54,31 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Double getAvgRatingByUser(Long userId) {
-        List<EventResponse> events = communicationService.getUserEvents(userId);
-        List<Long> eventIds = events.stream()
-                .filter(e -> e.getOrganizerId().equals(userId))
-                .map(EventResponse::getId)
-                .toList();
+        List<Long> eventIds = getEventIdsByUserId(userId);
         return reviewRepository.findAvgRatingByEventIds(eventIds);
     }
 
     @Override
     public List<String> getUserReviews(Long userId) {
-        if (userId == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청 내용");
-        }
-        List<EventResponse> events = communicationService.getUserEvents(userId);
-        List<Long> eventIds = events.stream()
-                .filter(e -> e.getOrganizerId().equals(userId))
-                .map(EventResponse::getId)
-                .toList();
+        List<Long> eventIds = getEventIdsByUserId(userId);
         return reviewRepository.findReviewsByEventIds(eventIds);
     }
 
     @Override
     public List<DetailReview> getUserDetailReviews(Long userId) {
+        List<Long> eventIds = getEventIdsByUserId(userId);
+        return reviewRepository.findDetailReviews(eventIds);
+    }
+
+    private List<Long> getEventIdsByUserId(Long userId) {
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청 내용");
         }
+
         List<EventResponse> events = communicationService.getUserEvents(userId);
-        List<Long> eventIds = events.stream()
+        return events.stream()
                 .filter(e -> e.getOrganizerId().equals(userId))
                 .map(EventResponse::getId)
                 .toList();
-        return reviewRepository.findDetailReviews(eventIds);
     }
 }
