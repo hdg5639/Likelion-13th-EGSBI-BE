@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "History API", description = "히스토리 정보 관련 API")
-@RequestMapping("api/activity")
+@RequestMapping("/api/activity")
 public interface HistoryAPI {
     @Operation(summary = "행사 상세 조회 시 히스토리 기록 생성",
             requestBody = @RequestBody(

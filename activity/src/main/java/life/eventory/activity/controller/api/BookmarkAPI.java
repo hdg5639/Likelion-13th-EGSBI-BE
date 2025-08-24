@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @Tag(name = "Bookmark API", description = "북마크 정보 관련 API")
-@RequestMapping("api/activity")
+@RequestMapping("/api/activity")
 public interface BookmarkAPI {
     @Operation(summary = "북마크 설정, 해제",
             requestBody = @RequestBody(
