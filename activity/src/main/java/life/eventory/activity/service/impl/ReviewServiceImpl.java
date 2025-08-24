@@ -10,7 +10,9 @@ import life.eventory.activity.repository.ReviewRepository;
 import life.eventory.activity.service.CommunicationService;
 import life.eventory.activity.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -62,6 +64,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<String> getUserReviews(Long userId) {
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청 내용");
+        }
         List<EventResponse> events = communicationService.getUserEvents(userId);
         List<Long> eventIds = events.stream()
                 .filter(e -> e.getOrganizerId().equals(userId))
@@ -72,6 +77,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<DetailReview> getUserDetailReviews(Long userId) {
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청 내용");
+        }
         List<EventResponse> events = communicationService.getUserEvents(userId);
         List<Long> eventIds = events.stream()
                 .filter(e -> e.getOrganizerId().equals(userId))
