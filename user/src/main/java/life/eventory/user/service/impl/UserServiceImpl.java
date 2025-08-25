@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import life.eventory.user.dto.*;
 import life.eventory.user.dto.login.LoginResponse;
 import life.eventory.user.entity.UserEntity;
+import life.eventory.user.repository.EmailRepository;
 import life.eventory.user.repository.UserRepository;
 import life.eventory.user.service.CommunicationService;
 import life.eventory.user.service.TokenService;
@@ -26,11 +27,16 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CommunicationService communicationService;
     private final TokenService tokenService;
+    private final EmailRepository emailRepository;
 
     @Override
     public UserSignUpRequest signup(UserSignUpRequest request, MultipartFile file) throws IOException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+
+        if(!emailRepository.checkVerified(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 인증 필요");
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -82,12 +88,8 @@ public class UserServiceImpl implements UserService {
             String encodedPassword = passwordEncoder.encode(request.getPassword());
             user.setPassword(encodedPassword);
         }
-        if (request.getName() != null && !request.getName().isBlank())
-            user.setName(request.getName());
         if (request.getNickname() != null && !request.getNickname().isBlank())
             user.setNickname(request.getNickname());
-        if (request.getPhone() != null && !request.getPhone().isBlank())
-            user.setPhone(request.getPhone());
         if (! request.getProfileEnabled()) {
             communicationService.deleteProfile(user.getProfileId());
             user.setProfileId(null);
