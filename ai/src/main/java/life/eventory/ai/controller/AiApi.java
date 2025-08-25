@@ -141,5 +141,7 @@ public interface AiApi {
     )
     @GetMapping("/review/summary")
     ResponseEntity<String> createReviewSummary(
-            @RequestHeader(name = "X-User-Id") Long userId);
+            @RequestHeader(name = "X-User-Id", required = false) Long userId,
+            @Parameter(description = "타겟 ID (없어도 되는데, 넣으면 여기 들어간 ID로 조회됨)", example = "1")
+            @RequestParam(required = false) Long targetId);
 }
