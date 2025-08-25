@@ -2,9 +2,7 @@ package life.eventory.user.controller;
 
 import life.eventory.user.controller.api.EmailAPI;
 import life.eventory.user.service.EmailService;
-import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,15 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class EmailController implements EmailAPI {
     private final EmailService emailService;
-    private final UserService userService;
 
     @Override
     public ResponseEntity<String> sendCode(@RequestParam String email) {
-        ResponseEntity<Long> userCheckResponse = userService.checkByEmail(email);
-        if (!userCheckResponse.getStatusCode().is2xxSuccessful()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("사용자가 존재하지 않습니다.");
-        }
         String code = emailService.generateVerificationCode();
         emailService.saveVerificationCode(email, code);
         emailService.sendVerificationCode(email, code);

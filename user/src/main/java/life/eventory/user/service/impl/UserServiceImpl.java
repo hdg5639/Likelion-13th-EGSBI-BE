@@ -11,7 +11,6 @@ import life.eventory.user.service.TokenService;
 import life.eventory.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,13 +135,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean UserExist(Long id){
         return userRepository.existsById(id);
-    }
-
-    @Override
-    public ResponseEntity<Long> checkByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(user -> ResponseEntity.ok(user.getId()))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @Override
