@@ -4,5 +4,10 @@
       "name": "geocoding.api",
       "type": "java.lang.String",
       "description": "Geocoding api key."
-  }
-] }
+    },
+    {
+      "name": "soul.event",
+      "type": "java.lang.String",
+      "description": "Soul event api."
+    }
+  ] }

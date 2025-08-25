@@ -75,7 +75,7 @@ public class ExternalEventInfoAggregator {
     // 외부 행사 정보 변환 및 DB 저장 / 매일 0시 업데이트
     @PostConstruct
     @Scheduled(cron = "0 0 0 1 * *")
-    private void transformAndSaveEvents() throws IOException, InterruptedException, ApiException {
+    public void transformAndSaveEvents() throws IOException, InterruptedException, ApiException {
         final LocalDate cutOff = LocalDate.of(2025, 1, 1);
 
         for (DaeguEventDTO daeguEventDTO :
