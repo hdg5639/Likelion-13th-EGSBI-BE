@@ -8,7 +8,9 @@ import life.eventory.ai.service.AiService;
 import life.eventory.ai.service.CommunicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -124,6 +126,9 @@ public class AiServiceImpl implements AiService {
 
     @Override
     public String createUserReviewSummary(Long userId) {
+        if (userId == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청");
+
         List<String> reviews = communicationService.getReviews(userId);
 
         if (reviews == null || reviews.isEmpty()) return "아직 리뷰가 부족해요";

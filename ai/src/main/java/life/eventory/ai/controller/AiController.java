@@ -36,7 +36,11 @@ public class AiController implements AiApi {
 
     @Override
     public ResponseEntity<String> createReviewSummary(
-            @RequestHeader(name = "X-User-Id") Long userId) {
-        return ResponseEntity.ok(aiService.createUserReviewSummary(userId));
+            @RequestHeader(name = "X-User-Id", required = false) Long userId,
+            @RequestParam(required = false) Long targetId) {
+        if (targetId == null)
+            return ResponseEntity.ok(aiService.createUserReviewSummary(userId));
+
+        return ResponseEntity.ok(aiService.createUserReviewSummary(targetId));
     }
 }

@@ -28,12 +28,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 참여 여부 확인
         if (!participationRepository.existsByUserIdAndEventId(userId, eventId)) {
-            throw new IllegalStateException("행사에 참여한 기록이 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "행사에 참여한 기록이 없습니다.");
         }
 
         // 중복 리뷰 확인
         if (reviewRepository.existsByUserIdAndEventId(userId, eventId)) {
-            throw new IllegalStateException("이미 리뷰를 작성한 행사입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 리뷰를 작성한 행사입니다.");
         }
 
         ReviewEntity review = ReviewEntity.builder()
