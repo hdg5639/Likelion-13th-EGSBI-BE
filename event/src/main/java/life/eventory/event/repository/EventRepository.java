@@ -79,4 +79,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             Collection<Long> excludeIds,
             Pageable pageable
     );
+
+    boolean existsByNameAndStartTimeAndAddress(String name, LocalDateTime startTime, String address);
 }
