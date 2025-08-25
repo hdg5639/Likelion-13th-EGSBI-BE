@@ -54,8 +54,13 @@ public class CultureEventMapper {
             try (InputStream is = res.getInputStream()) {
                 CultureApiRoot root = objectMapper.readValue(is, CultureApiRoot.class);
 
+                long cutoffMillis = LocalDateTime.of(2025, 9, 1, 0, 0)
+                        .atZone(ZoneId.of("Asia/Seoul"))
+                        .toInstant()
+                        .toEpochMilli();
+
                 var candidates = root.DATA().stream()
-                        .filter(d -> d.strtdate() != null)
+                        .filter(d -> d.strtdate() != null && d.strtdate() >= cutoffMillis)
                         .sorted(Comparator.comparing(CultureData::strtdate))
                         .limit(50)
                         .map(d -> {
