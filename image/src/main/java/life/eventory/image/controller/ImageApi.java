@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Tag(name = "Image API", description = "이미지 업로드 및 조회 API")
-@RequestMapping("/api/image")
+@RequestMapping("/v1/image")
 public interface ImageApi {
 
     @Operation(

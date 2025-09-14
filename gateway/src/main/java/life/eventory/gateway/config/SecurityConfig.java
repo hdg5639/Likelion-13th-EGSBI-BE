@@ -49,7 +49,7 @@ public class SecurityConfig {
         http
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(
-                                "/api/user/login",
+                                "/v1/user/login",
                                 "/.well-known/jwks.json",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
@@ -61,30 +61,30 @@ public class SecurityConfig {
 
                         // GET 요청 차단
                         .pathMatchers(HttpMethod.GET,
-                                "/api/activity/history/**",
-                                "/api/event/qr")
+                                "/v1/activity/history/**",
+                                "/v1/event/qr")
                         .authenticated()
 
                         // POST 요청 차단
                         .pathMatchers(HttpMethod.POST,
-                                "/api/activity/**",
-                                "/api/ai/description",
-                                "/api/event/qr/join",
-                                "/api/event",
-                                "/api/event/ai/description",
-                                "/api/user/renew",
-                                "/api/user/location",
-                                "/api/user/subscription/create")
+                                "/v1/activity/**",
+                                "/v1/ai/description",
+                                "/v1/event/qr/join",
+                                "/v1/event",
+                                "/v1/event/ai/description",
+                                "/v1/user/renew",
+                                "/v1/user/location",
+                                "/v1/user/subscription/create")
                         .authenticated()
 
                         // PATCH 요청 차단
                         .pathMatchers(HttpMethod.PATCH,
-                                "/api/event",
-                                "/api/user/update").authenticated()
+                                "/v1/event",
+                                "/v1/user/update").authenticated()
 
                         // DELETE 요청 차단
                         .pathMatchers(HttpMethod.DELETE,
-                                "/api/user/subscription/create")
+                                "/v1/user/subscription/create")
                         .authenticated()
 
                         .anyExchange().permitAll() // 그 외의 요청은 인증 불필요
@@ -105,7 +105,8 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(Arrays.asList(
                 "https://eventory.life",
                 "http://127.0.0.1:*",
-                "https://*.gamja.cloud"
+                "https://likelion-att.o-r.kr",
+                "http://likelion-att.o-r.kr",
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.addAllowedHeader("*");

@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Tag(name = "User API", description = "회원 가입 및 사용자 정보 관련 API")
-@RequestMapping("/api/user")
+@RequestMapping("/v1/user")
 public interface UserAPI {
     @Operation(
             summary = "회원가입",

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.UnsupportedEncodingException;
 
 @Tag(name = "QR API", description = "QR API")
-@RequestMapping("/api/event/qr")
+@RequestMapping("/v1/event/qr")
 public interface QrApi {
 
     @Operation(

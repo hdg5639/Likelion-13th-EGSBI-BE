@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "AI API", description = "AI 서버 API")
-@RequestMapping("/api/ai")
+@RequestMapping("/v1/ai")
 public interface AiApi {
     @Operation(
             summary = "행사 요약 생성 API",

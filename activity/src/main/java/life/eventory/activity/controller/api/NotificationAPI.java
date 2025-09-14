@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Notification API", description = "알림 관련 API")
-@RequestMapping("/api/activity")
+@RequestMapping("/v1/activity")
 public interface NotificationAPI {
     @Operation(summary = "알림 설정, 해제",
             requestBody = @RequestBody(
