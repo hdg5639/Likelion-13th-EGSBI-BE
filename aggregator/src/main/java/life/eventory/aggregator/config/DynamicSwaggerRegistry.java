@@ -41,7 +41,7 @@ public class DynamicSwaggerRegistry {
             if (EXCLUDES.contains(raw)) return;
 
             String service = raw.toLowerCase();         // 게이트웨이 경로는 소문자 사용 권장
-            String url = gateway + "/" + service + "/api-docs";
+            String url = gateway + "/v1/" + service + "/api-docs";
 
             // 서비스당 한 번만 체크(여러 인스턴스 중복 방지)
             if (map.containsKey(service)) return;

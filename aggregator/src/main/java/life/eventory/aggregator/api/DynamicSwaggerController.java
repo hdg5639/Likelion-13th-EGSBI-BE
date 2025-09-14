@@ -9,7 +9,7 @@ import life.eventory.aggregator.config.DynamicSwaggerRegistry;
 import java.util.List;
 
 @RestController
-@RequestMapping("/internal/swagger")
+@RequestMapping("/v1/internal/swagger")
 @RequiredArgsConstructor
 public class DynamicSwaggerController {
 

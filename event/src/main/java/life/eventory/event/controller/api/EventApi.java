@@ -28,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Tag(name = "Event API", description = "행사 업로드 및 조회 API")
-@RequestMapping("/api/event")
+@RequestMapping("/v1/event")
 public interface EventApi {
     @Operation(summary = "행사 생성",
             requestBody = @RequestBody(

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Participation API", description = "행사 참여 관련 API")
-@RequestMapping("/api/activity")
+@RequestMapping("/v1/activity")
 public interface ParticipationAPI {
     @Operation(summary = "행사 참여 처리",
             requestBody = @RequestBody(

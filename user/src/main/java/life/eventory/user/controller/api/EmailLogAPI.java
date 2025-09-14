@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Email Log API", description = "이메일 발송 로그 관련 API")
-@RequestMapping("/api/user/email_log")
+@RequestMapping("/v1/user/email_log")
 public interface EmailLogAPI {
 
     @Operation(

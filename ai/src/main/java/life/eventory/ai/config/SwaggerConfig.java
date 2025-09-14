@@ -22,7 +22,7 @@ public class SwaggerConfig {
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .info(apiInfo())
                 .addServersItem(new Server()
-                        .url("https://gateway.gamja.cloud")
+                        .url("https://likelion-att.o-r.kr")
                         .description("Production server"))
                 .addServersItem(new Server()
                         .url("http://localhost:14000")

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Subscription API", description = "구독 관련 API")
-@RequestMapping("/api/user/subscription")
+@RequestMapping("/v1/user/subscription")
 public interface SubscriptionAPI {
 
     @Operation(

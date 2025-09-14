@@ -46,7 +46,8 @@ public class SecurityConfig {
                         .allowedOriginPatterns(
                                 "http://localhost:*",
                                 "http://127.0.0.1:*",
-                                "https://*.gamja.cloud",
+                                "https://likelion-att.o-r.kr",
+                                "http://likelion-att.o-r.kr",
                                 "https://eventory.life"
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Email API", description = "이메일 인증 및 알림 관련 API")
-@RequestMapping("/api/user/email")
+@RequestMapping("/v1/user/email")
 public interface EmailAPI {
     @Operation(
             summary = "인증 코드 전송",
