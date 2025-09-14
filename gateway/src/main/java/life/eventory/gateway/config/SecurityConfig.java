@@ -106,7 +106,7 @@ public class SecurityConfig {
                 "https://eventory.life",
                 "http://127.0.0.1:*",
                 "https://likelion-att.o-r.kr",
-                "http://likelion-att.o-r.kr",
+                "http://likelion-att.o-r.kr"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.addAllowedHeader("*");
