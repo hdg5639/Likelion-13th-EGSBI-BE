@@ -32,7 +32,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
-                .path("/api/event/info/" + eventId)
+                .path("/v1/event/info/" + eventId)
                 .build()
                 .toUri();
 
@@ -68,7 +68,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
-                .path("/api/activity/review/all")
+                .path("/v1/activity/review/all")
                 .build()
                 .toUri();
 
@@ -106,7 +106,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/history/add")
+                .path("/v1/activity/history/add")
                 .build()
                 .toUri();
 

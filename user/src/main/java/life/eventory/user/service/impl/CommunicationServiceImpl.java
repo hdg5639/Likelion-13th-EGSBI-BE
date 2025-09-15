@@ -39,7 +39,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         ServiceInstance imageInstance = getImageInstance();
 
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/image")
+                .path("/v1/image")
                 .build()
                 .toUri();
 
@@ -80,7 +80,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/image/" + imageId)
+                .path("/v1/image/" + imageId)
                 .build()
                 .toUri();
 
@@ -137,7 +137,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         ServiceInstance organizerInstance = getOrganizerInstance();
 
         URI uri = UriComponentsBuilder.fromUri(organizerInstance.getUri())
-                .path("/api/event/exist/organizer/{organizerId}")
+                .path("/v1/event/exist/organizer/{organizerId}")
                 .buildAndExpand(organizerId)
                 .toUri();
 
@@ -163,7 +163,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         ServiceInstance bookmarkInstance = getBookmarkInstance();
 
         URI uri = UriComponentsBuilder.fromUri(bookmarkInstance.getUri())
-                .path("/api/activity/participation/{eventId}")
+                .path("/v1/activity/participation/{eventId}")
                 .buildAndExpand(eventId)
                 .toUri();
 
@@ -190,7 +190,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         ServiceInstance eventInstance = getEventInstance();
 
         URI uri = UriComponentsBuilder.fromUri(eventInstance.getUri())
-                .path("/api/event/upcoming")
+                .path("/v1/event/upcoming")
                 .build()
                 .toUri();
 
@@ -215,7 +215,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         ServiceInstance imageInstance = getImageInstance();
 
         return UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/image/{id}")
+                .path("/v1/image/{id}")
                 .buildAndExpand(imageId)
                 .toUriString();
     }

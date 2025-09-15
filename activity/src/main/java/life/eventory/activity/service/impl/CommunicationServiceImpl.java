@@ -33,7 +33,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 헤더 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/event/" + userId)
+                .path("/v1/event/" + userId)
                 .build()
                 .toUri();
 
