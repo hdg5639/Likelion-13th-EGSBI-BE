@@ -47,7 +47,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/image")
+                .path("/v1/image")
                 .build()
                 .toUri();
 
@@ -82,7 +82,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/image/" + posterId)
+                .path("/v1/image/" + posterId)
                 .build()
                 .toUri();
 
@@ -119,7 +119,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/user/exist/" + userId)
+                .path("/v1/user/exist/" + userId)
                 .build()
                 .toUri();
 
@@ -155,7 +155,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/ai/description")
+                .path("/v1/ai/description")
                 .build()
                 .toUri();
 
@@ -191,7 +191,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/history/list")
+                .path("/v1/activity/history/list")
                 .build()
                 .toUri();
 
@@ -216,7 +216,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/history/list")
+                .path("/v1/activity/history/list")
                 .build()
                 .toUri();
 
@@ -258,7 +258,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/bookmark/list")
+                .path("/v1/activity/bookmark/list")
                 .build()
                 .toUri();
 
@@ -295,7 +295,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/bookmark/all")
+                .path("/v1/activity/bookmark/all")
                 .build()
                 .toUri();
 
@@ -332,7 +332,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/activity/participation/list")
+                .path("/v1/activity/participation/list")
                 .build()
                 .toUri();
 
@@ -369,7 +369,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/ai/comment")
+                .path("/v1/ai/comment")
                 .build()
                 .toUri();
 
@@ -404,7 +404,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/user/email/notify/new/" + organizerId)
+                .path("/v1/user/email/notify/new/" + organizerId)
                 .build()
                 .toUri();
 
@@ -417,7 +417,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
         // 요청 url 생성
         URI uri = UriComponentsBuilder.fromUri(imageInstance.getUri())
-                .path("/api/user/email/notify/update/" + eventId)
+                .path("/v1/user/email/notify/update/" + eventId)
                 .build()
                 .toUri();
 
